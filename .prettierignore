@@ -6,6 +6,7 @@ context
 hooks
 lib
 styles
+pages
 public
 recoil
 colors.js
