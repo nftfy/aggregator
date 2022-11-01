@@ -1,34 +1,34 @@
+import * as Tabs from '@radix-ui/react-tabs'
+import { paths, setParams } from '@reservoir0x/reservoir-kit-client'
+import { useAttributes, useCollections } from '@reservoir0x/reservoir-kit-ui'
+import AttributesFlex from 'components/AttributesFlex'
+import ExploreFlex from 'components/ExploreFlex'
+import ExploreTokens from 'components/ExploreTokens'
+import FormatEth from 'components/FormatEth'
+import Hero from 'components/Hero'
+import Layout from 'components/Layout'
+import Sidebar from 'components/Sidebar'
+import SortMenuExplore from 'components/SortMenuExplore'
+import Sweep from 'components/Sweep'
+import CollectionActivityTab from 'components/tables/CollectionActivityTab'
+import { setToast } from 'components/token/setToast'
+import TokensGrid from 'components/TokensGrid'
+import ViewMenu from 'components/ViewMenu'
+import useCollectionAttributes from 'hooks/useCollectionAttributes'
+import useCollectionStats from 'hooks/useCollectionStats'
+import useTokens from 'hooks/useTokens'
+import { formatNumber } from 'lib/numbers'
+import { toggleOnItem } from 'lib/router'
 import type {
   GetStaticPaths,
   GetStaticProps,
   InferGetStaticPropsType,
-  NextPage,
+  NextPage
 } from 'next'
-import { useRouter } from 'next/router'
-import Layout from 'components/Layout'
-import { useState } from 'react'
-import useCollectionStats from 'hooks/useCollectionStats'
-import useTokens from 'hooks/useTokens'
-import useCollectionAttributes from 'hooks/useCollectionAttributes'
-import { setToast } from 'components/token/setToast'
-import { paths, setParams } from '@reservoir0x/reservoir-kit-client'
-import Hero from 'components/Hero'
-import { formatNumber } from 'lib/numbers'
-import Sidebar from 'components/Sidebar'
-import AttributesFlex from 'components/AttributesFlex'
-import ExploreFlex from 'components/ExploreFlex'
-import SortMenuExplore from 'components/SortMenuExplore'
-import ViewMenu from 'components/ViewMenu'
-import { FiRefreshCcw } from 'react-icons/fi'
-import ExploreTokens from 'components/ExploreTokens'
-import TokensGrid from 'components/TokensGrid'
 import Head from 'next/head'
-import FormatEth from 'components/FormatEth'
-import * as Tabs from '@radix-ui/react-tabs'
-import { toggleOnItem } from 'lib/router'
-import Sweep from 'components/Sweep'
-import { useCollections, useAttributes } from '@reservoir0x/reservoir-kit-ui'
-import CollectionActivityTab from 'components/tables/CollectionActivityTab'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { FiRefreshCcw } from 'react-icons/fi'
 
 // Environment variables
 // For more information about these variables
@@ -174,6 +174,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
   const tabs = [
     { name: 'Items', id: 'items' },
     { name: 'Activity', id: 'activity' },
+    { name: 'Rewards', id: 'rewards' },
   ]
 
   return (
@@ -303,6 +304,11 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
             className="col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]"
           >
             <CollectionActivityTab collectionId={id} />
+          </Tabs.Content>
+          <Tabs.Content value="rewards" asChild className="col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]">
+            <div className='container box-content shadow-sm' >
+              <h1>test</h1>
+            </div>
           </Tabs.Content>
         </Tabs.Root>
       </>
