@@ -30,8 +30,6 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
     { name: 'Action', align: 'center' }
   ]
 
-  console.log('test', specificPools, loading)
-
   if (loading) {
     return (
       <div className='my-20 flex justify-center'>
@@ -79,7 +77,9 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
                 <span className='ml-2.5 mr-2.5  font-light'>{Number(pool.buyersCount)}</span>
               </td>
               <td className='px-6 py-4'>
-                <span className='ml-2.5 mr-2.5  font-light'>{Number(pool.poolProgress)}</span>
+                <progress id='file' className='bg-primary' value={Number(pool.poolProgress)} max='100'>
+                  {Number(pool.poolProgress)}
+                </progress>
               </td>
               <td className=' px-6 py-4'>
                 <span className='ml-2.5 mr-2.5  font-light'>
