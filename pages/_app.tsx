@@ -39,6 +39,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import presetColors from '../colors'
 import { nftfyClient } from '../src/graphql/nftfy/Client'
+import '../styles/theme.light.less'
 
 config.autoAddCss = true
 // Select a custom ether.js interface for connecting to a network

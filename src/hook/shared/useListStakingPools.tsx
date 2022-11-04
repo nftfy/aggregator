@@ -1,39 +1,27 @@
 import { useLazyQuery } from '@apollo/client'
-import {
-  StakingPoolsData,
-  StakingPoolsVars,
-  STAKING_POOLS_QUERY,
-} from '@graphql/pool/StakingPoolsQuery'
+import { StakingPoolsData, StakingPoolsVars, STAKING_POOLS_QUERY } from '@graphql/pool/StakingPoolsQuery'
 import { useEffect, useState } from 'react'
 import { notifyError } from '../../services/UtilService'
 
-export const useStakingPools = (
-  chainId: number,
-  walletInitialized: boolean,
-  filter: string,
-  accountAddress?: string
-) => {
+export const useStakingPools = (chainId: number, walletInitialized: boolean, filter: string, accountAddress?: string) => {
   const paginationLimit = 100
   const [offset, setOffset] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(true)
 
   const [isInitLoad, setInitLoad] = useState<boolean>(true)
   const [isRefetching, setIsRefetching] = useState<boolean>(false)
-  const [getPools, { loading, fetchMore, data }] = useLazyQuery<
-    StakingPoolsData,
-    StakingPoolsVars
-  >(STAKING_POOLS_QUERY, {
+  const [getPools, { loading, fetchMore, data }] = useLazyQuery<StakingPoolsData, StakingPoolsVars>(STAKING_POOLS_QUERY, {
     variables: {
       chainId,
       accountAddress: accountAddress?.toLowerCase(),
       limit: paginationLimit,
       offset,
-      filterBy: filter,
+      filterBy: filter
     },
     notifyOnNetworkStatusChange: true,
-    onError: (errorData) => {
+    onError: errorData => {
       notifyError(errorData.networkError, 'Failed to obtain data ')
-    },
+    }
   })
 
   useEffect(() => {
@@ -47,27 +35,15 @@ export const useStakingPools = (
         accountAddress: accountAddress?.toLowerCase(),
         limit: paginationLimit,
         offset: 0,
-        filterBy: filter,
-      },
+        filterBy: filter
+      }
     })
 
     setInitLoad(false)
-  }, [
-    accountAddress,
-    chainId,
-    getPools,
-    paginationLimit,
-    walletInitialized,
-    filter,
-  ])
+  }, [accountAddress, chainId, getPools, paginationLimit, walletInitialized, filter])
 
   const loadMore = async () => {
-    if (
-      !isRefetching &&
-      walletInitialized &&
-      !loading &&
-      !data?.stakingPools.length
-    ) {
+    if (!isRefetching && walletInitialized && !loading && !data?.stakingPools.length) {
       setHasMore(false)
     }
 
@@ -75,8 +51,8 @@ export const useStakingPools = (
       const newOffset = offset + paginationLimit
       const { data: nextPageData, error: nextPageError } = await fetchMore({
         variables: {
-          offset: newOffset,
-        },
+          offset: newOffset
+        }
       })
 
       if (nextPageError) {
@@ -96,9 +72,9 @@ export const useStakingPools = (
         accountAddress: accountAddress?.toLowerCase(),
         limit: offset ? offset + paginationLimit : paginationLimit,
         offset: 0,
-        filterBy: filter,
+        filterBy: filter
       },
-      fetchPolicy: 'no-cache',
+      fetchPolicy: 'no-cache'
     })
     setIsRefetching(isRefetchLoading)
   }
@@ -118,6 +94,6 @@ export const useStakingPools = (
     loadMore,
     hasMore,
     refetch: handleRefetch,
-    isRefetching,
+    isRefetching
   }
 }
