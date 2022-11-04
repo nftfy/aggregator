@@ -14,7 +14,17 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@config/chain": ["src/ChainConfig.ts"],
+      "@config/global": ["src/GlobalConfig.ts"],
+      "@appTypes/*": ["src/types/*"],
+      "@hook/*": ["src/hook/*"],
+      "@assets/*": ["public/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@services/*": ["src/services/*"],
+      "@graphql/*": ["src/graphql/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
