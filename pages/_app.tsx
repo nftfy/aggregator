@@ -1,4 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
 import {
   darkTheme as rainbowKitDarkTheme,
   getDefaultWallets,
@@ -38,6 +40,7 @@ import { publicProvider } from 'wagmi/providers/public'
 import presetColors from '../colors'
 import { nftfyClient } from '../src/graphql/nftfy/Client'
 
+config.autoAddCss = true
 // Select a custom ether.js interface for connecting to a network
 // Reference = https://wagmi-xyz.vercel.app/docs/provider#provider-optional
 // OPTIONAL
