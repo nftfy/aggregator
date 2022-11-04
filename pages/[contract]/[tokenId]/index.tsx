@@ -1,5 +1,8 @@
 import { paths } from '@reservoir0x/reservoir-kit-client'
-import { useCollections, useTokenOpenseaBanned, useTokens, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
+import {
+  useCollections, useTokenOpenseaBanned,
+  useTokens, useUserTokens
+} from '@reservoir0x/reservoir-kit-ui'
 import Layout from 'components/Layout'
 import CollectionInfo from 'components/token/CollectionInfo'
 import Listings from 'components/token/Listings'
@@ -44,36 +47,48 @@ const metadata = {
   title: (title: string) => (
     <>
       <title>{title}</title>
-      <meta property='twitter:title' content={title} />
-      <meta property='og:title' content={title} />
+      <meta property="twitter:title" content={title} />
+      <meta property="og:title" content={title} />
     </>
   ),
-  description: (description: string) => <meta name='description' content={description} />,
+  description: (description: string) => (
+    <meta name="description" content={description} />
+  ),
   image: (image: string) => (
     <>
-      <meta name='twitter:image' content={image} />
-      <meta property='og:image' content={image} />
+      <meta name="twitter:image" content={image} />
+      <meta property="og:image" content={image} />
     </>
   ),
-  tagline: (tagline: string | undefined) => <>{tagline || 'Discover, buy and sell NFTs'}</>
+  tagline: (tagline: string | undefined) => (
+    <>{tagline || 'Discover, buy and sell NFTs'}</>
+  ),
 }
 
 const Index: NextPage<Props> = ({ collectionId, tokenDetails }) => {
   const [tokenOpenSea] = useState<any>({
     animation_url: null,
-    extension: null
+    extension: null,
   })
   const account = useAccount()
   const router = useRouter()
-  const bannedOnOpenSea = useTokenOpenseaBanned(collectionId, router.query?.tokenId?.toString() || '')
+  const bannedOnOpenSea = useTokenOpenseaBanned(
+    collectionId,
+    router.query?.tokenId?.toString() || ''
+  )
 
   const collectionResponse = useCollections({ id: collectionId })
-  const collection = collectionResponse.data && collectionResponse.data[0] ? collectionResponse.data[0] : undefined
+  const collection =
+    collectionResponse.data && collectionResponse.data[0]
+      ? collectionResponse.data[0]
+      : undefined
 
   const tokenData = useTokens({
-    tokens: [`${router.query?.contract?.toString()}:${router.query?.tokenId?.toString()}`],
+    tokens: [
+      `${router.query?.contract?.toString()}:${router.query?.tokenId?.toString()}`,
+    ],
     includeTopBid: true,
-    includeAttributes: true
+    includeAttributes: true,
   })
 
   const tokens = tokenData.data
@@ -85,15 +100,20 @@ const Index: NextPage<Props> = ({ collectionId, tokenDetails }) => {
 
   useEffect(() => {
     if (CHAIN_ID && (+CHAIN_ID === 1 || +CHAIN_ID === 5)) {
-      const baseUrl = +CHAIN_ID === 1 ? 'https://api.opensea.io' : 'https://testnets-api.opensea.io'
-      fetch(`${baseUrl}/api/v1/asset/${collectionId}/${router.query?.tokenId?.toString()}/offers`).then(async data => {
+      const baseUrl =
+        +CHAIN_ID === 1
+          ? 'https://api.opensea.io'
+          : 'https://testnets-api.opensea.io'
+      fetch(
+        `${baseUrl}/api/v1/asset/${collectionId}/${router.query?.tokenId?.toString()}/offers`
+      ).then(async (data) => {
         const response = await data.json()
         fetch(`${PROXY_API_BASE}/seaport/offers`, {
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           method: 'POST',
-          body: JSON.stringify(response)
+          body: JSON.stringify(response),
         })
       })
     }
@@ -115,7 +135,11 @@ const Index: NextPage<Props> = ({ collectionId, tokenDetails }) => {
     ? metadata.description(META_DESCRIPTION)
     : metadata.description(`${collection?.description as string}`)
 
-  const image = META_OG_IMAGE ? metadata.image(META_OG_IMAGE) : token?.token?.image ? metadata.image(token?.token?.image) : null
+  const image = META_OG_IMAGE
+    ? metadata.image(META_OG_IMAGE)
+    : token?.token?.image
+    ? metadata.image(token?.token?.image)
+    : null
 
   const isOwner =
     userTokens && userTokens[0] && userTokens[0].ownership?.tokenCount && +userTokens[0].ownership.tokenCount > 0
@@ -129,24 +153,26 @@ const Index: NextPage<Props> = ({ collectionId, tokenDetails }) => {
         {description}
         {image}
       </Head>
-      <div className='col-span-full content-start space-y-4 px-2 pt-4 md:col-span-4 lg:col-span-5 lg:col-start-2 lg:px-0 2xl:col-span-4 2xl:col-start-3 3xl:col-start-5 4xl:col-start-7'>
-        <div className='mb-4'>
+      <div className="col-span-full content-start space-y-4 px-2 pt-4 md:col-span-4 lg:col-span-5 lg:col-start-2 lg:px-0 2xl:col-span-4 2xl:col-start-3 3xl:col-start-5 4xl:col-start-7">
+        <div className="mb-4">
           <TokenMedia token={token.token} />
         </div>
-        <div className='hidden space-y-4 md:block'>
+        <div className="hidden space-y-4 md:block">
           <CollectionInfo collection={collection} token={token.token} />
           <TokenInfo token={token.token} />
         </div>
       </div>
-      <div className='col-span-full mb-4 space-y-4 px-2 pt-0 md:col-span-4 md:col-start-5 md:pt-4 lg:col-span-5 lg:col-start-7 lg:px-0 2xl:col-span-5 2xl:col-start-7 3xl:col-start-9 4xl:col-start-11'>
+      <div className="col-span-full mb-4 space-y-4 px-2 pt-0 md:col-span-4 md:col-start-5 md:pt-4 lg:col-span-5 lg:col-start-7 lg:px-0 2xl:col-span-5 2xl:col-start-7 3xl:col-start-9 4xl:col-start-11">
         <Owner details={token} bannedOnOpenSea={bannedOnOpenSea} />
         <PriceData details={tokenData} collection={collection} isOwner={isOwner} />
         <TokenAttributes token={token?.token} collection={collection} isOwner={isOwner} />
         {token.token?.kind === 'erc1155' && (
-          <Listings token={`${router.query?.contract?.toString()}:${router.query?.tokenId?.toString()}`} />
+          <Listings
+            token={`${router.query?.contract?.toString()}:${router.query?.tokenId?.toString()}`}
+          />
         )}
       </div>
-      <div className='col-span-full block space-y-4 px-2 md:hidden lg:px-0'>
+      <div className="col-span-full block space-y-4 px-2 md:hidden lg:px-0">
         <CollectionInfo collection={collection} token={token.token} />
         <TokenInfo token={token.token} />
       </div>
@@ -159,7 +185,7 @@ export default Index
 export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: 'blocking',
   }
 }
 
@@ -171,9 +197,14 @@ export const getStaticProps: GetStaticProps<{
   const tokenId = params?.tokenId?.toString()
   const collectionAddress = COLLECTION ? COLLECTION.split(':')[0] : COLLECTION
 
-  if (collectionAddress && !COMMUNITY && !COLLECTION_SET_ID && collectionAddress.toLowerCase() !== contract?.toLowerCase()) {
+  if (
+    collectionAddress &&
+    !COMMUNITY &&
+    !COLLECTION_SET_ID &&
+    collectionAddress.toLowerCase() !== contract?.toLowerCase()
+  ) {
     return {
-      notFound: true
+      notFound: true,
     }
   }
 
@@ -181,7 +212,7 @@ export const getStaticProps: GetStaticProps<{
 
   if (RESERVOIR_API_KEY) {
     options.headers = {
-      'x-api-key': RESERVOIR_API_KEY
+      'x-api-key': RESERVOIR_API_KEY,
     }
   }
 
@@ -190,24 +221,25 @@ export const getStaticProps: GetStaticProps<{
   const query: paths['/tokens/v5']['get']['parameters']['query'] = {
     tokens: [`${contract}:${tokenId}`],
     includeTopBid: true,
-    includeAttributes: true
+    includeAttributes: true,
   }
 
   const href = setParams(url, query)
 
   const res = await fetch(href, options)
 
-  const data = (await res.json()) as paths['/tokens/v5']['get']['responses']['200']['schema']
+  const data =
+    (await res.json()) as paths['/tokens/v5']['get']['responses']['200']['schema']
 
   const collectionId = data.tokens?.[0]?.token?.collection?.id
 
   if (!collectionId) {
     return {
-      notFound: true
+      notFound: true,
     }
   }
 
   return {
-    props: { collectionId, tokenDetails: data?.tokens?.[0]?.token }
+    props: { collectionId, tokenDetails: data?.tokens?.[0]?.token },
   }
 }
