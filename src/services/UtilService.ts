@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
-import humanFormat from 'human-format'
 
 export const formatToLocaleString = (
   value: string | number | BigNumber,
@@ -8,22 +7,6 @@ export const formatToLocaleString = (
   minimumFractionDigits?: number
 ) => {
   return new BigNumber(value).toNumber().toLocaleString('en-US', { maximumFractionDigits, minimumFractionDigits })
-}
-
-export function toHumanFormat(value: number): string {
-  if (value === 0 || Number.isNaN(value)) {
-    return '0'
-  }
-  if (value > 0 && value < 1) {
-    return formatToLocaleString(value, 5)
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-  return humanFormat(Number(value), {
-    separator: ''
-  })
-    .replace('G', 'B') // Necessary since the prefix for short scale is B, not G: https://en.wikipedia.org/wiki/Metric_prefix
-    .toLowerCase()
 }
 
 export function formatSymbol(tokenSymbol: string) {
