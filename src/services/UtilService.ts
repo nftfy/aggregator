@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import humanFormat from 'human-format'
-import { message as Toast } from 'antd'
 
 export const formatToLocaleString = (
   value: string | number | BigNumber,
@@ -63,7 +62,4 @@ export async function getGasPrice(provider: ethers.providers.JsonRpcProvider) {
 export function notifyError(error: unknown, message: string, silent?: boolean) {
   // eslint-disable-next-line no-console
   console.error(error)
-  if (!silent) {
-    Toast.error(message)
-  }
 }

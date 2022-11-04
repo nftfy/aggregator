@@ -3,11 +3,19 @@ import banner from 'public/banner-example.png';
 import collection from 'public/collection-example.png';
 import styled from 'styled-components';
 import tx from 'tailwind-styled-components';
+import { useStakingPools } from '../../hook/shared/useListStakingPools';
 import { CardReward } from './CardReward';
 
 export const RewardsList = () => {
+  const { stakingPools, loading} = useStakingPools(5, true, 'open')
   return (
-    <CardReward banner={banner.src} collectionImage={collection.src} />
+    <div className=''>
+      {
+        stakingPools.map(pool => 
+          <CardReward pool={pool} banner={banner.src} collectionImage={collection.src} key={pool.id} />
+        )
+      }
+    </div>
   )
 }
 

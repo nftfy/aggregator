@@ -2,15 +2,18 @@ import React from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import styled from "styled-components";
 import tx from 'tailwind-styled-components';
+import { RewardPool } from "../../types/pool/RewardPool";
 
 interface CardRewardProps {
   banner: string,
   collectionImage: string
+  pool: RewardPool
 }
 
-export const CardReward = ({banner, collectionImage }:CardRewardProps) => {
+export const CardReward = ({pool, banner, collectionImage }:CardRewardProps) => {
   const [isShowDetails, setIsShowDetails] = React.useState(false)
-
+  const { offchain, rewards } = pool
+  console.log('offchain', offchain?.sponsor?.name)
   return (
     <Card onMouseEnter={()=>setIsShowDetails(!isShowDetails)} onMouseLeave={()=>setIsShowDetails(!isShowDetails)} className=''>
         <Header className='rounded-t-lg' hidden={isShowDetails}>
@@ -20,21 +23,21 @@ export const CardReward = ({banner, collectionImage }:CardRewardProps) => {
           <span>Sponsored by:</span>
           <div className='flex flex-row gap-1'>
             <img  className='rounded-full' src={collectionImage} width={24} height={24} />
-            <span className='text-sm'>Azuki</span>
+            <span className='text-sm'>{offchain?.sponsor?.name ?? 'Not defined'}</span>
           </div>
-          <div className='flex flex-row gap-1 justify-between'>
+          <div className='flex flex-row gap-2 justify-between'>
             <div>
               <span className='text-sm'>Stake</span>
               <div className='flex flex-row gap-1'>
                 <img  className='rounded-full' src={collectionImage} width={24} height={24} />
-                <span className='text-sm'>Ethereum</span>
+                <span className='text-sm'>{pool?.token?.symbol ?? pool.token?.name  ?? 'Ethereum'}</span>
               </div>
             </div>
             <div>
               <span className='text-sm'>Earn Fractions</span>
               <div className='flex flex-row gap-1'>
                 <img  className='rounded-full' src={collectionImage} width={24} height={24} />
-                <span className='text-sm'>Doodle#9648</span>
+                <span className='text-sm'>{rewards[0].token?.symbol ?? rewards[0].token?.name }</span>
               </div>
             </div>
           </div>
@@ -45,7 +48,7 @@ export const CardReward = ({banner, collectionImage }:CardRewardProps) => {
             </div>
             <div className='flex gap-1 justify-center items-center'>
               <AiOutlineUser/>
-              <span>356</span>
+              <span>{pool.userCount}</span>
             </div>
           </div>
         </Content>

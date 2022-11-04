@@ -264,7 +264,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
               <h3>[Release 12/2022] Integration with Nftfy RockPool</h3>
             </div>
           </Tabs.Content>
-          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
+          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid'>
             <div className='justify-right mt-14  dark:text-white'>
               <RewardsList />
             </div>
