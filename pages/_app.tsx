@@ -1,3 +1,5 @@
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
 import {
   darkTheme as rainbowKitDarkTheme, getDefaultWallets, lightTheme as rainbowKitLightTheme, RainbowKitProvider
 } from '@rainbow-me/rainbowkit'
@@ -42,6 +44,7 @@ import { publicProvider } from 'wagmi/providers/public'
 import presetColors from '../colors'
 
 
+config.autoAddCss = true
 // Select a custom ether.js interface for connecting to a network
 // Reference = https://wagmi-xyz.vercel.app/docs/provider#provider-optional
 // OPTIONAL

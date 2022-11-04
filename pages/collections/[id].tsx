@@ -29,6 +29,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiRefreshCcw } from 'react-icons/fi'
+import { RewardsList } from '../../src/components/reward/RewardsList'
 import SpecificPublicTable from '../../src/components/rockpool/SpecificPublicTable'
 
 // Environment variables
@@ -311,7 +312,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           </Tabs.Content>
           <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
             <div className='justify-right mt-14  dark:text-white'>
-              <h3>[Release 12/2022] Integration with Nftfy Rewards</h3>
+              <RewardsList />
             </div>
           </Tabs.Content>
         </Tabs.Root>
