@@ -1,3 +1,4 @@
+import { ApolloProvider } from '@apollo/client'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import {
@@ -42,6 +43,7 @@ import {
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import presetColors from '../colors'
+import { nftfyClient } from '../src/graphql/nftfy/Client'
 
 
 config.autoAddCss = true
@@ -180,23 +182,25 @@ const App: FC<AppProps & { baseUrl: string }> = ({
   }
 
   return (
-    <ReservoirKitProvider options={options} theme={reservoirKitTheme}>
-      <GlobalProvider>
-        <RecoilRoot>
-          <WagmiConfig client={wagmiClient}>
-            <RainbowKitProvider
-              chains={chains}
-              theme={rainbowKitTheme}
-              modalSize="compact"
-            >
-              <AnalyticsProvider>
-                <Component {...pageProps} />
-              </AnalyticsProvider>
-            </RainbowKitProvider>
-          </WagmiConfig>
-        </RecoilRoot>
-      </GlobalProvider>
-    </ReservoirKitProvider>
+    <ApolloProvider client={nftfyClient}>
+      <ReservoirKitProvider options={options} theme={reservoirKitTheme}>
+        <GlobalProvider >
+          <RecoilRoot>
+            <WagmiConfig client={wagmiClient}>
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
+              >
+                <AnalyticsProvider>
+                  <Component {...pageProps} />
+                </AnalyticsProvider>
+              </RainbowKitProvider>
+            </WagmiConfig>
+          </RecoilRoot>
+        </GlobalProvider>
+      </ReservoirKitProvider>
+    </ApolloProvider>
   )
 }
 
