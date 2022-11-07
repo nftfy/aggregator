@@ -5,6 +5,9 @@ const nextConfig = {
   reactStrictMode: true,
   api: {
     bodyParser: false
+  },
+  images: {
+    domains: ['images.ctfassets.net']
   }
 }
 

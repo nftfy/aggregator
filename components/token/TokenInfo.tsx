@@ -1,5 +1,5 @@
 import { truncateAddress } from 'lib/truncateText'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { FiExternalLink, FiRefreshCcw } from 'react-icons/fi'
 import { TokenDetails } from 'types/reservoir'
 import { setToast } from './setToast'
@@ -12,8 +12,6 @@ type Props = {
 
 const TokenInfo: FC<Props> = ({ token }) => {
   const [refreshLoading, setRefreshLoading] = useState(false)
-
-  // const token = details.data?.tokens?.[0]
 
   async function refreshToken(token: string | undefined) {
     function handleError(message?: string) {

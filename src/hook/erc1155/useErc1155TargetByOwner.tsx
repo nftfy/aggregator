@@ -6,11 +6,10 @@ import {
   ERC1155_TARGET_BY_OWNER_QUERY
 } from '@graphql/erc1155/Erc1155TargetByOwner'
 import { useEffect, useState } from 'react'
-import { globalConfig } from '../../GlobalConfig'
 import { notifyError } from '../../services/UtilService'
 
 export const useErc1155TargetByOwner = (chainId: number, contractAddress: string, ownerAddress: string) => {
-  const { paginationLimit } = globalConfig
+  const paginationLimit = 10
   const [offset, setOffset] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(true)
 

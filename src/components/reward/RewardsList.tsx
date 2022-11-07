@@ -1,13 +1,12 @@
 
-import banner from 'public/banner-example.png';
-import collection from 'public/collection-example.png';
 import styled from 'styled-components';
 import tx from 'tailwind-styled-components';
-import { CardReward } from './CardReward';
+import { RewardPools } from './reward-pools/RewardPools';
+
 
 export const RewardsList = () => {
   return (
-    <CardReward banner={banner.src} collectionImage={collection.src} />
+    <RewardPools chainId={5} />
   )
 }
 
