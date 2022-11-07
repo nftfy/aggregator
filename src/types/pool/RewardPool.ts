@@ -44,6 +44,7 @@ export type PoolType = 'ERC-721' | 'ERC-20' | 'ERC-1155' | 'native'
 export type FilterType = FilterEnum.closed | FilterEnum.open | FilterEnum.created
 
 export enum FilterEnum {
+  all = 'all',
   open = 'open',
   closed = 'closed',
   created = 'created'
@@ -61,6 +62,13 @@ export interface RewardPoolOffChain {
   stakeTokenImage?: string
   earnTokenImage?: string
   sponsor?: RewardPoolSponsor
+  description: string
+  discord?: string
+  twitter?: string
+  website?: string
+  telegram?: string
+  name: string
+  getMoreTokenUrl?: string
 }
 
 export interface RewardPool {

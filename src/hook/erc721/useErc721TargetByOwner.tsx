@@ -6,11 +6,10 @@ import {
   ERC721_TARGET_BY_OWNER_QUERY
 } from '@graphql/wallet/Erc721TargetByOwner'
 import { useEffect, useState } from 'react'
-import { globalConfig } from '../../GlobalConfig'
 import { notifyError } from '../../services/UtilService'
 
 export const useErc721TargetByOwner = (chainId: number, contractAddress: string, ownerAddress: string, limit?: number) => {
-  const { paginationLimit } = globalConfig
+  const paginationLimit = 10
   const [offset, setOffset] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(true)
 
