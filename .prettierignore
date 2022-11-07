@@ -1,11 +1,11 @@
 .next
 node_modules
 *.md
-components
 context
 hooks
 lib
 styles
+pages
 public
 recoil
 colors.js
