@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import LoadingIcon from '../../../components/LoadingIcon'
-import { useSpecificPublicItems } from '../../hook/useSpecificPulicItems'
+import { useSpecificPublicItems } from '../../hook/rockpool/useSpecificPulicItems'
 import { OrderDirection, SpecificPoolItemFilter, SpecificPoolItemOrderBy } from '../../models/rockpool/SpecificPoolsTypes'
 import { formatToLocaleString } from '../../services/UtilService'
 
