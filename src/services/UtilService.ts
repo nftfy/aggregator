@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import humanFormat from 'human-format'
+import { EthereumTestNetworks } from '../ChainConfig'
 
 export const formatToLocaleString = (
   value: string | number | BigNumber,
@@ -9,6 +10,8 @@ export const formatToLocaleString = (
 ) => {
   return new BigNumber(value).toNumber().toLocaleString('en-US', { maximumFractionDigits, minimumFractionDigits })
 }
+
+export const checkEthereumTestNet = (chainId: number): boolean => Object.values(EthereumTestNetworks).includes(chainId)
 
 export function toHumanFormat(value: number): string {
   if (value === 0 || Number.isNaN(value)) {

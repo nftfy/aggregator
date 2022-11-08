@@ -1,12 +1,12 @@
 import { useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { globalConfig } from '../config'
+import { globalConfig } from '../../config'
 import {
   SpecificPublicItemsData,
   SpecificPublicItemsVars,
   SPECIFIC_PUBLIC_ITEMS_QUERY
-} from '../graphql/nftfy/rockpool/SpecificPublicItemsQuery'
-import { RockpoolFilter } from '../models/rockpool/SpecificPoolsTypes'
+} from '../../graphql/nftfy/rockpool/SpecificPublicItemsQuery'
+import { RockpoolFilter } from '../../models/rockpool/SpecificPoolsTypes'
 
 export const useSpecificPublicItems = (chainId: number, filters: RockpoolFilter, filterByCollectionAddress: string) => {
   const [offset, setOffset] = useState<number>(0)
