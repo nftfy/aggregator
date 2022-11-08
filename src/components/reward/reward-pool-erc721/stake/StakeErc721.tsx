@@ -196,7 +196,7 @@ export function StakeErc721({
                       )}
                       {!!(!isLoadingStakedNfts && stakedTokenIdList.length) &&
                         stakedTokenIdList.map(stakedTokenId => (
-                          <Col span={24}>
+                          <Col span={24} key={`${stakedTokenId.id}#${stakedTokenId.tokenId}`}>
                             <ListItemNft
                               image={stakedNfts.find(item => item.tokenId === stakedTokenId.tokenId)?.metadata?.image}
                               token={pool.token}
@@ -246,7 +246,7 @@ export function StakeErc721({
                   {!isLoadingWalletNfts &&
                     walletNfts.length > 0 &&
                     walletNfts.map(item => (
-                      <Col span={24}>
+                      <Col span={24} key={`${item.address}#${item.tokenId}`}>
                         <ListItemNft
                           disabled={
                             !isApprovedForAll ||
@@ -296,7 +296,7 @@ export function StakeErc721({
           <InfiniteScroll next={loadMore} hasMore={false} loader={false} dataLength={selectedItems.length}>
             <Row gutter={[0, 8]}>
               {selectedItems.map(item => (
-                <Col span={24}>
+                <Col span={24} key={`${item.amount}#${item.tokenId}`}>
                   <CardTokenContainer gutter={0}>
                     <CardTokenImage
                       chainConfig={config}

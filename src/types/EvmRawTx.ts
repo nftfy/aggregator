@@ -5,3 +5,5 @@ export interface EvmRawTx {
   gasPrice: number
   gas: number
 }
+
+export type TransactionStatus = 'standby' | 'success' | 'reverted' | 'pending'
