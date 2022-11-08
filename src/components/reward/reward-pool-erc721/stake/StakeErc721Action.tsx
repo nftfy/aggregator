@@ -65,10 +65,10 @@ export function StakeERC721Action({
               chainId
             )
           }
-          onChangeNetwork={()=>console.log('mudarr aqui rede')}
+          onChangeNetwork={() => console.log('mudarr aqui rede')}
           currentChainId={walletChainId}
           accountAddress={account}
-          onConnectWallet={()=>console.log('connect wallet')}
+          onConnectWallet={() => console.log('connect wallet')}
           chainId={chainId}
           disabled={account?.length > 0 && (!selectedItems.length || !isApprovedForAll)}
           skipStateValidation={false}

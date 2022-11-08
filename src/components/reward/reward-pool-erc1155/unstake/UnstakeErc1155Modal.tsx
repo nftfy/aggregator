@@ -1,4 +1,3 @@
-
 import { Col, Divider, Row, Typography } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -8,7 +7,6 @@ import CardToken from '../../../shared/card-token/CardToken'
 import CardLoader from '../../../shared/card/CardLoader'
 import { Button, Modal } from '../../../shared/design-system'
 import { ListItemNft } from '../../../shared/ListItemNft'
-
 
 interface UnstakeNftModalProps {
   pool: RewardPool
@@ -98,10 +96,10 @@ export function UnstakeErc1155Modal({ pool, myRewards, visible, onClose, onConfi
               type='primary'
               shape='default'
               loading={isLoading}
-              onChangeNetwork={()=>console.log('change chainId')}
+              onChangeNetwork={() => console.log('change chainId')}
               currentChainId={walletChainId}
               accountAddress={walletAccount}
-              onConnectWallet={()=>console.log('connect wallet')}
+              onConnectWallet={() => console.log('connect wallet')}
               chainId={chainId}
               disabled={isDisabled}
               onClick={handleConfirm}

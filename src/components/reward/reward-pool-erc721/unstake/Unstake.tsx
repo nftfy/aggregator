@@ -1,5 +1,3 @@
-
-
 import { ModalConfirm } from '@components/shared/design-system'
 import { Web3Provider } from '@ethersproject/providers'
 import { useEffect, useState } from 'react'
@@ -7,7 +5,6 @@ import { useRewardPoolErc721Withdraw } from '../../../../hook/contracts/reward-p
 import { RewardPool } from '../../../../types/pool/RewardPool'
 import { SuccessfulUnstakeNft } from './SuccessfulUnstakeNft'
 import { SelectedNft, UnstakeErc721Modal } from './UnstakeErc721Modal'
-
 
 interface UnstakeProps {
   pool: RewardPool

@@ -1,10 +1,8 @@
-import { paths } from '@reservoir0x/reservoir-kit-client'
-import React, { FC, useContext } from 'react'
-import { SWRResponse } from 'swr'
-import { useSigner } from 'wagmi'
-import { GlobalContext } from 'context/GlobalState'
 import { BuyModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { useSwitchNetwork } from 'wagmi'
+import { GlobalContext } from 'context/GlobalState'
+import { FC, useContext } from 'react'
+import { SWRResponse } from 'swr'
+import { useSigner, useSwitchNetwork } from 'wagmi'
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
@@ -19,16 +17,10 @@ type Props = {
   mutate?: SWRResponse['mutate']
 }
 
-const BuyNow: FC<Props> = ({
-  data,
-  isInTheWrongNetwork,
-  signer,
-  buttonClassName = 'btn-primary-fill w-full',
-  mutate,
-}) => {
+const BuyNow: FC<Props> = ({ data, isInTheWrongNetwork, signer, buttonClassName = 'btn-primary-fill w-full', mutate }) => {
   const { dispatch } = useContext(GlobalContext)
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: CHAIN_ID ? +CHAIN_ID : undefined,
+    chainId: CHAIN_ID ? +CHAIN_ID : undefined
   })
 
   let forSale = false
@@ -45,9 +37,7 @@ const BuyNow: FC<Props> = ({
     const marketData = data.token.market
     tokenId = token?.tokenId
     collectionId = token?.collection?.id
-    forSale =
-      marketData?.floorAsk?.price?.amount != null &&
-      marketData?.floorAsk?.price?.amount != undefined
+    forSale = marketData?.floorAsk?.price?.amount != null && marketData?.floorAsk?.price?.amount != undefined
   }
 
   const trigger = <button className={buttonClassName}>Buy Now</button>

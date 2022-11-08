@@ -13,12 +13,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useErc1155Collection } from '@hook/erc1155/useErc1155Collection'
 import { useErc1155TargetByOwner } from '@hook/erc1155/useErc1155TargetByOwner'
 import { useErc1155TokenIdListItems } from '@hook/erc1155/useErc1155TokenIdListItems'
-import { TransactionStatus } from '@nftfyorg/wallet'
 import { toHumanFormat } from '@services/UtilService'
 import { Col, Divider, Empty, Row, Space, Typography } from 'antd'
 import { ReactNode, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components'
+import { TransactionStatus } from '../../../../types/EvmRawTx'
 
 const { Text } = Typography
 
@@ -175,7 +175,7 @@ export function StakeERC1155({
                   {!isLoadingListNfts &&
                     listMyNftsByCollection.length > 0 &&
                     listMyNftsByCollection.map(item => (
-                      <Col span={24}>
+                      <Col span={24} key={`${item.address}#${item.tokenId}`}>
                         <ListItemNft
                           disabled={!isApprovedForAll}
                           onChange={(tokenId, amount) => onSelectItem(tokenId, String(amount), item.metadata?.image || '')}
@@ -224,7 +224,7 @@ export function StakeERC1155({
           <InfiniteScroll next={loadMore} hasMore={false} loader={false} dataLength={selectedItems.length}>
             <Row gutter={[0, 8]}>
               {selectedItems.map(item => (
-                <Col span={24}>
+                <Col span={24} key={`${item.amount}#${item.tokenId}`}>
                   <CardToken
                     gutter={0}
                     title='My Stake'

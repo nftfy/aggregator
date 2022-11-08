@@ -11,8 +11,9 @@ import { Card as AntCard, Col, Row } from 'antd'
 import debounce from 'lodash.debounce'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import styled from 'styled-components'
+import { useAccount } from 'wagmi'
 import { CardCover } from './CardCover'
 
 export type Token = {
@@ -39,19 +40,12 @@ export interface CardProps {
 
 export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, children, chainId, walletChainId, accountAddress }: CardProps) {
   const router = useRouter()
+  const account = useAccount()
   const remainingTime = useRemainingTime({ ...pool?.rewards[0]?.expirationInfo })
-
   const [isCardHover, setIsCardHover] = useState(false)
 
-  const isWalletAvailable = useMemo(() => {
-    const isRightChain = chainId === walletChainId
-    const isConnected = !!accountAddress
-
-    return isRightChain && isConnected
-  }, [chainId, walletChainId, accountAddress])
-
   const handleOnMouseOver = debounce(() => {
-    if (!isWalletAvailable) {
+    if (account?.isDisconnected) {
       return
     }
 
@@ -104,8 +98,8 @@ export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, chil
               chainId={chainId}
               currentChainId={walletChainId}
               accountAddress={accountAddress}
-              onConnectWallet={()=>console.log('coonect wallet')}
-              onChangeNetwork={()=>console.log('network')}
+              onConnectWallet={() => console.log('coonect wallet')}
+              onChangeNetwork={() => console.log('network')}
               skipStateValidation={false}
             >
               Details
@@ -118,7 +112,7 @@ export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, chil
             <ProgramDetailsParticipants count={pool?.userCount} />
           </Row>
         </Col>
-        {isWalletAvailable && (
+        {account?.isConnected && (
           <Col span={24}>
             {typeof children === 'function'
               ? children({
