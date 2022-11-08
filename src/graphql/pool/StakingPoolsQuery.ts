@@ -7,6 +7,8 @@ export interface StakingPoolsVars {
   limit: number
   offset: number
   filterBy: FilterType | string
+  tokenList?: string[]
+  stakedOnly?: boolean
 }
 
 export interface StakingPoolsData {
@@ -14,8 +16,24 @@ export interface StakingPoolsData {
 }
 
 export const STAKING_POOLS_QUERY = gql`
-  query StakingPools($chainId: Int!, $limit: Int!, $offset: Int!, $accountAddress: String, $filterBy: String!) {
-    stakingPools(chainId: $chainId, limit: $limit, offset: $offset, accountAddress: $accountAddress, filterBy: $filterBy) {
+  query StakingPools(
+    $chainId: Int!
+    $limit: Int!
+    $offset: Int!
+    $accountAddress: String
+    $filterBy: String!
+    $tokenList: [String!]
+    $stakedOnly: Boolean
+  ) {
+    stakingPools(
+      chainId: $chainId
+      limit: $limit
+      offset: $offset
+      accountAddress: $accountAddress
+      filterBy: $filterBy
+      tokenList: $tokenList
+      stakedOnly: $stakedOnly
+    ) {
       id
       address
       userCount
