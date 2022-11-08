@@ -12,7 +12,6 @@ import { chainConfig } from '../../../../ChainConfig'
 import { useErc721TokenIdListItems } from '../../../../hook/erc721/useErc721TokenIdListItems'
 import { SelectedNft } from './UnstakeErc721Modal'
 
-
 interface SuccessfulUnstakeNftProps {
   pool: RewardPool
   unstakedItems: SelectedNft[]

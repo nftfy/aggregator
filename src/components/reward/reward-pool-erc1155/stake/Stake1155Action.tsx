@@ -56,10 +56,10 @@ export function StakeERC1155Action({
           type='primary'
           shape='default'
           loading={isLoadingStakeErc1155}
-          onChangeNetwork={()=>console.log('change network')}
+          onChangeNetwork={() => console.log('change network')}
           currentChainId={walletChainId}
           accountAddress={account}
-          onConnectWallet={()=>console.log('connect wallet')}
+          onConnectWallet={() => console.log('connect wallet')}
           chainId={chainId}
           skipStateValidation={false}
           disabled={account?.length > 0 && (!selectedItems.length || !isApprovedForAll)}

@@ -12,8 +12,6 @@ import { Harvest } from './harvest/Harvest'
 import { StakeModal } from './stake/StakeModal'
 import { Unstake } from './unstake/Unstake'
 
-
-
 interface RewardPoolERC721CardProps {
   pool: RewardPool
   chainId: number

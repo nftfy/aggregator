@@ -12,7 +12,6 @@ import CardTokenContainer from '../../../shared/card-token/CardTokenContainer'
 import CardTokenImage from '../../../shared/card-token/CardTokenImage'
 import { SelectedNft } from './UnstakeErc1155Modal'
 
-
 interface SuccessfulUnstakeNftProps {
   pool: RewardPool
   unstakedItems: SelectedNft[]
