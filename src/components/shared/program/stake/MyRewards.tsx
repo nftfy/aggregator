@@ -3,6 +3,7 @@ import { Button, Col, Row, Space, Typography } from 'antd'
 import BigNumber from 'bignumber.js'
 
 interface ProgramStakeMyRewardsProps {
+  loading: boolean
   symbol?: string
   amount?: string
   onHarvest(): void
@@ -10,7 +11,7 @@ interface ProgramStakeMyRewardsProps {
 
 const { Text, Title } = Typography
 
-export function ProgramStakeMyRewards({ onHarvest, amount, symbol }: ProgramStakeMyRewardsProps) {
+export function ProgramStakeMyRewards({ loading, onHarvest, amount, symbol }: ProgramStakeMyRewardsProps) {
   const amountBigNumber = new BigNumber(amount ?? 0)
   const hasRewards = amountBigNumber.isGreaterThanOrEqualTo('0.00001')
   const formattedAmount = toHumanFormat(amountBigNumber.toNumber())
@@ -26,7 +27,7 @@ export function ProgramStakeMyRewards({ onHarvest, amount, symbol }: ProgramStak
             <Title level={5}>{formattedAmount}</Title>
             <Text type='secondary'>{symbol}</Text>
           </Space>
-          <Button disabled={!hasRewards} onClick={onHarvest}>
+          <Button disabled={!hasRewards} onClick={onHarvest} loading={loading}>
             Harvest
           </Button>
         </Row>

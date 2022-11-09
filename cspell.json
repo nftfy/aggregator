@@ -24,6 +24,7 @@
     "nftfyorg",
     "offchain",
     "rockpool",
-    "unstake"
+    "unstake",
+    "wagmi"
   ]
 }

@@ -1,26 +1,29 @@
-import { Web3Provider } from '@ethersproject/providers'
+import { useEffect, useState } from 'react'
+import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
+import { rewardPoolErc721Abi } from '../../../contracts/reward-pool-erc721/RewardPoolErc721Abi'
 
-import { useState } from 'react'
-import { rewardPoolErc721Contract } from '../../../contracts/reward-pool-erc721/RewardPoolErc721Contract'
-
-export const useRewardPoolErc721Deposit = () => {
-  const [isExecuting, setIsExecuting] = useState(false)
-
-  const deposit = async (poolAddress: string, tokenIdList: string[], signerProvider: Web3Provider, chainId: number) => {
-    setIsExecuting(true)
-    const tx = await rewardPoolErc721Contract(signerProvider).deposit(poolAddress, tokenIdList)
-
-    setIsExecuting(false)
-
-    if (!tx) {
-      return
+export const useRewardPoolErc721Deposit = (poolAddress: string) => {
+  const [collectionList, setCollectionList] = useState<string[]>([])
+  const { config } = usePrepareContractWrite({
+    addressOrName: poolAddress,
+    contractInterface: rewardPoolErc721Abi,
+    functionName: 'deposit',
+    args: [collectionList, true]
+  })
+  const { sendTransaction, isLoading, isSuccess } = useSendTransaction(config)
+  useEffect(() => {
+    if (sendTransaction) {
+      sendTransaction()
     }
+  }, [collectionList, sendTransaction])
+
+  const deposit = async (tokenIdList: string[]) => {
+    setCollectionList(tokenIdList)
   }
 
   return {
-    status: true,
-    isLoading: isExecuting,
-    deposit,
-    dismiss: () => {}
+    status: isSuccess,
+    isLoading: isLoading,
+    deposit
   }
 }

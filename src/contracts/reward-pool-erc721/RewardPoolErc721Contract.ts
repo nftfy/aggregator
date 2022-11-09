@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { ethers } from 'ethers'
 import { getGasLimit, getGasPrice, notifyError } from '../../services/UtilService'
 import { rewardPoolErc721Abi } from './RewardPoolErc721Abi'
@@ -11,7 +12,7 @@ interface RewardPoolContractErc721 {
   exit(poolAddress: string, tokenIds: string[]): Promise<string | undefined>
 }
 
-export const rewardPoolErc721Contract = (signerProvider: ethers.providers.Web3Provider): RewardPoolContractErc721 => {
+export const rewardPoolErc721Contract = (signerProvider: JsonRpcProvider): RewardPoolContractErc721 => {
   return {
     async addRewardToken(poolAddress: string, rewardToken: string): Promise<string | undefined> {
       try {
