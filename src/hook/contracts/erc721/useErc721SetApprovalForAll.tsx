@@ -1,26 +1,19 @@
-import { Web3Provider } from '@ethersproject/providers'
+import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
+import { erc721Abi } from '../../../contracts/erc721/Erc721Abi'
 
-import { useState } from 'react'
-import { erc721Contract } from '../../../contracts/erc721/Erc721Contract'
+export const useErc721SetApprovalForAll = (contractAddress: string, spenderAddress: string) => {
+  const { config } = usePrepareContractWrite({
+    addressOrName: contractAddress,
+    contractInterface: erc721Abi,
+    functionName: 'setApprovalForAll',
+    args: [spenderAddress, true]
+  })
 
-export const useErc721SetApprovalForAll = () => {
-  const [isExecuting, setIsExecuting] = useState(false)
-
-  const setApprovalForAll = async (signerProvider: Web3Provider, contractAddress: string, spenderAddress: string) => {
-    setIsExecuting(true)
-    const tx = await erc721Contract(signerProvider).setApprovalForAll(contractAddress, spenderAddress, true)
-
-    setIsExecuting(false)
-
-    if (!tx) {
-      return
-    }
-  }
+  const { sendTransaction, isLoading, isSuccess } = useSendTransaction(config)
 
   return {
-    isLoading: isExecuting,
-    setApprovalForAll,
-    dismiss: () => {},
-    status
+    isLoading: isLoading,
+    setApprovalForAll: sendTransaction,
+    status: isSuccess
   }
 }

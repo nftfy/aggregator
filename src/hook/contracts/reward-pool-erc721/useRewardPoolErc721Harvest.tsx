@@ -1,24 +1,24 @@
-import { Web3Provider } from '@ethersproject/providers'
+import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
+import { rewardPoolErc721Abi } from '../../../contracts/reward-pool-erc721/RewardPoolErc721Abi'
 
-import { useState } from 'react'
-import { rewardPoolErc721Contract } from '../../../contracts/reward-pool-erc721/RewardPoolErc721Contract'
+export const useRewardPoolErc721Harvest = (poolAddress: string, rewardToken: string) => {
+  const { config } = usePrepareContractWrite({
+    addressOrName: poolAddress,
+    contractInterface: rewardPoolErc721Abi,
+    functionName: 'harvest',
+    args: [rewardToken]
+  })
 
-export const useRewardPoolErc721Harvest = () => {
-  const [isExecuting, setIsExecuting] = useState(false)
+  const { sendTransaction, isLoading, isSuccess } = useSendTransaction(config)
 
-  const getHarvest = async (signerProvider: Web3Provider, poolAddress: string, rewardToken: string, chainId: number) => {
-    setIsExecuting(true)
-    const tx = await rewardPoolErc721Contract(signerProvider).harvest(poolAddress, rewardToken)
-    setIsExecuting(false)
-
-    if (!tx) {
-      return
+  const getHarvest = async () => {
+    if (sendTransaction) {
+      sendTransaction()
     }
   }
   return {
-    loading: isExecuting,
+    loading: isLoading,
     getHarvest,
-    dismiss: () => {},
-    status: true
+    status: isSuccess
   }
 }

@@ -3,7 +3,6 @@ import { Reward } from '@appTypes/pool/RewardPool'
 import { CardToken } from '@components/shared/card-token/CardToken'
 import { ModalConfirm } from '@components/shared/design-system'
 import { ProgramStakeMyRewards } from '@components/shared/program/stake/MyRewards'
-import { Web3Provider } from '@ethersproject/providers'
 import { useRewardPoolErc721Harvest } from '@hook/contracts/reward-pool-erc721/useRewardPoolErc721Harvest'
 import { useEffect, useState } from 'react'
 
@@ -12,44 +11,34 @@ interface HarvestProps {
   stakeToken: HarvestStakeToken
   rewardToken: Reward
   reward?: string
-  signerProvider: Web3Provider
   chainId: number
   tokenImageReward: string
   refetch: () => void
 }
 
-export function Harvest({
-  poolAddress,
-  stakeToken,
-  rewardToken,
-  reward,
-  signerProvider,
-  refetch,
-  chainId,
-  tokenImageReward
-}: HarvestProps) {
+export function Harvest({ poolAddress, stakeToken, rewardToken, reward, refetch, chainId, tokenImageReward }: HarvestProps) {
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const { loading, getHarvest, status, dismiss } = useRewardPoolErc721Harvest()
+  const { loading, getHarvest, status } = useRewardPoolErc721Harvest(poolAddress, rewardToken.token.id)
 
   const handleConfirmed = () => {
     refetch()
     setIsConfirmed(false)
   }
 
-  const handleOnHarvest = () => {
-    getHarvest(signerProvider, poolAddress, rewardToken.token.id, chainId)
-  }
-
   useEffect(() => {
-    if (!loading && status === 'success') {
+    if (!loading && status) {
       setIsConfirmed(true)
-      dismiss()
     }
-  }, [status, reward, stakeToken, rewardToken, loading, dismiss])
+  }, [status, reward, stakeToken, rewardToken, loading])
 
   return (
     <>
-      <ProgramStakeMyRewards symbol={rewardToken.token.symbol || rewardToken.token.name} amount={reward} onHarvest={handleOnHarvest} />
+      <ProgramStakeMyRewards
+        symbol={rewardToken.token.symbol || rewardToken.token.name}
+        amount={reward}
+        onHarvest={getHarvest}
+        loading={loading}
+      />
       <ModalConfirm type='success' title='Harvest confirmed' visible={isConfirmed} onCancel={handleConfirmed} onOk={handleConfirmed}>
         <CardToken
           title='Earned'

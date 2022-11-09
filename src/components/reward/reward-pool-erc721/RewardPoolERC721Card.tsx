@@ -2,7 +2,7 @@ import { HarvestStakeToken } from '@appTypes/pool/Harvest'
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Card } from '@components/shared/card/Card'
 import { ProgramStakeMyStake } from '@components/shared/program/stake/MyStake'
-import { Web3Provider } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { useMyRewards } from '@hook/shared/useMyRewards'
 import { toHumanFormat } from '@services/UtilService'
 import { Col, Divider, Row } from 'antd'
@@ -18,7 +18,7 @@ interface RewardPoolERC721CardProps {
   loading: boolean
   accountAddress: string
   walletChainId: number | null
-  signerProvider: Web3Provider | null
+  signerProvider: JsonRpcProvider | null
   refetchStakingPoolList: () => void
 }
 
@@ -125,14 +125,13 @@ export function RewardPoolERC721Card({
                   poolAddress={pool.address}
                   reward={myRewards.reward}
                   refetch={myRewards.refetch}
-                  signerProvider={signerProvider}
                   chainId={chainId}
                   tokenImageReward={pool.offchain?.earnTokenImage || ''}
                 />
               </Col>
             )}
           </Row>
-          {isUnstaking && accountAddress && signerProvider && (
+          {isUnstaking && accountAddress && (
             <Unstake
               account={accountAddress}
               pool={pool}
@@ -142,7 +141,7 @@ export function RewardPoolERC721Card({
               signerProvider={signerProvider}
             />
           )}
-          {pool.token?.id && isStaking && signerProvider && accountAddress && (
+          {pool.token?.id && isStaking && accountAddress && (
             <StakeModal
               visible={isStaking}
               onClose={() => setIsStaking(false)}
@@ -150,7 +149,6 @@ export function RewardPoolERC721Card({
               chainIdPage={chainId}
               onConfirm={handleConfirmStake}
               account={accountAddress}
-              signerProvider={signerProvider}
               stakeTokenImage={pool.offchain?.stakeTokenImage}
             />
           )}
