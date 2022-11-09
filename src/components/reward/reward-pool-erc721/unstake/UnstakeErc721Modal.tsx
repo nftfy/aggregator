@@ -9,7 +9,6 @@ import CardToken from '../../../shared/card-token/CardToken'
 import { Button, Modal } from '../../../shared/design-system'
 import { ListItemNft } from '../../../shared/ListItemNft'
 
-
 interface UnstakeNftModalProps {
   pool: RewardPool
   account: string

@@ -29,7 +29,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiRefreshCcw } from 'react-icons/fi'
-import { RewardsList } from '../../src/components/reward/RewardsList'
+import { RewardPools } from '../../src/components/reward/reward-pools/RewardPools'
 import SpecificPublicTable from '../../src/components/rockpool/SpecificPublicTable'
 
 // Environment variables
@@ -312,7 +312,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           </Tabs.Content>
           <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
             <div className='justify-right mt-14  dark:text-white'>
-              <RewardsList />
+              {id && <RewardPools chainId={5} collectionAddress={id} />} 
             </div>
           </Tabs.Content>
         </Tabs.Root>
@@ -431,7 +431,7 @@ export const getStaticProps: GetStaticProps<{
   const tokensRes = await fetch(tokensUrl.href, options)
 
   const tokens = (await tokensRes.json()) as Props['fallback']['tokens']
-
+  console.log('id', id)
   return {
     props: { fallback: { collection, tokens }, id },
     revalidate: 20,

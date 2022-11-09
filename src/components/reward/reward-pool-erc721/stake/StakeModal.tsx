@@ -1,5 +1,4 @@
 import { RewardPool } from '@appTypes/pool/RewardPool'
-import { Web3Provider } from '@ethersproject/providers'
 
 import { useState } from 'react'
 import { useErc721IsApprovedForAll } from '../../../../hook/contracts/erc721/useErc721IsApprovedForAll'
@@ -14,7 +13,6 @@ import { StakeERC721Action } from './StakeErc721Action'
 interface StakeErc721Props {
   pool: RewardPool
   chainIdPage: number
-  signerProvider: Web3Provider
   stakeTokenImage?: string
   account: string
   visible: boolean
@@ -22,20 +20,24 @@ interface StakeErc721Props {
   onClose?: () => void
 }
 
-export function StakeModal({ pool, account, chainIdPage, signerProvider, stakeTokenImage, visible, onConfirm, onClose }: StakeErc721Props) {
+export function StakeModal({ pool, account, chainIdPage, stakeTokenImage, visible, onConfirm, onClose }: StakeErc721Props) {
   const [selectedItems, setSelectedItems] = useState<SelectedNftStake[]>([])
 
   const walletChainId = 5
 
-  const { isLoading: isApprovingUnlock, setApprovalForAll, status: unlockStatus } = useErc721SetApprovalForAll()
+  const { isLoading: isApprovingUnlock, setApprovalForAll, status: unlockStatus } = useErc721SetApprovalForAll(pool.token.id, pool.address)
   const {
     refetch: refetchUnlock,
     isApprovedForAll,
     isLoading: isCheckingUnlock
   } = useErc721IsApprovedForAll(pool.token.id, account, pool.address, chainIdPage)
 
-  const { isLoading: isStaking, status: stakeStatus, deposit: depositStake } = useRewardPoolErc721Deposit()
-
+  const { isLoading: isStaking, status: stakeStatus, deposit: depositStake } = useRewardPoolErc721Deposit(pool.token.id)
+  const handleSetApprovalForAll = () => {
+    if (setApprovalForAll) {
+      setApprovalForAll()
+    }
+  }
   return (
     <Modal
       title={pool.hasStake ? 'Add more stake' : 'Stake'}
@@ -47,9 +49,8 @@ export function StakeModal({ pool, account, chainIdPage, signerProvider, stakeTo
           pool={pool}
           account={account}
           chainId={chainIdPage}
-          signerProvider={signerProvider}
           isApprovingUnlock={isApprovingUnlock}
-          setApprovalForAll={setApprovalForAll}
+          setApprovalForAll={handleSetApprovalForAll}
           isApprovedForAll={isApprovedForAll}
           isCheckingUnlock={isCheckingUnlock}
           walletChainId={walletChainId}

@@ -2,7 +2,6 @@ import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
 
 import { useState } from 'react'
 
-
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Modal } from '@components/shared/design-system'
 import { Web3Provider } from '@ethersproject/providers'
