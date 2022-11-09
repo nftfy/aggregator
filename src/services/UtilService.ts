@@ -68,3 +68,23 @@ export function notifyError(error: unknown, message: string, silent?: boolean) {
     // Toast.error(message)
   }
 }
+
+export function formatDecimals(value: string, decimals: number) {
+  const og = 10 ** decimals
+  return Math.trunc(Number(value) * og) / og
+}
+
+export function cryptoInputValidForm(value: string) {
+  let updatedValue = value
+
+  if (updatedValue[0] === '.') {
+    updatedValue = `0${value}`
+  }
+
+  if (updatedValue.length > 0 && updatedValue[updatedValue.length - 1] === '.' && updatedValue.slice(0, -1).includes('.')) {
+    updatedValue = updatedValue.slice(0, -1)
+  }
+
+  updatedValue = updatedValue.replace(/[^0-9.]/g, '')
+  return updatedValue
+}

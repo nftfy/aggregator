@@ -1,10 +1,9 @@
 import { LinkOutlined } from '@ant-design/icons'
+import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { Card, Col, Row, Typography } from 'antd'
 import styled from 'styled-components'
 import { chainConfig } from '../../../ChainConfig'
-import { useCollectionDetails } from '../../../hook/rockpool/useCollectionDetails'
 import { Collection } from '../../../models/rockpool/Collection'
-import { TokenTypeEnum } from '../../../models/TokenTypeEnum'
 import { TokenImage } from '../../shared/TokenImage'
 
 export interface CollectionInfoProps {
@@ -27,7 +26,8 @@ export default function CollectionInfo({
   const { Text } = Typography
   const { openSeaUrl, name } = chainConfig(chainId)
 
-  const { data: collectionInfo } = useCollectionDetails(chainId, collection.id, TokenTypeEnum.erc721)
+  const collectionData = useCollections({ id: collection.id })
+  const collectionInfo = collectionData.data && collectionData.data[0] ? collectionData.data[0] : undefined
 
   return (
     <Row gutter={[0, 20]}>
@@ -43,7 +43,7 @@ export default function CollectionInfo({
               target='_blank'
               rel='noreferrer'
             >
-              <TokenImage address={collection.id} shape='square' diameter={48} />
+              <TokenImage src={collectionInfo?.image} address={collection.id} shape='square' diameter={48} />
             </a>
             <div>
               <Text strong>Collection</Text>
