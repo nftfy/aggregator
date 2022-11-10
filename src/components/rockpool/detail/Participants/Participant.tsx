@@ -1,7 +1,7 @@
 import { LinkOutlined } from '@ant-design/icons'
 import { List, Typography } from 'antd'
 import { chainConfig } from '../../../../ChainConfig'
-import { formatToLocaleString } from '../../../../services/UtilService'
+import { formatShortAccountName, formatToLocaleString } from '../../../../services/UtilService'
 import { TokenImage } from '../../../shared/TokenImage'
 
 interface ParticipantProps {
@@ -13,9 +13,6 @@ interface ParticipantProps {
 export default function Participant({ chainId, buyer, amount }: ParticipantProps) {
   const config = chainConfig(chainId)
   const { Text } = Typography
-  function formatShortAccountName(buyer: string): import('react').ReactNode {
-    throw new Error('Function not implemented.')
-  }
 
   return (
     <List.Item

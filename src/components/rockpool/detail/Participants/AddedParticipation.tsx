@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import ConnectWalletButton from '../../../../../components/ConnectWalletButton'
 import { chainConfig } from '../../../../ChainConfig'
+import useSpecificJoinPool from '../../../../hook/rockpool/specific/useSpecificJoinPool'
 import { RockpoolStatus, SpecificPoolItem } from '../../../../models/rockpool/SpecificPoolsTypes'
 import { cryptoInputValidForm, formatToLocaleString } from '../../../../services/UtilService'
 
@@ -30,7 +31,6 @@ export default function AddedParticipants({
   userParticipation,
   specificPublicItem,
   refetchData,
-  signerProvider,
   walletAddress,
   losePool,
   winningPool
@@ -38,6 +38,7 @@ export default function AddedParticipants({
   const [depositAmount, setDepositAmount] = useState('0')
   const [maxJoinValue, setMaxJoinValue] = useState<string>('0')
   const [canJoin, setCanJoin] = useState<boolean>(false)
+  console.log('can', canJoin)
   const walletChainId = 5 // TODO get reservo library info
 
   const isPoolInicialized = !new BigNumber(specificPublicItem.amount).gt('0')
@@ -65,14 +66,13 @@ export default function AddedParticipants({
     )
   }, [maxJoinValue, depositAmount, walletAddress])
 
-  // const { handleJoin, isExecutin: loadingJoin } = useSpecificJoinPool(
-  //   chainId,
-  //   walletAddress || '',
-  //   signerProvider,
-  //   specificPublicItem,
-  //   depositAmount,
-  //   refetchData
-  // )
+  const { handleJoin, isExecutin: loadingJoin } = useSpecificJoinPool(
+    chainId,
+    walletAddress || '',
+    specificPublicItem,
+    depositAmount,
+    refetchData
+  )
 
   // const { handleLeave, isExecutin: loadingLeave } = useSpecificLeavePool(
   //   chainId,
@@ -155,10 +155,9 @@ export default function AddedParticipants({
                 <div>buy NFT</div>
               )}
               {!poolIsCompleted && !losePool && walletAddress && (
-                // <Button type='primary' block onClick={handleJoin} loading={loadingJoin} disabled={canJoin}>
-                //   {isPoolInicialized ? 'Start Pool' : 'Deposit Amount'}
-                // </Button>
-                <div>deposit</div>
+                <Button type='primary' block onClick={handleJoin} loading={loadingJoin} disabled={canJoin}>
+                  {isPoolInicialized ? 'Start Pool' : 'Deposit Amount'}
+                </Button>
               )}
               {new BigNumber(userParticipation || '0').gt('0') && (
                 // <Button

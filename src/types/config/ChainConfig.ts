@@ -11,6 +11,7 @@ interface SpecificConfig {
     externalAcquirer: string
     openCollectivePurchase: string
   }
+  subgraph: string
 }
 export interface AssetERC20 {
   name: string
