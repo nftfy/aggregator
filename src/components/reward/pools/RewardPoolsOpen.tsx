@@ -3,8 +3,8 @@ import CardGrid from '@components/shared/card/CardGrid'
 import CardLoader from '@components/shared/card/CardLoader'
 import { Empty } from '@components/shared/Empty'
 import { useAccount } from 'wagmi'
-import { RewardPoolERC1155Card } from '../reward-pool-erc1155/RewardPoolERC1155Card'
-import { RewardPoolERC721Card } from '../reward-pool-erc721/RewardPoolERC721Card'
+import { RewardPoolERC1155Card } from '../pool-erc1155/RewardPoolERC1155Card'
+import { RewardPoolERC721Card } from '../pool-erc721/RewardPoolERC721Card'
 
 interface RewardPoolsOpenProps {
   chainId: number
