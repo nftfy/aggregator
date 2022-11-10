@@ -52,10 +52,10 @@ export default function useClaimFractions(
         duration: 5
       })
     }
-  }, [status, dismiss, refetchData, notificationSuccessAddFounds])
+  }, [status, refetchData, notificationSuccessAddFounds])
 
   return {
     handleClaimFractions,
-    isExecutin: isExecution
+    isExecution
   }
 }
