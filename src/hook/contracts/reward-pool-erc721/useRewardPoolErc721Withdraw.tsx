@@ -1,24 +1,28 @@
-import { Web3Provider } from '@ethersproject/providers'
 import { useState } from 'react'
-import { rewardPoolErc721Contract } from '../../../contracts/reward-pool-erc721/RewardPoolErc721Contract'
+import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
+import { rewardPoolErc721Abi } from '../../../contracts/reward-pool-erc721/RewardPoolErc721Abi'
+import { useObserverTransaction } from '../useObserveTransaction'
 
-export const useRewardPoolErc721Withdraw = () => {
-  const [isExecuting, setIsExecuting] = useState(false)
+export const useRewardPoolErc721Withdraw = (poolAddress: string, tokenIdList: string[]) => {
+  const [processing, setProcessing] = useState(false)
 
-  const withdraw = async (poolAddress: string, tokenIdList: string[], signerProvider: Web3Provider, chainId: number) => {
-    setIsExecuting(true)
-    const tx = await rewardPoolErc721Contract(signerProvider).withdraw(poolAddress, tokenIdList)
-    setIsExecuting(false)
-
-    if (!tx) {
-      return
+  const { config } = usePrepareContractWrite({
+    addressOrName: poolAddress,
+    contractInterface: rewardPoolErc721Abi,
+    functionName: 'withdraw',
+    args: [tokenIdList, true]
+  })
+  const { data, sendTransaction, isLoading, isSuccess } = useSendTransaction(config)
+  const { isLoading: loading } = useObserverTransaction(data, isSuccess, () => setProcessing(false))
+  const withdraw = async () => {
+    if (sendTransaction) {
+      setProcessing(true)
+      sendTransaction()
     }
   }
-
   return {
-    status: true,
-    isLoading: isExecuting,
-    withdraw,
-    dismiss: () => {}
+    status: isSuccess && !loading && !processing,
+    isLoading: isLoading || loading,
+    withdraw
   }
 }

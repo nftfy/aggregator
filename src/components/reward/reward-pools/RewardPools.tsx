@@ -4,7 +4,7 @@ import { isManagePoolConfirmedVar, selectedMenuItemsVar, stakedOnlyVar } from '@
 import { useStakingPools } from '@hook/shared/useStakingPools'
 import { Col, Layout, Row } from 'antd'
 import { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 import useMounted from '../../../../hooks/useMounted'
 import { RewardPoolsOpen } from './RewardPoolsOpen'
 
@@ -31,7 +31,7 @@ export function RewardPools({ chainId, collectionAddress }: RewardPoolsProps) {
     [collectionAddress],
     stakedOnly
   )
-
+  const { chain } = useNetwork()
   useEffect(() => {
     if (isManagePoolConfirmed) {
       refetch()
@@ -66,7 +66,7 @@ export function RewardPools({ chainId, collectionAddress }: RewardPoolsProps) {
             <Row gutter={[12, 24]}>
               <Col span={24}>
                 <RewardPoolsOpen
-                  chainId={chainId}
+                  chainId={chain?.id ?? chainId}
                   stakingPools={stakingPools}
                   loading={loading}
                   loadMore={loadMore}

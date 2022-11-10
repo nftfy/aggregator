@@ -1,7 +1,5 @@
 import { ModalConfirm } from '@components/shared/design-system'
-import { Web3Provider } from '@ethersproject/providers'
-import { useEffect, useState } from 'react'
-import { useRewardPoolErc721Withdraw } from '../../../../hook/contracts/reward-pool-erc721/useRewardPoolErc721Withdraw'
+import { useState } from 'react'
 import { RewardPool } from '../../../../types/pool/RewardPool'
 import { SuccessfulUnstakeNft } from './SuccessfulUnstakeNft'
 import { SelectedNft, UnstakeErc721Modal } from './UnstakeErc721Modal'
@@ -10,56 +8,33 @@ interface UnstakeProps {
   pool: RewardPool
   account: string
   chainId: number
-  signerProvider: Web3Provider
   myRewards: string
   onConfirm: (pool: RewardPool) => void
 }
 
-export function Unstake({ pool, chainId, onConfirm, myRewards, signerProvider, account }: UnstakeProps) {
+export function Unstake({ pool, chainId, onConfirm, myRewards, account }: UnstakeProps) {
   const [isUnstaking, setIsUnstaking] = useState(true)
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const [isFinished, setIsFinished] = useState(false)
   const [unstakedNfts, setUnstakedNfts] = useState<SelectedNft[]>([])
   const [rewardsEarned, setRewardsEarned] = useState<string>('0')
 
-  const { withdraw, status: withdrawStatus, isLoading: isWithdrawing, dismiss: dismissWithdraw } = useRewardPoolErc721Withdraw()
-
-  const handleUnstakeErc721 = async (selectedItems: SelectedNft[]) => {
-    const tokenIdList = selectedItems.map(item => item.tokenId)
-    setRewardsEarned(myRewards)
-
-    withdraw(pool.address, tokenIdList, signerProvider, chainId)
+  const handleUnstakeErc721 = async (selectedItems: SelectedNft[], isConfirmed: boolean, rewardsEarned: string) => {
     setUnstakedNfts(selectedItems)
+    setIsConfirmed(isConfirmed)
+    setRewardsEarned(rewardsEarned)
   }
 
   const handleConfirm = async () => {
-    setIsFinished(true)
+    setIsUnstaking(false)
+    setIsConfirmed(false)
+    onConfirm(pool)
   }
 
   const handleCancel = async () => {
-    setIsFinished(true)
+    setIsUnstaking(false)
+    setIsConfirmed(false)
+    onConfirm(pool)
   }
-
-  useEffect(() => {
-    if (withdrawStatus === 'success') {
-      setIsUnstaking(false)
-      setIsConfirmed(true)
-    } else if (withdrawStatus === 'reverted') {
-      setIsFinished(true)
-      setUnstakedNfts([])
-    }
-  }, [withdrawStatus])
-
-  useEffect(() => {
-    if (isFinished) {
-      setIsUnstaking(false)
-      setIsConfirmed(false)
-      setUnstakedNfts([])
-      dismissWithdraw()
-      onConfirm(pool)
-    }
-  }, [onConfirm, isFinished, pool, dismissWithdraw])
-
   return (
     <>
       {isUnstaking && (
@@ -68,10 +43,9 @@ export function Unstake({ pool, chainId, onConfirm, myRewards, signerProvider, a
           pool={pool}
           chainId={chainId}
           myRewards={myRewards}
-          visible={isUnstaking}
+          visible={isUnstaking && !isConfirmed}
           onClose={handleCancel}
-          isLoading={isWithdrawing}
-          onConfirm={(selectedItems: SelectedNft[]) => handleUnstakeErc721(selectedItems)}
+          onConfirm={handleUnstakeErc721}
         />
       )}
       {isConfirmed && (
