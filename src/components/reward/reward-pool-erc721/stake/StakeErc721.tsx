@@ -25,8 +25,8 @@ interface StakeErc721Props {
   pool: RewardPool
   chainIdPage: number
   account: string
-  stakeStatus: string
-  unlockStatus: string
+  stakeStatus: boolean
+  unlockStatus: boolean
   stakeTokenImage?: string
   isApprovingUnlock: boolean
   isApprovedForAll: boolean
@@ -119,14 +119,14 @@ export function StakeErc721({
   }, [chainIdPage, getErc721Collection, pool.token.id])
 
   useEffect(() => {
-    if (stakeStatus === 'success') {
+    if (stakeStatus && !isLoadingStakedNfts) {
       refetchWalletNfts()
       setIsConfirmModalShowing(true)
     }
-  }, [refetchWalletNfts, stakeStatus])
+  }, [refetchWalletNfts, stakeStatus, isLoadingStakedNfts])
 
   useEffect(() => {
-    if (!isApprovingUnlock && unlockStatus === 'success') {
+    if (!isApprovingUnlock && unlockStatus) {
       refetchUnlock()
     }
   }, [isApprovingUnlock, refetchUnlock, unlockStatus])

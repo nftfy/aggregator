@@ -32,7 +32,14 @@ export function StakeModal({ pool, account, chainIdPage, stakeTokenImage, visibl
     isLoading: isCheckingUnlock
   } = useErc721IsApprovedForAll(pool.token.id, account, pool.address, chainIdPage)
 
-  const { isLoading: isStaking, status: stakeStatus, deposit: depositStake } = useRewardPoolErc721Deposit(pool.token.id)
+  const {
+    isLoading: isStaking,
+    status: stakeStatus,
+    deposit: depositStake
+  } = useRewardPoolErc721Deposit(
+    pool.address,
+    selectedItems.map(item => item.tokenId)
+  )
   const handleSetApprovalForAll = () => {
     if (setApprovalForAll) {
       setApprovalForAll()
