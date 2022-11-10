@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react'
 import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
 import { chainConfig } from '../../../ChainConfig'
 import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
 import { units } from '../../../services/UtilService'
+import { useObserverTransaction } from '../../shared/useObserveTransaction'
 import perpetualOpenCollectivePurchaseAbi from './openCollectivePurchaseAbi.json'
 
 const useJoin = (chainId: number, specificPoolItem: SpecificPoolItem, value: string) => {
-  const [isLoadingTx, setIsLoadingTx] = useState(false)
   const { products, nativeToken } = chainConfig(chainId)
   const amountInUnits = units(value, specificPoolItem.paymentToken.decimals || 0)
   const reservePriceInUnits = units(specificPoolItem.reservePrice || '0', specificPoolItem.paymentToken.decimals)
@@ -18,7 +17,8 @@ const useJoin = (chainId: number, specificPoolItem: SpecificPoolItem, value: str
     functionName: 'join',
     args: [specificPoolItem.id, amountInUnits, reservePriceInUnits, isNetworkToken ? { value: amountInUnits } : { value: 0 }]
   })
-  const { sendTransaction, isLoading, isSuccess, data } = useSendTransaction(config)
+  const { sendTransaction, isSuccess, data, isLoading: isLoadingTransactionWallet } = useSendTransaction(config)
+  const { isLoading, status, dismiss } = useObserverTransaction(data, isSuccess, products.specific.subgraph)
 
   const join = async () => {
     if (sendTransaction) {
@@ -26,28 +26,11 @@ const useJoin = (chainId: number, specificPoolItem: SpecificPoolItem, value: str
     }
   }
 
-  useEffect(() => {
-    const handleWait = async () => {
-      await data?.wait()
-      setIsLoadingTx(false)
-    }
-    if (data && isSuccess) {
-      setIsLoadingTx(true)
-      handleWait()
-    }
-  }, [data])
-
-  // useEffect(()=>{
-  //   if(data && data.hash){
-  //     observe(data.hash, ,products.specific.subgraph)
-  //   }
-  // },[])
-
   return {
     join,
-    isLoading: isLoading || isLoadingTx,
-    isSuccess,
-    data
+    isLoading: isLoading || isLoadingTransactionWallet,
+    status,
+    dismiss
   }
 }
 

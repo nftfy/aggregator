@@ -19,12 +19,7 @@ export default function useSpecificJoinPool(
   //   specificPoolItem?.paymentToken?.id || '',
   //   config.products.specific.contract.openCollectivePurchase
   // )
-  const { join, isLoading, isSuccess, data } = useJoin(chainId, specificPoolItem, value)
-
-  console.log('joinLoading', isLoading)
-  console.log('isExecution', isExecution)
-  console.log('isSuccess', isSuccess)
-  console.log('data', data?.hash)
+  const { join, isLoading, status, dismiss } = useJoin(chainId, specificPoolItem, value)
 
   const handleJoin = async () => {
     if (!accountAddress || !specificPoolItem) {
@@ -58,18 +53,19 @@ export default function useSpecificJoinPool(
   }, [value])
 
   useEffect(() => {
-    if (isSuccess) {
-      // refetchData()
+    if (status === 'success') {
+      refetchData()
       notificationSuccessAddFounds()
+      dismiss()
     }
-    // if (status === 'reverted') {
-    //   console.error({
-    //     type: 'error',
-    //     text: 'error',
-    //     duration: 5
-    //   })
-    // }
-  }, [notificationSuccessAddFounds])
+    if (status === 'reverted') {
+      console.error({
+        type: 'error',
+        text: 'error',
+        duration: 5
+      })
+    }
+  }, [notificationSuccessAddFounds, status])
 
   return {
     handleJoin,

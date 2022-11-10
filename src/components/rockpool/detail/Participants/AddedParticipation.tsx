@@ -10,6 +10,7 @@ import { chainConfig } from '../../../../ChainConfig'
 import useSpecificJoinPool from '../../../../hook/rockpool/specific/useSpecificJoinPool'
 import { RockpoolStatus, SpecificPoolItem } from '../../../../models/rockpool/SpecificPoolsTypes'
 import { cryptoInputValidForm, formatToLocaleString } from '../../../../services/UtilService'
+import { ModalTransaction } from '../../../shared/TransactionModal'
 
 interface AddedParticipantsProps {
   chainId: number
@@ -174,6 +175,7 @@ export default function AddedParticipants({
             </>
           ))}
       </Col>
+      <ModalTransaction />
     </Row>
   )
 }

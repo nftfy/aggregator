@@ -36,3 +36,18 @@ export const nftfyClient = new ApolloClient({
   }),
   connectToDevTools: true
 })
+
+export const theGraphClient = (uri: string) => {
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {}
+      }
+    }
+  })
+
+  return new ApolloClient({
+    uri,
+    cache
+  })
+}
