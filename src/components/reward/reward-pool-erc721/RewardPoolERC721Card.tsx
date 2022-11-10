@@ -2,7 +2,6 @@ import { HarvestStakeToken } from '@appTypes/pool/Harvest'
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Card } from '@components/shared/card/Card'
 import { ProgramStakeMyStake } from '@components/shared/program/stake/MyStake'
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { useMyRewards } from '@hook/shared/useMyRewards'
 import { toHumanFormat } from '@services/UtilService'
 import { Col, Divider, Row } from 'antd'
@@ -18,7 +17,6 @@ interface RewardPoolERC721CardProps {
   loading: boolean
   accountAddress: string
   walletChainId: number | null
-  signerProvider: JsonRpcProvider | null
   refetchStakingPoolList: () => void
 }
 
@@ -28,7 +26,6 @@ export function RewardPoolERC721Card({
   loading,
   accountAddress,
   walletChainId,
-  signerProvider,
   refetchStakingPoolList
 }: RewardPoolERC721CardProps) {
   const config = chainConfig(chainId)
@@ -117,7 +114,7 @@ export function RewardPoolERC721Card({
                 </Col>
               </>
             )}
-            {!isExpired && signerProvider && stakedToken && walletChainId && pool.rewards[0] && (
+            {!isExpired && stakedToken && walletChainId && pool.rewards[0] && (
               <Col span={24}>
                 <Harvest
                   rewardToken={pool.rewards[0]}
@@ -138,7 +135,6 @@ export function RewardPoolERC721Card({
               chainId={chainId}
               myRewards={myRewards.reward ? toHumanFormat(+myRewards.reward) : '0'}
               onConfirm={confirmedUnstake}
-              signerProvider={signerProvider}
             />
           )}
           {pool.token?.id && isStaking && accountAddress && (

@@ -11,9 +11,10 @@ import { Card as AntCard, Col, Row } from 'antd'
 import debounce from 'lodash.debounce'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useContext, useState } from 'react'
 import styled from 'styled-components'
-import { useAccount } from 'wagmi'
+import { useAccount, useSwitchNetwork } from 'wagmi'
+import { GlobalContext } from '../../../../context/GlobalState'
 import { CardCover } from './CardCover'
 
 export type Token = {
@@ -42,6 +43,8 @@ export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, chil
   const router = useRouter()
   const account = useAccount()
   const remainingTime = useRemainingTime({ ...pool?.rewards[0]?.expirationInfo })
+  const { switchNetwork } = useSwitchNetwork()
+  const { dispatch } = useContext(GlobalContext)
   const [isCardHover, setIsCardHover] = useState(false)
 
   const handleOnMouseOver = debounce(() => {
@@ -98,8 +101,10 @@ export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, chil
               chainId={chainId}
               currentChainId={walletChainId}
               accountAddress={accountAddress}
-              onConnectWallet={() => console.log('coonect wallet')}
-              onChangeNetwork={() => console.log('network')}
+              onConnectWallet={() => {
+                dispatch({ type: 'CONNECT_WALLET', payload: false })
+              }}
+              onChangeNetwork={() => switchNetwork && switchNetwork(Number(process.env.NEXT_PUBLIC_CHAIN_ID))}
               skipStateValidation={false}
             >
               Details

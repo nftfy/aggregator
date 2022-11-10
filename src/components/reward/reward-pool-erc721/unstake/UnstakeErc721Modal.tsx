@@ -3,6 +3,7 @@ import { Col, Divider, Row, Typography } from 'antd'
 import iconPath from 'public/assets/alert-circle.svg'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useRewardPoolErc721Withdraw } from '../../../../hook/contracts/reward-pool-erc721/useRewardPoolErc721Withdraw'
 import { useErc721TokenIdListItems } from '../../../../hook/erc721/useErc721TokenIdListItems'
 import { RewardPool, StakedItem } from '../../../../types/pool/RewardPool'
 import CardToken from '../../../shared/card-token/CardToken'
@@ -16,8 +17,7 @@ interface UnstakeNftModalProps {
   myRewards: string
   visible?: boolean
   onClose?: () => void
-  onConfirm: (selectedItems: SelectedNft[]) => void
-  isLoading: boolean
+  onConfirm: (selectedItems: SelectedNft[], isConfirmed: boolean, rewardsEarned: string) => void
 }
 
 export interface SelectedNft {
@@ -27,7 +27,7 @@ export interface SelectedNft {
 
 const { Text } = Typography
 
-export function UnstakeErc721Modal({ pool, myRewards, visible, onClose, onConfirm, chainId, isLoading, account }: UnstakeNftModalProps) {
+export function UnstakeErc721Modal({ pool, myRewards, visible, onClose, onConfirm, chainId, account }: UnstakeNftModalProps) {
   const [selectedItems, setSelectedItems] = useState<SelectedNft[]>([])
   const [isDisabled, setIsDisabled] = useState(false)
   const [stakedTokenIdList, setStakedTokenIdList] = useState<StakedItem[]>([])
@@ -55,15 +55,19 @@ export function UnstakeErc721Modal({ pool, myRewards, visible, onClose, onConfir
     [selectedItems]
   )
 
-  const handleConfirm = useCallback(() => {
-    onConfirm(selectedItems)
-  }, [onConfirm, selectedItems])
+  const {
+    withdraw,
+    status: withdrawStatus,
+    isLoading: isWithdrawing
+  } = useRewardPoolErc721Withdraw(
+    pool.address,
+    selectedItems.map(item => item.tokenId)
+  )
 
   useEffect(() => {
     if (!pool.hasStake) {
       return
     }
-
     const myItems = pool.items.filter(item => item.account.id.toLocaleLowerCase() === account.toLocaleLowerCase() && item.tokenId)
 
     setStakedTokenIdList(myItems)
@@ -85,13 +89,19 @@ export function UnstakeErc721Modal({ pool, myRewards, visible, onClose, onConfir
     setHasReachedMaxSelection(selectedItems.length >= 5)
   }, [selectedItems])
 
+  useEffect(() => {
+    if (withdrawStatus && !isWithdrawing) {
+      onConfirm(selectedItems, withdrawStatus, myRewards)
+    }
+  }, [isWithdrawing, withdrawStatus])
+
   return (
     <Modal
       title='Unstake'
       onCancel={onClose}
       visible={visible}
       customFooter={
-        <Button type='primary' block onClick={handleConfirm} disabled={isDisabled} loading={isLoading}>
+        <Button type='primary' block onClick={withdraw} disabled={isDisabled} loading={isWithdrawing}>
           Confirm
         </Button>
       }
