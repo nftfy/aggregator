@@ -1,18 +1,16 @@
-import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons'
-import { useReactiveVar } from '@apollo/client'
-import { connectWallet, switchNetwork, walletChainIdVar } from '@nftfyorg/wallet'
-import { Alert, Button, Col, Input, Modal, Row, Space, Typography } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import { switchNetwork } from '@wagmi/core'
+import { Alert, Button, Col, Input, Row, Space, Typography } from 'antd'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { chainConfig } from '../../../../config/ChainConfig'
-import { rpcList } from '../../../../config/GlobalConfig'
-import useSpecificAcquire from '../../../../hooks/specific/useSpecificAcquire'
-import useSpecificJoinPool from '../../../../hooks/specific/useSpecificJoinPool'
-import useSpecificLeavePool from '../../../../hooks/specific/useSpecificLeavePool'
+import ConnectWalletButton from '../../../../../components/ConnectWalletButton'
+import { chainConfig } from '../../../../ChainConfig'
+import useSpecificJoinPool from '../../../../hook/rockpool/specific/useSpecificJoinPool'
+import { RockpoolStatus, SpecificPoolItem } from '../../../../models/rockpool/SpecificPoolsTypes'
 import { cryptoInputValidForm, formatToLocaleString } from '../../../../services/UtilService'
-import { RockpoolStatus, SpecificPoolItem } from '../../../../types/models/SpecificPoolsTypes'
+import { ModalTransaction } from '../../../shared/TransactionModal'
 
 interface AddedParticipantsProps {
   chainId: number
@@ -34,7 +32,6 @@ export default function AddedParticipants({
   userParticipation,
   specificPublicItem,
   refetchData,
-  signerProvider,
   walletAddress,
   losePool,
   winningPool
@@ -42,7 +39,8 @@ export default function AddedParticipants({
   const [depositAmount, setDepositAmount] = useState('0')
   const [maxJoinValue, setMaxJoinValue] = useState<string>('0')
   const [canJoin, setCanJoin] = useState<boolean>(false)
-  const walletChainId = useReactiveVar(walletChainIdVar)
+  console.log('can', canJoin)
+  const walletChainId = 5 // TODO get reservo library info
 
   const isPoolInicialized = !new BigNumber(specificPublicItem.amount).gt('0')
   const isWalletWithoutBalance = !new BigNumber(balance).toNumber() || new BigNumber(depositAmount).gt(new BigNumber(balance))
@@ -72,40 +70,39 @@ export default function AddedParticipants({
   const { handleJoin, isExecutin: loadingJoin } = useSpecificJoinPool(
     chainId,
     walletAddress || '',
-    signerProvider,
     specificPublicItem,
     depositAmount,
     refetchData
   )
 
-  const { handleLeave, isExecutin: loadingLeave } = useSpecificLeavePool(
-    chainId,
-    signerProvider,
-    specificPublicItem,
-    userParticipation || '0',
-    refetchData
-  )
+  // const { handleLeave, isExecutin: loadingLeave } = useSpecificLeavePool(
+  //   chainId,
+  //   signerProvider,
+  //   specificPublicItem,
+  //   userParticipation || '0',
+  //   refetchData
+  // )
 
-  const handleRemoveParticipation = () => {
-    Modal.confirm({
-      title: 'Remove funds',
-      icon: <ExclamationCircleOutlined />,
-      content: `You have ${userParticipation || ''} ${config.nativeToken.symbol} of participation. Do you want to remove it?`,
-      okText: 'Remove participation',
-      cancelText: 'Cancel',
-      onOk: async () => handleLeave(),
-      cancelButtonProps: { style: { width: '100%', padding: '5px' } },
-      okButtonProps: { style: { width: '100%', padding: '5px' } }
-    })
-  }
+  // const handleRemoveParticipation = () => {
+  //   Modal.confirm({
+  //     title: 'Remove funds',
+  //     icon: <ExclamationCircleOutlined />,
+  //     content: `You have ${userParticipation || ''} ${config.nativeToken.symbol} of participation. Do you want to remove it?`,
+  //     okText: 'Remove participation',
+  //     cancelText: 'Cancel',
+  //     onOk: async () => handleLeave(),
+  //     cancelButtonProps: { style: { width: '100%', padding: '5px' } },
+  //     okButtonProps: { style: { width: '100%', padding: '5px' } }
+  //   })
+  // }
 
-  const { handleSpecificAcquire, isExecutin: loadingAcquire } = useSpecificAcquire(
-    chainId,
-    signerProvider,
-    specificPublicItem,
-    walletAddress || '',
-    refetchData
-  )
+  // const { handleSpecificAcquire, isExecutin: loadingAcquire } = useSpecificAcquire(
+  //   chainId,
+  //   signerProvider,
+  //   specificPublicItem,
+  //   walletAddress || '',
+  //   refetchData
+  // )
 
   const handleUseMax = () => {
     const maxValue = maxValueDeposit.gt(new BigNumber(balance)) ? new BigNumber(balance).toString() : maxValueDeposit.toString()
@@ -144,22 +141,19 @@ export default function AddedParticipants({
         )}
       </Col>
       <Col span={24}>
-        {!walletAddress && (
-          <Button type='primary' block onClick={() => connectWallet(rpcList)}>
-            Connect Wallet
-          </Button>
-        )}
+        {!walletAddress && <ConnectWalletButton className='w-full' />}
         {!winningPool &&
           (walletChainId !== chainId && walletAddress ? (
-            <Button onClick={() => switchNetwork(Number(chainId))} type='primary' block style={{ height: '40px' }}>
+            <Button onClick={() => switchNetwork({ chainId: Number(chainId) })} type='primary' block style={{ height: '40px' }}>
               {`Change network to ${config.name}`}
             </Button>
           ) : (
             <>
               {poolIsCompleted && !losePool && walletAddress && (
-                <Button type='primary' block onClick={handleSpecificAcquire} loading={loadingAcquire}>
-                  buy NFT
-                </Button>
+                // <Button type='primary' block onClick={handleSpecificAcquire} loading={loadingAcquire}>
+                //   buy NFT
+                // </Button>
+                <div>buy NFT</div>
               )}
               {!poolIsCompleted && !losePool && walletAddress && (
                 <Button type='primary' block onClick={handleJoin} loading={loadingJoin} disabled={canJoin}>
@@ -167,19 +161,21 @@ export default function AddedParticipants({
                 </Button>
               )}
               {new BigNumber(userParticipation || '0').gt('0') && (
-                <Button
-                  type='text'
-                  block
-                  onClick={handleRemoveParticipation}
-                  loading={loadingLeave}
-                  style={{ color: 'var(--primary-color)' }}
-                >
-                  Remove participation
-                </Button>
+                // <Button
+                //   type='text'
+                //   block
+                //   onClick={handleRemoveParticipation}
+                //   loading={loadingLeave}
+                //   style={{ color: 'var(--primary-color)' }}
+                // >
+                //   Remove participation
+                // </Button>
+                <div>RemoveParticipation</div>
               )}
             </>
           ))}
       </Col>
+      <ModalTransaction />
     </Row>
   )
 }

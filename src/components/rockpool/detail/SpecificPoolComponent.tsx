@@ -1,6 +1,7 @@
 import { Card, Col, Row } from 'antd'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
+import styled from 'styled-components'
 import { useAccount } from 'wagmi'
 import LoadingIcon from '../../../../components/LoadingIcon'
 import { chainConfig } from '../../../ChainConfig'
@@ -12,10 +13,12 @@ import { useErc20Balance } from '../../../hook/useErc20Balance'
 import { useNativeBalance } from '../../../hook/useNativeBalance'
 import { RockpoolStatus } from '../../../models/rockpool/SpecificPoolsTypes'
 import { formatToLocaleString } from '../../../services/UtilService'
+import AddedParticipants from './Participants/AddedParticipation'
 
 import SpecificParticipants from './Participants/SpecificParticipants'
 import CollectionInfo from './SpecificPoolDetailItem'
 import TargetNftCards from './TargetNftCards'
+import WinningPool from './WinningPool'
 
 interface SpecificPoolComponentProps {
   specificPoolId: string
@@ -58,7 +61,9 @@ export default function SpecificPoolComponent({ chainId, specificPoolId }: Speci
   return (
     <Row gutter={[24, 20]}>
       {loading ? (
-        <LoadingIcon />
+        <ContainerLoading>
+          <LoadingIcon />
+        </ContainerLoading>
       ) : (
         <>
           <Col lg={12} span={24}>
@@ -95,29 +100,28 @@ export default function SpecificPoolComponent({ chainId, specificPoolId }: Speci
               <Row gutter={[0, 28]} style={{ padding: '24px 0px 0px' }}>
                 <Col span={24}>
                   {specificPublicItem && (
-                    // <AddedParticipants
-                    //   chainId={chainId}
-                    //   refetchData={handleRefetchData}
-                    //   balance={isNativeToken ? balanceNative : balanceErc20}
-                    //   balanceLoading={isNativeToken ? balanceLoading : erc20Loading}
-                    //   specificPublicItem={specificPublicItem}
-                    //   signerProvider={signerProvider}
-                    //   userParticipation={rockpoolItemBuyer?.amount || '0'}
-                    //   walletAddress={walletAccount}
-                    //   losePool={!!losePool}
-                    //   winningPool={!!winningPool}
-                    // />
-                    <div>added participants</div>
+                    <AddedParticipants
+                      chainId={chainId}
+                      refetchData={handleRefetchData}
+                      balance={isNativeToken ? balanceNative : balanceErc20}
+                      balanceLoading={isNativeToken ? balanceLoading : erc20Loading}
+                      specificPublicItem={specificPublicItem}
+                      signerProvider={signerProvider}
+                      userParticipation={rockpoolItemBuyer?.amount || '0'}
+                      walletAddress={walletAccount}
+                      losePool={!!losePool}
+                      winningPool={!!winningPool}
+                    />
                   )}
                   {!!winningPool && (
-                    <div>winning</div>
-                    // <WinningPool
-                    //   chainId={chainId}
-                    //   userBuyer={rockpoolItemBuyer}
-                    //   specificPublicItem={specificPublicItem}
-                    //   signerProvider={signerProvider}
-                    //   refetch={handleRefetchData}
-                    // />
+                    <WinningPool
+                      walletAddress={walletAccount}
+                      chainId={chainId}
+                      userBuyer={rockpoolItemBuyer}
+                      specificPublicItem={specificPublicItem}
+                      signerProvider={signerProvider}
+                      refetch={handleRefetchData}
+                    />
                   )}
                 </Col>
                 <Col span={24}>
@@ -137,4 +141,14 @@ export default function SpecificPoolComponent({ chainId, specificPoolId }: Speci
       )}
     </Row>
   )
+}
+
+const { ContainerLoading } = {
+  ContainerLoading: styled.div`
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `
 }

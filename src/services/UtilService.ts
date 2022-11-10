@@ -38,6 +38,7 @@ export function valid(amount: string, decimals: number): boolean {
 }
 
 export function units(coinsValue: string, decimals: number): string {
+  if (coinsValue.slice(-1) === '.' || !coinsValue) return ''
   if (!valid(coinsValue, decimals)) throw new Error('Invalid amount')
   let i = coinsValue.indexOf('.')
   if (i < 0) i = coinsValue.length
@@ -46,6 +47,7 @@ export function units(coinsValue: string, decimals: number): string {
 }
 
 export function coins(unitsValue: string, decimals: number): string {
+  if (unitsValue.slice(-1) === '.' || !unitsValue) return ''
   if (!valid(unitsValue, 0)) throw new Error('Invalid amount')
   if (decimals === 0) return unitsValue
   const s = unitsValue.padStart(1 + decimals, '0')
@@ -67,4 +69,29 @@ export function notifyError(error: unknown, message: string, silent?: boolean) {
   if (!silent) {
     // Toast.error(message)
   }
+}
+
+export function formatDecimals(value: string, decimals: number) {
+  const og = 10 ** decimals
+  return Math.trunc(Number(value) * og) / og
+}
+
+export function formatShortAccountName(address: string, size = 6): string {
+  const finalChar = address.length > size && address.slice(-4)
+  return [address.slice(0, size), finalChar].filter(Boolean).join('...')
+}
+
+export function cryptoInputValidForm(value: string) {
+  let updatedValue = value
+
+  if (updatedValue[0] === '.') {
+    updatedValue = `0${value}`
+  }
+
+  if (updatedValue.length > 0 && updatedValue[updatedValue.length - 1] === '.' && updatedValue.slice(0, -1).includes('.')) {
+    updatedValue = updatedValue.slice(0, -1)
+  }
+
+  updatedValue = updatedValue.replace(/[^0-9.]/g, '')
+  return updatedValue
 }
