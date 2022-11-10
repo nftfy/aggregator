@@ -14,7 +14,7 @@ interface StakeErc721Props {
   account: string
   walletChainId: number | null
   selectedItems: SelectedNftStake[]
-  depositStake: (tokenIdList: string[]) => Promise<void>
+  depositStake: () => void
 }
 
 export function StakeERC721Action({
@@ -53,7 +53,7 @@ export function StakeERC721Action({
           block
           loading={isStaking}
           type='primary'
-          onClick={() => depositStake(selectedItems.map(item => item.tokenId))}
+          onClick={depositStake}
           onChangeNetwork={() => console.log('mudarr aqui rede')}
           currentChainId={walletChainId}
           accountAddress={account}
