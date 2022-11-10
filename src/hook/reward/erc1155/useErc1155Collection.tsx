@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client'
-import { Erc1155CollectionData, Erc1155CollectionVars, ERC1155_COLLECTION_QUERY } from '../../graphql/erc1155/Erc1155CollectionQuery'
-import { notifyError } from '../../services/UtilService'
+import { Erc1155CollectionData, Erc1155CollectionVars, ERC1155_COLLECTION_QUERY } from '../../../graphql/erc1155/Erc1155CollectionQuery'
+import { notifyError } from '../../../services/UtilService'
 
 export function useErc1155Collection() {
   const [getErc1155Collection, { loading, data, error }] = useLazyQuery<Erc1155CollectionData, Erc1155CollectionVars>(

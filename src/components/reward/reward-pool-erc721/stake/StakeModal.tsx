@@ -1,9 +1,9 @@
 import { RewardPool } from '@appTypes/pool/RewardPool'
 
 import { useState } from 'react'
-import { useErc721IsApprovedForAll } from '../../../../hook/contracts/erc721/useErc721IsApprovedForAll'
-import { useErc721SetApprovalForAll } from '../../../../hook/contracts/erc721/useErc721SetApprovalForAll'
-import { useRewardPoolErc721Deposit } from '../../../../hook/contracts/reward-pool-erc721/useRewardPoolErc721Deposit'
+import { useErc721IsApprovedForAll } from '../../../../hook/reward/erc721/useErc721IsApprovedForAll'
+import { useErc721SetApprovalForAll } from '../../../../hook/reward/erc721/useErc721SetApprovalForAll'
+import { useRewardPoolErc721Deposit } from '../../../../hook/reward/pool-erc721/useRewardPoolErc721Deposit'
 import { SelectedNftStake } from '../../../../types/stake/SelectedNftStake'
 import { Modal } from '../../../shared/design-system'
 

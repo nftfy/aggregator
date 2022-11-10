@@ -1,26 +1,26 @@
 import { useQuery } from '@apollo/client'
 
 import {
-  Erc721TargetByOwnerQueryData,
-  Erc721TargetByOwnerQueryVars,
-  ERC721_TARGET_BY_OWNER_QUERY
-} from '@graphql/wallet/Erc721TargetByOwner'
+  Erc1155TargetByOwnerQueryData,
+  Erc1155TargetByOwnerQueryVars,
+  ERC1155_TARGET_BY_OWNER_QUERY
+} from '@graphql/erc1155/Erc1155TargetByOwner'
 import { useEffect, useState } from 'react'
-import { notifyError } from '../../services/UtilService'
+import { notifyError } from '../../../services/UtilService'
 
-export const useErc721TargetByOwner = (chainId: number, contractAddress: string, ownerAddress: string, limit?: number) => {
+export const useErc1155TargetByOwner = (chainId: number, contractAddress: string, ownerAddress: string) => {
   const paginationLimit = 10
   const [offset, setOffset] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(true)
 
-  const { loading, data, fetchMore, error, refetch } = useQuery<Erc721TargetByOwnerQueryData, Erc721TargetByOwnerQueryVars>(
-    ERC721_TARGET_BY_OWNER_QUERY,
+  const { loading, data, fetchMore, error, refetch } = useQuery<Erc1155TargetByOwnerQueryData, Erc1155TargetByOwnerQueryVars>(
+    ERC1155_TARGET_BY_OWNER_QUERY,
     {
       variables: {
         chainId,
         contractAddress: contractAddress?.toLowerCase(),
         ownerAddress: ownerAddress?.toLowerCase(),
-        limit: limit || paginationLimit,
+        limit: paginationLimit,
         offset
       },
       skip: !ownerAddress,
@@ -39,6 +39,7 @@ export const useErc721TargetByOwner = (chainId: number, contractAddress: string,
           offset: isLoaded ? data?.targetNftByOwner.length || 0 : newOffset
         }
       })
+
       if (nextPageError) {
         throw nextPageError
       }
@@ -53,6 +54,12 @@ export const useErc721TargetByOwner = (chainId: number, contractAddress: string,
   }
 
   useEffect(() => {
+    if (ownerAddress) {
+      refetch()
+    }
+  }, [ownerAddress, refetch])
+
+  useEffect(() => {
     setOffset(0)
     setHasMore(true)
   }, [chainId])
@@ -62,12 +69,6 @@ export const useErc721TargetByOwner = (chainId: number, contractAddress: string,
       throw error
     }
   }, [error])
-
-  useEffect(() => {
-    if (ownerAddress) {
-      refetch()
-    }
-  }, [ownerAddress, refetch])
 
   return { erc721TargetByOwner: data?.targetNftByOwner || [], loading, loadMore, hasMore, refetch }
 }

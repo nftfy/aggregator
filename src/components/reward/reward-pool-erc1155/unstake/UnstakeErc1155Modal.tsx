@@ -1,7 +1,7 @@
 import { Col, Divider, Row, Typography } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useErc721TokenIdListItems } from '../../../../hook/erc721/useErc721TokenIdListItems'
+import { useErc721TokenIdListItems } from '../../../../hook/reward/erc721/useErc721TokenIdListItems'
 import { RewardPool, StakedItem } from '../../../../types/pool/RewardPool'
 import CardToken from '../../../shared/card-token/CardToken'
 import CardLoader from '../../../shared/card/CardLoader'

@@ -5,8 +5,9 @@ import { useState } from 'react'
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Modal } from '@components/shared/design-system'
 import { Web3Provider } from '@ethersproject/providers'
-import { useStakeErc1155 } from '@hook/contracts/reward-pool-erc1155/useRewardPoolErc1155Deposit'
-import { useErc1155ApproveForAll } from '@hook/erc1155/useErc1155ApproveForAll'
+
+import { useErc1155ApproveForAll } from '../../../../hook/reward/erc1155/useErc1155ApproveForAll'
+import { useStakeErc1155 } from '../../../../hook/reward/pool-erc1155/useRewardPoolErc1155Deposit'
 import { StakeERC1155 } from './Stake1155'
 import { StakeERC1155Action } from './Stake1155Action'
 

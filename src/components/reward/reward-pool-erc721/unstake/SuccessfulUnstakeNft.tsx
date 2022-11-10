@@ -9,7 +9,7 @@ import { Col, Row } from 'antd'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 import { chainConfig } from '../../../../ChainConfig'
-import { useErc721TokenIdListItems } from '../../../../hook/erc721/useErc721TokenIdListItems'
+import { useErc721TokenIdListItems } from '../../../../hook/reward/erc721/useErc721TokenIdListItems'
 import { SelectedNft } from './UnstakeErc721Modal'
 
 interface SuccessfulUnstakeNftProps {

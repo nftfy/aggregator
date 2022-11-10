@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@apollo/client'
-import { Erc721IsValidContractData, Erc721IsValidContractVars, IS_VALID_ERC721_QUERY } from '../../graphql/erc721/Erc721isValidContract'
-import { notifyError } from '../../services/UtilService'
+import { Erc721IsValidContractData, Erc721IsValidContractVars, IS_VALID_ERC721_QUERY } from '../../../graphql/erc721/Erc721isValidContract'
+import { notifyError } from '../../../services/UtilService'
 
 export function useErc721IsValidContract() {
   const [getIsValidContract, { loading, error }] = useLazyQuery<Erc721IsValidContractData, Erc721IsValidContractVars>(

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { UseErc1155IsApprovedForAll } from '../contracts/erc1155/useErc1155IsApprovedForAll'
-import { useErc1155SetApprovalForAll } from '../contracts/erc1155/useErc1155SetApprovalForAll'
+import { UseErc1155IsApprovedForAll } from './useErc1155IsApprovedForAll'
+import { useErc1155SetApprovalForAll } from './useErc1155SetApprovalForAll'
 
 export function useErc1155ApproveForAll(chainId: number, collectionAddress: string, spenderAddress: string, ownerAccount: string) {
   const { isApprovedForAll, refetch, isLoading } = UseErc1155IsApprovedForAll(collectionAddress, ownerAccount, spenderAddress, chainId)

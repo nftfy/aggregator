@@ -3,8 +3,9 @@ import { Reward } from '@appTypes/pool/RewardPool'
 import { CardToken } from '@components/shared/card-token/CardToken'
 import { ModalConfirm } from '@components/shared/design-system'
 import { ProgramStakeMyRewards } from '@components/shared/program/stake/MyRewards'
-import { useRewardPoolErc721Harvest } from '@hook/contracts/reward-pool-erc721/useRewardPoolErc721Harvest'
+
 import { useEffect, useState } from 'react'
+import { useRewardPoolErc721Harvest } from '../../../../hook/reward/pool-erc721/useRewardPoolErc721Harvest'
 
 interface HarvestProps {
   poolAddress: string

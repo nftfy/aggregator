@@ -29,7 +29,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiRefreshCcw } from 'react-icons/fi'
-import { RewardPools } from '../../src/components/reward/reward-pools/RewardPools'
+import { RewardPools } from '../../src/components/reward/pools/RewardPools'
 import SpecificPublicTable from '../../src/components/rockpool/SpecificPublicTable'
 
 // Environment variables

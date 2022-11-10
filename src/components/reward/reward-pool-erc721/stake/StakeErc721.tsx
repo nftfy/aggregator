@@ -10,13 +10,14 @@ import { ListItemNft } from '@components/shared/ListItemNft'
 import { chainConfig } from '@config/chain'
 import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useErc721Collection } from '@hook/erc721/useErc721Collection'
-import { useErc721TargetByOwner } from '@hook/erc721/useErc721TargetByOwner'
-import { useErc721TokenIdListItems } from '@hook/erc721/useErc721TokenIdListItems'
+
 import { Col, Divider, Empty, Row, Space, Typography } from 'antd'
 import { ReactNode, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components'
+import { useErc721Collection } from '../../../../hook/reward/erc721/useErc721Collection'
+import { useErc721TargetByOwner } from '../../../../hook/reward/erc721/useErc721TargetByOwner'
+import { useErc721TokenIdListItems } from '../../../../hook/reward/erc721/useErc721TokenIdListItems'
 
 const { Text } = Typography
 

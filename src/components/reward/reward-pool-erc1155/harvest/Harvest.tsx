@@ -3,8 +3,8 @@ import { CardToken } from '@components/shared/card-token/CardToken'
 import { ModalConfirm } from '@components/shared/design-system'
 import { ProgramStakeMyRewards } from '@components/shared/program/stake/MyRewards'
 import { Web3Provider } from '@ethersproject/providers'
-import { useRewardPoolErc1155Harvest } from '@hook/contracts/reward-pool-erc1155/useRewardPoolErc1155Harvest'
 import { useEffect, useState } from 'react'
+import { useRewardPoolErc1155Harvest } from '../../../../hook/reward/pool-erc1155/useRewardPoolErc1155Harvest'
 
 interface HarvestProps {
   poolAddress: string
@@ -38,7 +38,12 @@ export function Harvest({ poolAddress, rewardToken, reward, signerProvider, refe
 
   return (
     <>
-      <ProgramStakeMyRewards symbol={rewardToken.token.symbol || rewardToken.token.name} amount={reward} onHarvest={handleOnHarvest} />
+      <ProgramStakeMyRewards
+        symbol={rewardToken.token.symbol || rewardToken.token.name}
+        amount={reward}
+        onHarvest={handleOnHarvest}
+        loading={false}
+      />
       <ModalConfirm type='success' title='Harvest confirmed' visible={isConfirmed} onCancel={handleConfirmed} onOk={handleConfirmed}>
         <CardToken
           title='Earned'
