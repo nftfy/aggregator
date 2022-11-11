@@ -2,7 +2,6 @@ import { Reward } from '@appTypes/pool/RewardPool'
 import { CardToken } from '@components/shared/card-token/CardToken'
 import { ModalConfirm } from '@components/shared/design-system'
 import { ProgramStakeMyRewards } from '@components/shared/program/stake/MyRewards'
-import { Web3Provider } from '@ethersproject/providers'
 import { useEffect, useState } from 'react'
 import { useRewardPoolErc1155Harvest } from '../../../../hook/reward/pool-erc1155/useRewardPoolErc1155Harvest'
 
@@ -10,23 +9,18 @@ interface HarvestProps {
   poolAddress: string
   rewardToken: Reward
   reward?: string
-  signerProvider: Web3Provider
   chainId: number
   tokenImageReward?: string
   refetch: () => void
 }
 
-export function Harvest({ poolAddress, rewardToken, reward, signerProvider, refetch, chainId, tokenImageReward }: HarvestProps) {
+export function Harvest({ poolAddress, rewardToken, reward, refetch, chainId, tokenImageReward }: HarvestProps) {
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const { loading, getHarvest, status, dismiss } = useRewardPoolErc1155Harvest()
+  const { loading, getHarvest, status, dismiss } = useRewardPoolErc1155Harvest(poolAddress, rewardToken.token.id)
 
   const handleConfirmed = () => {
     refetch()
     setIsConfirmed(false)
-  }
-
-  const handleOnHarvest = () => {
-    getHarvest(signerProvider, poolAddress, rewardToken.token.id, chainId)
   }
 
   useEffect(() => {
@@ -41,8 +35,8 @@ export function Harvest({ poolAddress, rewardToken, reward, signerProvider, refe
       <ProgramStakeMyRewards
         symbol={rewardToken.token.symbol || rewardToken.token.name}
         amount={reward}
-        onHarvest={handleOnHarvest}
-        loading={false}
+        onHarvest={() => getHarvest && getHarvest()}
+        loading={loading}
       />
       <ModalConfirm type='success' title='Harvest confirmed' visible={isConfirmed} onCancel={handleConfirmed} onOk={handleConfirmed}>
         <CardToken

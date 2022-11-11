@@ -4,10 +4,8 @@ import { useState } from 'react'
 
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Modal } from '@components/shared/design-system'
-import { Web3Provider } from '@ethersproject/providers'
 
 import { useErc1155ApproveForAll } from '../../../../hook/reward/erc1155/useErc1155ApproveForAll'
-import { useStakeErc1155 } from '../../../../hook/reward/pool-erc1155/useRewardPoolErc1155Deposit'
 import { StakeERC1155 } from './Stake1155'
 import { StakeERC1155Action } from './Stake1155Action'
 
@@ -17,7 +15,6 @@ interface StakeERC20ModalProps {
   chainIdPage: number
   visible: boolean
   account: string
-  signerProvider: Web3Provider
   onConfirm: () => void
   onClose?: () => void
   stakePoolImage?: string
@@ -31,7 +28,6 @@ export function StakeModal({
   pool,
   chainIdPage,
   account,
-  signerProvider,
   stakePoolImage,
   title,
   stakedAmount
@@ -43,9 +39,9 @@ export function StakeModal({
   const {
     isLoading: isLoadingUnlock,
     isApprovedForAll,
-    setApprovalForAll
+    setApprovalForAll,
+    status
   } = useErc1155ApproveForAll(chainIdPage, pool.token.id, pool.address, account)
-  const { isLoading: isLoadingStakeErc1155, deposit, status } = useStakeErc1155()
 
   const onSelectItem = (tokenId: string, amount: string, image: string) => {
     const selectedItemsToUpdate = selectedItems.filter(item => item.tokenId !== tokenId)
@@ -67,17 +63,14 @@ export function StakeModal({
       closable
       customFooter={
         <StakeERC1155Action
-          deposit={deposit}
-          pool={pool}
           account={account}
           chainId={chainIdPage}
-          signerProvider={signerProvider}
           setApprovalForAll={setApprovalForAll}
           isApprovedForAll={isApprovedForAll}
           walletChainId={walletChainId}
           selectedItems={selectedItems}
           isLoadingUnlock={isLoadingUnlock}
-          isLoadingStakeErc1155={isLoadingStakeErc1155}
+          isLoadingStakeErc1155={isLoadingUnlock}
         />
       }
     >

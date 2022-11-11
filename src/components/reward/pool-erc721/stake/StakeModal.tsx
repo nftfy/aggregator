@@ -53,7 +53,6 @@ export function StakeModal({ pool, account, chainIdPage, stakeTokenImage, visibl
       closable
       customFooter={
         <StakeERC721Action
-          pool={pool}
           account={account}
           chainId={chainIdPage}
           isApprovingUnlock={isApprovingUnlock}
