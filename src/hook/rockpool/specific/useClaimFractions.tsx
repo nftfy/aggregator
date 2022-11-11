@@ -39,7 +39,7 @@ export default function useClaimFractions(chainId: number, poolId: string, buyer
         duration: 5
       })
     }
-  }, [status, dismiss, refetchData, notificationSuccessAddFounds])
+  }, [status, refetchData, notificationSuccessAddFounds])
 
   return {
     handleClaimFractions,

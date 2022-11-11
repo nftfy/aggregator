@@ -29,7 +29,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiRefreshCcw } from 'react-icons/fi'
-import { RewardPools } from '../../src/components/reward/reward-pools/RewardPools'
+import { RewardPools } from '../../src/components/reward/pools/RewardPools'
 import SpecificPublicTable from '../../src/components/rockpool/SpecificPublicTable'
 
 // Environment variables
@@ -63,7 +63,6 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
   const router = useRouter()
   const [localListings, setLocalListings] = useState(false)
   const [refreshLoading, setRefreshLoading] = useState(false)
-
   const collectionResponse = useCollections(
     { id },
     {
@@ -312,7 +311,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           </Tabs.Content>
           <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
             <div className='justify-right mt-14  dark:text-white'>
-              {id && <RewardPools chainId={5} collectionAddress={id} />} 
+              {id && <RewardPools chainId={Number(CHAIN_ID)} collectionAddress={id} />} 
             </div>
           </Tabs.Content>
         </Tabs.Root>

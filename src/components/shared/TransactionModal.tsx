@@ -1,22 +1,16 @@
-import { Modal, Spin, Typography } from 'antd';
-import React from 'react';
-import styled from 'styled-components';
-import { useReactiveVar } from '@apollo/client';
-import { transactionProcessingVar } from '../../graphql/variables/TransactionVariables';
+import { Modal, Spin, Typography } from 'antd'
+import React from 'react'
+import styled from 'styled-components'
+import { useReactiveVar } from '@apollo/client'
+import { transactionProcessingVar } from '../../graphql/variables/TransactionVariables'
 
-const { Text } = Typography;
+const { Text } = Typography
 
 export function ModalTransaction() {
-  const transactionProcessing = useReactiveVar(transactionProcessingVar);
+  const transactionProcessing = useReactiveVar(transactionProcessingVar)
 
   return (
-    <Modal
-      open={transactionProcessing}
-      footer={null}
-      closable={false}
-      zIndex={10000}
-      centered
-    >
+    <Modal open={transactionProcessing} footer={null} closable={false} zIndex={10000} centered>
       <Container>
         <div>
           <Spin />
@@ -24,7 +18,7 @@ export function ModalTransaction() {
         <Title>Processing Transaction</Title>
       </Container>
     </Modal>
-  );
+  )
 }
 
 const { Container, Title } = {
@@ -38,5 +32,5 @@ const { Container, Title } = {
   `,
   Title: styled(Text)`
     color: var(--primary-color);
-  `,
-};
+  `
+}
