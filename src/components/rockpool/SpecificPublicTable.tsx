@@ -1,5 +1,8 @@
+import { Progress } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import styled from 'styled-components'
 import LoadingIcon from '../../../components/LoadingIcon'
 import { useSpecificPublicItems } from '../../hook/rockpool/useSpecificPulicItems'
 import { OrderDirection, SpecificPoolItemFilter, SpecificPoolItemOrderBy } from '../../models/rockpool/SpecificPoolsTypes'
@@ -20,6 +23,7 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
     },
     collectionAddress
   )
+  const history = useRouter()
 
   const headings = [
     { name: 'NFT', align: 'left' },
@@ -54,7 +58,7 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
           specificPools.map(pool => (
             <tr key={1} className='h-24 border-b border-gray-300 dark:border-[#525252]'>
               <td className='px-6 py-4'>
-                <Link href='#' passHref>
+                <Link href={`/rockpool/specific/${pool.id}`} passHref>
                   <a className='mr-2.5 flex items-center'>
                     <Image
                       className='rounded object-cover'
@@ -71,28 +75,34 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
                 </Link>
               </td>
               <td className='px-6 py-4'>
-                <span className='mr-2.5 ml-2.5  font-light'>{formatToLocaleString(pool.targetPrice)} ETH</span>
+                <Container>
+                  <span className='mr-2.5 ml-2.5  font-light'>{formatToLocaleString(pool.targetPrice)} ETH</span>
+                </Container>
               </td>
               <td className=' px-6 py-4'>
-                <span className='ml-2.5 mr-2.5  font-light'>{Number(pool.buyersCount)}</span>
+                <Container>
+                  <span className='ml-2.5 mr-2.5  font-light'>{Number(pool.buyersCount)}</span>
+                </Container>
               </td>
               <td className='px-6 py-4'>
-                <progress id='file' className='bg-primary' value={Number(pool.poolProgress)} max='100'>
-                  {Number(pool.poolProgress)}
-                </progress>
+                <Progress percent={Number(pool.poolProgress)} size='default' />
               </td>
               <td className=' px-6 py-4'>
-                <span className='ml-2.5 mr-2.5  font-light'>
-                  {formatToLocaleString(Number(pool.targetPrice) - Number(pool.amount))} ETH
-                </span>
+                <Container>
+                  <span className='ml-2.5 mr-2.5  font-light'>
+                    {formatToLocaleString(Number(pool.targetPrice) - Number(pool.amount))} ETH
+                  </span>
+                </Container>
               </td>
               <td className='px-6 py-4'>
-                <button
-                  className={`bg-primary flex gap-3 rounded-full px-4 py-3 md:hover:bg-primary-100 dark:md:hover:bg-neutral-600 ${'border-[1px] border-neutral-300 bg-white dark:bg-black'}`}
-                  onClick={() => console.log()}
-                >
-                  Enter pool
-                </button>
+                <Container>
+                  <button
+                    className={`bg-primary flex gap-3 rounded-full px-4 py-3 md:hover:bg-primary-100 dark:md:hover:bg-neutral-600 ${'border-[1px] border-neutral-300 bg-white dark:bg-black'}`}
+                    onClick={() => history.push(`/rockpool/specific/${pool.id}`)}
+                  >
+                    Enter pool
+                  </button>
+                </Container>
               </td>
             </tr>
           ))}
@@ -100,4 +110,12 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
       </tbody>
     </table>
   )
+}
+
+const { Container } = {
+  Container: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  `
 }
