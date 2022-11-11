@@ -1,7 +1,8 @@
 import { notification } from 'antd'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { chainConfig } from '../../../ChainConfig'
 import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
+import { useErc20Approve } from '../erc20/useErc20Approve'
 import useJoin from '../openCollectivePurchase/useJoin'
 
 export default function useSpecificJoinPool(
@@ -12,13 +13,13 @@ export default function useSpecificJoinPool(
   refetchData: () => void
 ) {
   const config = chainConfig(chainId)
-  const [isExecution, setIsExecution] = useState(false)
-  // const { isUnlocked, unlockErc20 } = useErc20Approve(
-  //   chainId,
-  //   accountAddress,
-  //   specificPoolItem?.paymentToken?.id || '',
-  //   config.products.specific.contract.openCollectivePurchase
-  // )
+  const { isUnlocked, unlockErc20 } = useErc20Approve(
+    chainId,
+    accountAddress,
+    specificPoolItem?.paymentToken?.id || '',
+    config.products.specific.contract.openCollectivePurchase,
+    value
+  )
   const { join, isLoading, status, dismiss } = useJoin(chainId, specificPoolItem, value)
 
   const handleJoin = async () => {
@@ -27,14 +28,11 @@ export default function useSpecificJoinPool(
     }
 
     try {
-      setIsExecution(true)
-      if (specificPoolItem.paymentToken.id !== config.nativeToken.address) {
-        // unlockErc20(specificPoolItem?.paymentToken?.id || '', config.products.specific.contract.openCollectivePurchase, value)
+      if (specificPoolItem.paymentToken.id !== config.nativeToken.address && isUnlocked) {
+        unlockErc20 && unlockErc20()
       }
       await join()
-      setIsExecution(false)
     } catch (_) {
-      setIsExecution(false)
       console.error({
         type: 'error',
         text: 'error',
@@ -69,6 +67,6 @@ export default function useSpecificJoinPool(
 
   return {
     handleJoin,
-    isExecutin: isExecution || isLoading
+    isExecutin: isLoading
   }
 }

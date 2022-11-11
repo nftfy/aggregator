@@ -1,6 +1,5 @@
 import { Card, Col, Row } from 'antd'
 import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useAccount } from 'wagmi'
 import LoadingIcon from '../../../../components/LoadingIcon'
@@ -8,7 +7,6 @@ import { chainConfig } from '../../../ChainConfig'
 import { useSpecificItemBuyers } from '../../../hook/rockpool/specific/useSpecificItemBuyers'
 import { useRockpoolItemBuyer } from '../../../hook/rockpool/specific/useSpecificPoolItemBuyer'
 import { useSpecificPublicItemById } from '../../../hook/rockpool/specific/useSpecificPublicItemById'
-import { useSpecificVerifyAvailability } from '../../../hook/rockpool/specific/useSpecificVerifyAvailability'
 import { useErc20Balance } from '../../../hook/useErc20Balance'
 import { useNativeBalance } from '../../../hook/useNativeBalance'
 import { RockpoolStatus } from '../../../models/rockpool/SpecificPoolsTypes'
@@ -28,10 +26,9 @@ interface SpecificPoolComponentProps {
 export default function SpecificPoolComponent({ chainId, specificPoolId }: SpecificPoolComponentProps) {
   const account = useAccount()
   const walletAccount = account?.address || ''
-  const signerProvider = new ethers.providers.Web3Provider(ethers.providers.AlchemyProvider)
   const config = chainConfig(chainId)
   const { loading, specificPublicItem, refetch: refetchSpecificPublicItemById } = useSpecificPublicItemById(specificPoolId, chainId)
-  useSpecificVerifyAvailability(chainId, signerProvider, specificPublicItem)
+  // useSpecificVerifyAvailability(chainId, signerProvider, specificPublicItem)
   const priceAfterFractionalization = new BigNumber(specificPublicItem?.targetPrice || 0).multipliedBy(
     specificPublicItem?.priceMultiplier || 0
   )
@@ -106,7 +103,6 @@ export default function SpecificPoolComponent({ chainId, specificPoolId }: Speci
                       balance={isNativeToken ? balanceNative : balanceErc20}
                       balanceLoading={isNativeToken ? balanceLoading : erc20Loading}
                       specificPublicItem={specificPublicItem}
-                      signerProvider={signerProvider}
                       userParticipation={rockpoolItemBuyer?.amount || '0'}
                       walletAddress={walletAccount}
                       losePool={!!losePool}
@@ -119,7 +115,6 @@ export default function SpecificPoolComponent({ chainId, specificPoolId }: Speci
                       chainId={chainId}
                       userBuyer={rockpoolItemBuyer}
                       specificPublicItem={specificPublicItem}
-                      signerProvider={signerProvider}
                       refetch={handleRefetchData}
                     />
                   )}

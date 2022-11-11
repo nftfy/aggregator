@@ -19,7 +19,6 @@ interface RewardPoolsOpenProps {
 export function RewardPoolsOpen({ chainId, stakingPools, loading, loadMore, hasMore, refetch, isRefetching }: RewardPoolsOpenProps) {
   const account = useAccount()
   const { data } = useSigner()
-  console.log('signer', data?.provider)
   const walletChainId = 5
   const resolveRewardPoolCard = (pool: RewardPool) => {
     if (pool.type === 'ERC-721') {

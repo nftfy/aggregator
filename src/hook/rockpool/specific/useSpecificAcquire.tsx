@@ -1,13 +1,29 @@
 import { notification } from 'antd'
 import { useCallback, useEffect } from 'react'
-import useClaim from '../openCollectivePurchase/useClaim'
+import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
+import useAcquire from '../openCollectivePurchase/useAcquire'
 
-export default function useClaimFractions(chainId: number, poolId: string, buyer: string, refetchData: () => void) {
-  const { setClaim, dismiss, status, isLoading } = useClaim(chainId, poolId, buyer)
+export default function useSpecificAcquire(
+  chainId: number,
+  specificPoolItem: SpecificPoolItem,
+  walletAddress: string,
+  poolIsCompleted: boolean,
+  refetchData: () => void
+) {
+  const { acquire, status, dismiss, isLoading } = useAcquire(
+    chainId,
+    specificPoolItem.id,
+    walletAddress,
+    specificPoolItem.listed,
+    poolIsCompleted
+  )
+  const handleSpecificAcquire = async () => {
+    if (!specificPoolItem) {
+      return
+    }
 
-  const handleClaimFractions = async () => {
     try {
-      await setClaim()
+      await acquire()
     } catch (_) {
       console.error({
         type: 'error',
@@ -19,7 +35,7 @@ export default function useClaimFractions(chainId: number, poolId: string, buyer
 
   const notificationSuccessAddFounds = useCallback(() => {
     notification.success({
-      message: `Claim fraction successfully`,
+      message: `Buy NFT successfully`,
       description: `successfully`,
       placement: 'top',
       duration: 2
@@ -42,7 +58,7 @@ export default function useClaimFractions(chainId: number, poolId: string, buyer
   }, [status, dismiss, refetchData, notificationSuccessAddFounds])
 
   return {
-    handleClaimFractions,
+    handleSpecificAcquire,
     isExecutin: isLoading
   }
 }

@@ -1,32 +1,29 @@
 import { switchNetwork } from '@wagmi/core'
 import { Alert, Button, Col, Modal, Row } from 'antd'
 import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { useNetwork } from 'wagmi'
 import { chainConfig } from '../../../ChainConfig'
 import { Buyer } from '../../../graphql/nftfy/rockpool/SpecificPoolItemBuyer'
+import useClaimFractions from '../../../hook/rockpool/specific/useClaimFractions'
 import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
 import { formatDecimals } from '../../../services/UtilService'
 
 interface ParticipantsProps {
   chainId: number
   userBuyer: Buyer | undefined
-  signerProvider: ethers.providers.Web3Provider | null
   specificPublicItem: SpecificPoolItem
   walletAddress: string
+
   refetch: () => void
 }
 
-export default function WinningPool({ signerProvider, specificPublicItem, walletAddress, refetch, chainId, userBuyer }: ParticipantsProps) {
-  const walletChainId = 5 // TODO get reservo library info
+export default function WinningPool({ specificPublicItem, walletAddress, refetch, chainId, userBuyer }: ParticipantsProps) {
   const config = chainConfig(chainId)
-
-  // const { handleClaimFractions } = useClaimFractions(chainId, refetch, signerProvider, walletAddress)
+  const { chain: activeChain } = useNetwork()
+  const walletChainId = activeChain?.id
+  const { handleClaimFractions } = useClaimFractions(chainId, specificPublicItem?.id, walletAddress, refetch)
 
   const handleClaim = () => {
-    if (!signerProvider) {
-      return
-    }
-
     Modal.confirm({
       title: 'Claim fractions',
       content: (
@@ -46,7 +43,7 @@ export default function WinningPool({ signerProvider, specificPublicItem, wallet
       okText: 'Claim',
       cancelText: 'Cancel',
       onOk: async () => {
-        // await handleClaimFractions(specificPublicItem?.id)
+        await handleClaimFractions()
       }
     })
   }
