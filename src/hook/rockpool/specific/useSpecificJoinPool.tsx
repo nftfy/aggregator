@@ -69,6 +69,6 @@ export default function useSpecificJoinPool(
 
   return {
     handleJoin,
-    isExecutin: isExecution || isLoading
+    isExecution: isExecution || isLoading
   }
 }
