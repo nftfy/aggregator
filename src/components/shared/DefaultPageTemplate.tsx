@@ -52,9 +52,8 @@ export function DefaultPageTemplate({ title, product, children }: DefaultPageTem
 
 const { Main } = {
   Main: styled(Content)`
-    background: red;
     padding: 16px 24px;
-    min-height: calc(100vh - 128px);
+    max-width: calc(var(--screen-xl) - 48px);
     max-width: 1136px;
     margin: 0 auto;
     width: 100%;
