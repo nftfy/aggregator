@@ -2,7 +2,7 @@ import { RewardPool } from '@appTypes/pool/RewardPool'
 import CardGrid from '@components/shared/card/CardGrid'
 import CardLoader from '@components/shared/card/CardLoader'
 import { Empty } from '@components/shared/Empty'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 import { RewardPoolERC1155Card } from '../pool-erc1155/RewardPoolERC1155Card'
 import { RewardPoolERC721Card } from '../pool-erc721/RewardPoolERC721Card'
 
@@ -18,6 +18,7 @@ interface RewardPoolsOpenProps {
 
 export function RewardPoolsOpen({ chainId, stakingPools, loading, loadMore, hasMore, refetch, isRefetching }: RewardPoolsOpenProps) {
   const account = useAccount()
+  const { chain } = useNetwork()
   const resolveRewardPoolCard = (pool: RewardPool) => {
     if (pool.type === 'ERC-721') {
       return (
@@ -26,7 +27,7 @@ export function RewardPoolsOpen({ chainId, stakingPools, loading, loadMore, hasM
           key={pool.id}
           accountAddress={String(account?.address)}
           chainId={chainId}
-          walletChainId={chainId}
+          walletChainId={chain?.id ?? null}
           loading={isRefetching}
           refetchStakingPoolList={refetch}
         />
@@ -39,9 +40,8 @@ export function RewardPoolsOpen({ chainId, stakingPools, loading, loadMore, hasM
           pool={pool}
           key={pool.id}
           accountAddress={String(account?.address)}
-          signerProvider={null}
           chainId={chainId}
-          walletChainId={chainId}
+          walletChainId={chain?.id ?? null}
           loading={isRefetching}
           refetchStakingPoolList={refetch}
         />

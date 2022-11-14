@@ -1,20 +1,21 @@
-import { useReactiveVar } from '@apollo/client'
 import { HarvestStakeToken } from '@appTypes/pool/Harvest'
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
-import { Harvest } from '@components/reward-pool-erc721/harvest/Harvest'
-import { Unstake } from '@components/reward-pool-erc721/unstake/Unstake'
 import { ProgramStakeMyStake } from '@components/shared/program/stake/MyStake'
-import { useErc721IsApprovedForAll } from '@hook/contracts/erc721/useErc721IsApprovedForAll'
-import { useErc721SetApprovalForAll } from '@hook/contracts/erc721/useErc721SetApprovalForAll'
-import { useRewardPoolErc721Deposit } from '@hook/contracts/reward-pool-erc721/useRewardPoolErc721Deposit'
+
 import { useMyRewards } from '@hook/shared/useMyRewards'
-import { signerProviderVar, walletChainIdVar } from '@nftfyorg/wallet'
+
 import { toHumanFormat } from '@services/UtilService'
 import { Col, Divider, Row } from 'antd'
 import { useEffect, useState } from 'react'
+import { useNetwork } from 'wagmi'
+import { useErc721IsApprovedForAll } from '../../../hook/reward/erc721/useErc721IsApprovedForAll'
+import { useErc721SetApprovalForAll } from '../../../hook/reward/erc721/useErc721SetApprovalForAll'
+import { useRewardPoolErc721Deposit } from '../../../hook/reward/pool-erc721/useRewardPoolErc721Deposit'
+import { Harvest } from './harvest/Harvest'
 import { StakeErc721 } from './stake/StakeErc721'
 import { StakeERC721Action } from './stake/StakeErc721Action'
+import { Unstake } from './unstake/Unstake'
 
 interface RewardPoolERC721StakeProps {
   pool: RewardPool
@@ -33,15 +34,15 @@ export function RewardPoolERC721Stake({
   isExpired,
   onGetPool
 }: RewardPoolERC721StakeProps) {
-  const walletChainId = useReactiveVar(walletChainIdVar)
-  const signerProvider = useReactiveVar(signerProviderVar)
+  const { chain } = useNetwork()
+  const walletChainId = chain?.id ?? null
 
   const [selectedItems, setSelectedItems] = useState<SelectedNftStake[]>([])
   const [amountMyStake, setAmountMyStake] = useState<string>('0')
   const [stakedToken, setStakedToken] = useState<HarvestStakeToken | null>(null)
   const [isUnstaking, setIsUnstaking] = useState(false)
 
-  const { isLoading: isApprovingUnlock, setApprovalForAll, status: unlockStatus } = useErc721SetApprovalForAll()
+  const { isLoading: isApprovingUnlock, setApprovalForAll, status: unlockStatus } = useErc721SetApprovalForAll(accountAddress, pool.address)
 
   const {
     refetch: refetchUnlock,
@@ -49,7 +50,14 @@ export function RewardPoolERC721Stake({
     isLoading: isCheckingUnlock
   } = useErc721IsApprovedForAll(pool.token.id, accountAddress, pool.address, chainId)
 
-  const { isLoading: isStaking, status: stakeStatus, deposit: depositStake } = useRewardPoolErc721Deposit()
+  const {
+    isLoading: isStaking,
+    status: stakeStatus,
+    deposit: depositStake
+  } = useRewardPoolErc721Deposit(
+    pool.address,
+    selectedItems.map(item => item.tokenId)
+  )
 
   const myRewards = useMyRewards(
     chainId,
@@ -107,10 +115,8 @@ export function RewardPoolERC721Stake({
         >
           <Col span={24}>
             <StakeERC721Action
-              pool={pool}
               account={accountAddress}
               chainId={chainId}
-              signerProvider={signerProvider}
               isApprovingUnlock={isApprovingUnlock}
               setApprovalForAll={setApprovalForAll}
               isApprovedForAll={isApprovedForAll}
@@ -141,7 +147,7 @@ export function RewardPoolERC721Stake({
               </Col>
             </>
           )}
-          {!isExpired && signerProvider && stakedToken && walletChainId && pool.rewards[0] && pool?.hasStake && (
+          {!isExpired && stakedToken && walletChainId && pool.rewards[0] && pool?.hasStake && (
             <Col span={12}>
               <Harvest
                 rewardToken={pool.rewards[0]}
@@ -149,20 +155,18 @@ export function RewardPoolERC721Stake({
                 poolAddress={pool.address}
                 reward={myRewards.reward}
                 refetch={myRewards.refetch}
-                signerProvider={signerProvider}
                 chainId={chainId}
                 tokenImageReward={pool.offchain?.earnTokenImage || ''}
               />
             </Col>
           )}
-          {isUnstaking && accountAddress && signerProvider && (
+          {isUnstaking && accountAddress && (
             <Unstake
               account={accountAddress}
               pool={pool}
               chainId={chainId}
               myRewards={myRewards.reward ? toHumanFormat(+myRewards.reward) : '0'}
               onConfirm={confirmedUnstake}
-              signerProvider={signerProvider}
             />
           )}
         </Row>

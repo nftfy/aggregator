@@ -4,9 +4,10 @@ import { chainConfig } from '@config/chain'
 import { faCopy } from '@fortawesome/free-regular-svg-icons'
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { writeText } from '@services/NavigatorService'
+
 import { Divider, message, Space, Typography } from 'antd'
 import styled from 'styled-components'
+import { writeText } from '../../../services/NavigatorService'
 
 const { Text, Link } = Typography
 
@@ -17,7 +18,7 @@ interface RewardPoolSocialInfoProps {
 }
 
 export function RewardPoolSocialInfo({ chainId, poolAddress, network }: RewardPoolSocialInfoProps) {
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL ?? ''}/stake/${network}/${poolAddress}`
+  const url = window?.location?.href
   const config = chainConfig(chainId)
 
   const handleCopyToClipboard = () => {

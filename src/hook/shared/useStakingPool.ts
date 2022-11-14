@@ -1,28 +1,41 @@
-import { useLazyQuery } from '@apollo/client'
-import { StakingPoolData, StakingPoolVars, STAKING_POOL_QUERY } from '@graphql/pool/StakingPoolQuery'
+import { useQuery } from '@apollo/client'
+import { StakingPoolData, StakingPoolVars, STAKING_POOL_QUERY } from '../../graphql/pool/StakingPoolQuery'
+
 import { notifyError } from '../../services/UtilService'
 
-export const useStakingPool = () => {
-  const [getPool] = useLazyQuery<StakingPoolData, StakingPoolVars>(STAKING_POOL_QUERY, {
+interface UseStakingPoolProps {
+  chainId?: number
+  poolAddress?: string
+  accountAddress?: string
+}
+
+export const useStakingPool = ({ chainId, poolAddress, accountAddress }: UseStakingPoolProps) => {
+  const { loading, refetch, data } = useQuery<StakingPoolData, StakingPoolVars>(STAKING_POOL_QUERY, {
+    fetchPolicy: 'no-cache',
+    skip: !chainId || !poolAddress,
     notifyOnNetworkStatusChange: true,
+    variables: {
+      chainId,
+      poolAddress,
+      accountAddress: accountAddress?.toLowerCase()
+    },
     onError: errorData => {
       notifyError(errorData.networkError, 'Failed to obtain data ')
     }
   })
-
-  const handleGetPool = async (chainId: number, poolAddress: string) => {
-    const { data } = await getPool({
-      fetchPolicy: 'no-cache',
-      variables: {
-        chainId,
-        poolAddress: poolAddress.toLowerCase()
-      }
+  const handleGetPool = async (variables: UseStakingPoolProps) => {
+    const { data: result } = await refetch({
+      ...variables,
+      poolAddress: variables?.poolAddress?.toLocaleLowerCase(),
+      accountAddress: variables?.accountAddress?.toLowerCase()
     })
 
-    return data?.stakingPool
+    return result
   }
 
   return {
-    getPool: handleGetPool
+    getPool: handleGetPool,
+    loading,
+    data: data?.stakingPool
   }
 }

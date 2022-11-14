@@ -40,7 +40,7 @@ export interface Reward {
   expirationInfo: Expiration
 }
 
-export type PoolType = 'ERC-721' | 'ERC-20' | 'ERC-1155' | 'native'
+export type PoolType = 'ERC-721' | 'ERC-1155'
 export type FilterType = FilterEnum.closed | FilterEnum.open | FilterEnum.created
 
 export enum FilterEnum {

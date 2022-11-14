@@ -10,7 +10,6 @@ import { useRemainingTime } from '@hook/shared/useRemainingTime'
 import { Card as AntCard, Col, Row } from 'antd'
 import debounce from 'lodash.debounce'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { ReactNode, useContext, useState } from 'react'
 import styled from 'styled-components'
 import { useAccount, useSwitchNetwork } from 'wagmi'
@@ -40,7 +39,6 @@ export interface CardProps {
 }
 
 export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, children, chainId, walletChainId, accountAddress }: CardProps) {
-  const router = useRouter()
   const account = useAccount()
   const remainingTime = useRemainingTime({ ...pool?.rewards[0]?.expirationInfo })
   const { switchNetwork } = useSwitchNetwork()
@@ -94,7 +92,7 @@ export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, chil
           </Row>
         </Col>
         <Col span={24}>
-          <Link href={[router.asPath, pool?.address].join('/')} passHref>
+          <Link href={['/reward', pool?.address].join('/')} passHref>
             <Button
               type='primary'
               block

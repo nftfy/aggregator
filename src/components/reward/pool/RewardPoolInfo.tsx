@@ -1,18 +1,15 @@
 import { GlobalOutlined, TwitterOutlined } from '@ant-design/icons'
+import { RewardPoolSponsor } from '@appTypes/pool/RewardPool'
 import SponsorBy from '@components/shared/program/details/SponsorBy'
 import SocialLink from '@components/shared/SocialLink'
 import { faDiscord, faTelegram } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Col, Row, Space, Typography } from 'antd'
-import Image from 'next/image'
-import styled from 'styled-components'
-import { RewardPoolSponsor } from '../../types/pool/RewardPool'
+import { Card, Col, Row, Space, Typography } from 'antd'
 
 const { Text } = Typography
 
 type DetailProps = {
   description?: string
-  detailsImage?: string
   sponsor?: RewardPoolSponsor
   items?: number
   owners?: number
@@ -22,17 +19,7 @@ type DetailProps = {
   website?: string
 }
 
-export default function ProgramInfo({
-  description,
-  detailsImage,
-  sponsor,
-  items,
-  owners,
-  twitter,
-  discord,
-  telegram,
-  website
-}: DetailProps) {
+export default function ProgramInfo({ description, sponsor, items, owners, twitter, discord, telegram, website }: DetailProps) {
   const socialMedias = [
     {
       label: 'Website',
@@ -59,20 +46,11 @@ export default function ProgramInfo({
   return (
     <Row gutter={[0, 24]}>
       <Col span={24}>
-        <ImageDetails
-          src={detailsImage || '/assets/imgs/poolDefault.svg'}
-          width={564}
-          height={282}
-          objectFit='cover'
-          objectPosition='center'
-        />
-      </Col>
-      <Col span={24}>
         <SponsorBy sponsor={sponsor} title='Sponsored by:' />
       </Col>
       {socialMedias.some(social => social.link) && (
         <Col span={24}>
-          <Space direction='horizontal' align='center' size={0}>
+          <Space direction='horizontal' align='center' size='small' wrap>
             {socialMedias.map(
               social =>
                 social.link && (
@@ -100,45 +78,37 @@ export default function ProgramInfo({
       {(sponsor || items || owners) && (
         <Col span={24}>
           <Row gutter={[0, 8]}>
-            {sponsor?.name && (
-              <Col span={24}>
-                <Text type='secondary'>Collection Info</Text>
-              </Col>
-            )}
             <Col span={24}>
-              <Row gutter={[0, 6]}>
-                {sponsor?.name && (
+              <Text type='secondary'>Collection Info</Text>
+            </Col>
+            <Col span={24}>
+              <Card size='small'>
+                <Row gutter={[0, 6]} align='middle' justify='center'>
                   <Col span={12}>
-                    <SponsorBy sponsor={sponsor} />
+                    <SponsorBy sponsor={sponsor} displayVerified={false} />
                   </Col>
-                )}
-                <Col span={sponsor?.name ? 12 : 24}>
-                  <Row>
-                    <Col span={12}>
-                      <Space size={0} direction='vertical'>
-                        <Text type='secondary'>Items</Text>
-                        <Text strong>{items}</Text>
-                      </Space>
-                    </Col>
-                    <Col span={12}>
-                      <Space size={0} direction='vertical'>
-                        <Text type='secondary'>Owners</Text>
-                        <Text strong>{owners}</Text>
-                      </Space>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
+                  <Col span={12}>
+                    <Row>
+                      <Col span={12}>
+                        <Space size={0} direction='vertical'>
+                          <Text type='secondary'>Items</Text>
+                          <Text strong>{items}</Text>
+                        </Space>
+                      </Col>
+                      <Col span={12}>
+                        <Space size={0} direction='vertical'>
+                          <Text type='secondary'>Owners</Text>
+                          <Text strong>{owners}</Text>
+                        </Space>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Card>
             </Col>
           </Row>
         </Col>
       )}
     </Row>
   )
-}
-
-const { ImageDetails } = {
-  ImageDetails: styled(Image)`
-    border-radius: var(--border-radius-base);
-  `
 }

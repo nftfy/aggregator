@@ -6,11 +6,12 @@ import { ProgramDetailsStake } from '@components/shared/program/details/Stake'
 import { ProgramDetailsTimeLeft } from '@components/shared/program/details/TimeLeft'
 import { ProgramDetailsTVL } from '@components/shared/program/details/TVL'
 import { chainConfig } from '@config/chain'
-import { useTvlErc1155 } from '@hook/reward-pool-erc1155/useTvlErc1155'
+
 import { UseRemainingTime } from '@hook/shared/useRemainingTime'
 import { Col, Row } from 'antd'
 import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
+import { useTvlErc1155 } from '../../../hook/reward/pool-erc1155/useTvlErc1155'
 
 interface RewardPoolERC1155DetailProps {
   remainingTime: UseRemainingTime
