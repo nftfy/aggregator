@@ -6,17 +6,20 @@ import { ProgramDetailsStake } from '@components/shared/program/details/Stake'
 import { ProgramDetailsTimeLeft } from '@components/shared/program/details/TimeLeft'
 import { ProgramDetailsTVL } from '@components/shared/program/details/TVL'
 import { chainConfig } from '@config/chain'
-import { useTvlErc721 } from '@hook/reward-pool-erc721/useTvlErc721'
+
 import { UseRemainingTime } from '@hook/shared/useRemainingTime'
-import { Col, Row } from 'antd'
+import { Col, Row, Space, Typography } from 'antd'
 import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
+import { useTvlErc721 } from '../../../hook/reward/pool-erc721/useTvlErc721'
 
 interface RewardPoolERC721DetailProps {
   remainingTime: UseRemainingTime
   chainId: number
   pool: RewardPool
 }
+
+const { Text } = Typography
 
 export function RewardPoolERC721Detail({ chainId, pool, remainingTime }: RewardPoolERC721DetailProps) {
   const config = chainConfig(chainId)
@@ -47,7 +50,7 @@ export function RewardPoolERC721Detail({ chainId, pool, remainingTime }: RewardP
 
   return (
     <Row gutter={[16, 16]} align='middle'>
-      <Col span={12}>
+      <Col xs={24} sm={24} md={24} lg={12}>
         <ProgramDetailsStake
           stake={{
             url: `${config.scanAddress}/address/${pool.token.id}`,
@@ -57,7 +60,7 @@ export function RewardPoolERC721Detail({ chainId, pool, remainingTime }: RewardP
           }}
         />
       </Col>
-      <Col span={12}>
+      <Col xs={24} sm={24} md={24} lg={12}>
         <ProgramDetailsEarn
           earn={{
             label: pool?.rewards[0]?.token?.name || pool?.rewards[0]?.token?.symbol,
@@ -66,13 +69,19 @@ export function RewardPoolERC721Detail({ chainId, pool, remainingTime }: RewardP
           }}
         />
       </Col>
-      <Col span={12}>
-        <ProgramDetailsTimeLeft progress={pool?.rewards[0]?.progress} label={remainingTime.label} isExpired={remainingTime.isExpired} />
+      <Col xs={24} sm={24} md={24} lg={12}>
+        <Space direction='vertical' size={0}>
+          <Text type='secondary'>Remaining Time:</Text>
+          <ProgramDetailsTimeLeft progress={pool?.rewards[0]?.progress} label={remainingTime.label} isExpired={remainingTime.isExpired} />
+        </Space>
       </Col>
-      <Col span={12}>
-        <ProgramDetailsParticipants count={pool?.userCount} />
+      <Col xs={24} sm={24} md={24} lg={12}>
+        <Space direction='vertical' size={0}>
+          <Text type='secondary'>Participants:</Text>
+          <ProgramDetailsParticipants count={pool?.userCount} />
+        </Space>
       </Col>
-      <Col span={12}>
+      <Col xs={24} sm={24} md={24} lg={12}>
         <ProgramDetailsDailyRewards
           dailyRewards={{
             amount: dailyRewards,
@@ -80,7 +89,7 @@ export function RewardPoolERC721Detail({ chainId, pool, remainingTime }: RewardP
           }}
         />
       </Col>
-      <Col span={12}>
+      <Col xs={24} sm={24} md={24} lg={12}>
         <ProgramDetailsTVL
           tvl={{
             amount: tvl

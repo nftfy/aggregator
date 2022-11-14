@@ -3,7 +3,12 @@ import debounce from 'lodash.debounce'
 import { Duration } from 'luxon'
 import { useEffect, useMemo, useState } from 'react'
 
-export function useRemainingTime({ days = 0, hours = 0, minutes = 0, seconds = 0 }: Partial<Expiration>) {
+export interface UseRemainingTime {
+  label: string
+  isExpired: boolean
+}
+
+export function useRemainingTime({ days = 0, hours = 0, minutes = 0, seconds = 0 }: Partial<Expiration>): UseRemainingTime {
   const [duration, setDuration] = useState(Duration.fromObject({ days, hours, minutes, seconds }))
 
   const isExpired = useMemo(() => {
@@ -18,7 +23,9 @@ export function useRemainingTime({ days = 0, hours = 0, minutes = 0, seconds = 0
       [duration.hours, 'h'],
       [duration.minutes, 'm'],
       [duration.seconds, 's']
-    ].map(([time, text]) => `${String(time).padStart(2, '0')}:${text} `)
+    ]
+      .map(([time, text]) => `${String(time).padStart(2, '0')}:${text}`)
+      .join(' ')
   }, [duration.days, duration.hours, duration.minutes, duration.seconds])
 
   const handleUpdateDuration = debounce(() => {
@@ -38,6 +45,10 @@ export function useRemainingTime({ days = 0, hours = 0, minutes = 0, seconds = 0
 
     setDuration(newDuration)
   })
+
+  useEffect(() => {
+    setDuration(Duration.fromObject({ days, hours, minutes, seconds }))
+  }, [days, hours, minutes, seconds])
 
   useEffect(() => {
     const interval = setInterval(() => {

@@ -3,7 +3,6 @@ import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Card } from '@components/shared/card/Card'
 import { ProgramStakeMyStake } from '@components/shared/program/stake/MyStake'
 import { chainConfig } from '@config/chain'
-import { Web3Provider } from '@ethersproject/providers'
 import { useMyRewards } from '@hook/shared/useMyRewards'
 import { toHumanFormat } from '@services/UtilService'
 import { Col, Divider, Row } from 'antd'
@@ -14,7 +13,6 @@ import { Unstake } from './unstake/Unstake'
 
 interface RewardPoolERC1155CardProps {
   accountAddress?: string
-  signerProvider: Web3Provider | null
   pool: RewardPool
   chainId: number
   walletChainId: number | null
@@ -27,7 +25,6 @@ export function RewardPoolERC1155Card({
   chainId,
   accountAddress,
   refetchStakingPoolList,
-  signerProvider,
   walletChainId,
   loading
 }: RewardPoolERC1155CardProps) {

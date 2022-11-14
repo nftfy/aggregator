@@ -1,4 +1,4 @@
-import { Layout } from 'antd'
+import { Layout, PageHeader, RowProps } from 'antd'
 import Head from 'next/head'
 import { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
@@ -9,13 +9,21 @@ import { ModalTransaction } from './TransactionModal'
 
 const { Content } = Layout
 
+export interface PageHeaderProps {
+  pageHeaderProps?: RowProps
+  pageHeaderAfter: ReactNode
+  pageHeaderTitle: ReactNode
+  onBack: () => void
+}
+
 interface DefaultPageTemplateProps {
   title: string
   product: string
   children: ReactNode
+  subHeader?: PageHeaderProps
 }
 
-export function DefaultPageTemplate({ title, product, children }: DefaultPageTemplateProps) {
+export function DefaultPageTemplate({ title, product, children, subHeader }: DefaultPageTemplateProps) {
   return (
     <>
       {/* TODO Exchange the goals for the aggregator information */}
@@ -43,7 +51,17 @@ export function DefaultPageTemplate({ title, product, children }: DefaultPageTem
         <Navbar />
         <Toaster position={'top-right'} containerStyle={{ zIndex: 100000000000 }} />
         <NetworkWarning />
-        <Main>{children}</Main>
+        <Main>
+          {subHeader && (
+            <PageHeader
+              title={subHeader.pageHeaderTitle}
+              extra={subHeader.pageHeaderAfter}
+              {...subHeader.pageHeaderProps}
+              onBack={subHeader.onBack}
+            />
+          )}
+          {children}
+        </Main>
         <ModalTransaction />
       </Layout>
     </>
