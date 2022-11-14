@@ -1,34 +1,29 @@
-import { useTransaction } from '@nftfyorg/wallet'
-import { ethers } from 'ethers'
-import { useState } from 'react'
-import { chainConfig } from '../../config/ChainConfig'
-import { openCollectivePurchase } from '../../contracts/openCollectivePurchase/openCollectivePurchase'
-import { SpecificPoolItem } from '../../types/models/SpecificPoolsTypes'
+import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
+import { chainConfig } from '../../../ChainConfig'
+import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
+import { useObserverTransaction } from '../../shared/useObserveTransaction'
+import perpetualOpenCollectivePurchaseAbi from './openCollectivePurchaseAbi.json'
 
-const useLeave = () => {
-  const [isExecuting, setIsExecuting] = useState(false)
+const useLeave = (chainId: number, specificPoolItem: SpecificPoolItem) => {
+  const { products } = chainConfig(chainId)
+  const { config } = usePrepareContractWrite({
+    addressOrName: products.specific.contract.openCollectivePurchase,
+    contractInterface: perpetualOpenCollectivePurchaseAbi,
+    functionName: 'leave',
+    args: [specificPoolItem.id]
+  })
+  const { sendTransaction, isSuccess, data, isLoading } = useSendTransaction(config)
+  const { status, dismiss } = useObserverTransaction(data, isSuccess, products.specific.subgraph)
 
-  const { status, observe, dismiss } = useTransaction()
-
-  const leave = async (signerProvider: ethers.providers.Web3Provider, chainId: number, specificPoolItem: SpecificPoolItem) => {
-    const config = chainConfig(chainId)
-
-    setIsExecuting(true)
-
-    const transaction: string = await openCollectivePurchase(signerProvider, chainId).leave(specificPoolItem)
-
-    setIsExecuting(false)
-
-    if (!transaction) {
-      return
+  const leave = async () => {
+    if (sendTransaction) {
+      await sendTransaction()
     }
-
-    observe(transaction, signerProvider, config.specificSubgraph)
   }
 
   return {
     leave,
-    isLoading: isExecuting,
+    isLoading: isLoading,
     status,
     dismiss
   }

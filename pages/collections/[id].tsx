@@ -430,7 +430,6 @@ export const getStaticProps: GetStaticProps<{
   const tokensRes = await fetch(tokensUrl.href, options)
 
   const tokens = (await tokensRes.json()) as Props['fallback']['tokens']
-  console.log('id', id)
   return {
     props: { fallback: { collection, tokens }, id },
     revalidate: 20,

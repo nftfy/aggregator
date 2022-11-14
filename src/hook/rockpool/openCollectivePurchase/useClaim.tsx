@@ -1,28 +1,28 @@
-import { useTransaction } from '@nftfyorg/wallet'
-import { ethers } from 'ethers'
-import { useState } from 'react'
-import { chainConfig } from '../../config/ChainConfig'
-import { openCollectivePurchase } from '../../contracts/openCollectivePurchase/openCollectivePurchase'
+import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
+import { chainConfig } from '../../../ChainConfig'
+import { useObserverTransaction } from '../../shared/useObserveTransaction'
+import perpetualOpenCollectivePurchaseAbi from './openCollectivePurchaseAbi.json'
 
-const useClaim = () => {
-  const { isLoading: isObserving, status, observe, dismiss } = useTransaction()
-  const [isExecuting, setIsExecuting] = useState(false)
+const useClaim = (chainId: number, listingId: string, buyer: string) => {
+  const { products } = chainConfig(chainId)
 
-  const setClaim = async (signerProvider: ethers.providers.Web3Provider, chainId: number, listingId: string, buyer: string) => {
-    const config = chainConfig(chainId)
-    setIsExecuting(true)
+  const { config } = usePrepareContractWrite({
+    addressOrName: products.specific.contract.openCollectivePurchase,
+    contractInterface: perpetualOpenCollectivePurchaseAbi,
+    functionName: 'claim',
+    args: [listingId, buyer]
+  })
+  const { sendTransaction, isSuccess, data, isLoading } = useSendTransaction(config)
+  const { status, dismiss } = useObserverTransaction(data, isSuccess, products.specific.subgraph)
 
-    const transaction: string = await openCollectivePurchase(signerProvider, chainId).claim(listingId, buyer)
-
-    setIsExecuting(false)
-
-    await observe(transaction, signerProvider, config.specificSubgraph)
-
-    return { transaction }
+  const setClaim = async () => {
+    if (sendTransaction) {
+      await sendTransaction()
+    }
   }
 
   return {
-    isLoading: isExecuting || isObserving,
+    isLoading: isLoading,
     setClaim,
     dismiss,
     status

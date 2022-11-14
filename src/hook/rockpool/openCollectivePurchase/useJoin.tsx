@@ -17,8 +17,8 @@ const useJoin = (chainId: number, specificPoolItem: SpecificPoolItem, value: str
     functionName: 'join',
     args: [specificPoolItem.id, amountInUnits, reservePriceInUnits, isNetworkToken ? { value: amountInUnits } : { value: 0 }]
   })
-  const { sendTransaction, isSuccess, data, isLoading: isLoadingTransactionWallet } = useSendTransaction(config)
-  const { isLoading, status, dismiss } = useObserverTransaction(data, isSuccess, products.specific.subgraph)
+  const { sendTransaction, isSuccess, data, isLoading } = useSendTransaction(config)
+  const { status, dismiss } = useObserverTransaction(data, isSuccess, products.specific.subgraph)
 
   const join = async () => {
     if (sendTransaction) {
@@ -28,7 +28,7 @@ const useJoin = (chainId: number, specificPoolItem: SpecificPoolItem, value: str
 
   return {
     join,
-    isLoading: isLoading || isLoadingTransactionWallet,
+    isLoading: isLoading,
     status,
     dismiss
   }

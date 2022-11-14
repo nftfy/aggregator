@@ -1,13 +1,18 @@
 import { notification } from 'antd'
 import { useCallback, useEffect } from 'react'
-import useClaim from '../openCollectivePurchase/useClaim'
+import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
+import useLeave from '../openCollectivePurchase/useLeave'
 
-export default function useClaimFractions(chainId: number, poolId: string, buyer: string, refetchData: () => void) {
-  const { setClaim, dismiss, status, isLoading } = useClaim(chainId, poolId, buyer)
-
-  const handleClaimFractions = async () => {
+export default function useSpecificLeavePool(
+  chainId: number,
+  specificPoolItem: SpecificPoolItem,
+  userParticipation: string,
+  refetchData: () => void
+) {
+  const { leave, status, dismiss, isLoading } = useLeave(chainId, specificPoolItem)
+  const handleLeave = async () => {
     try {
-      await setClaim()
+      await leave()
     } catch (_) {
       console.error({
         type: 'error',
@@ -19,12 +24,12 @@ export default function useClaimFractions(chainId: number, poolId: string, buyer
 
   const notificationSuccessAddFounds = useCallback(() => {
     notification.success({
-      message: `Claim fraction successfully`,
-      description: `successfully`,
+      message: `Funds successfully removed!`,
+      description: `Amount removed: ${userParticipation || ''} ETH`,
       placement: 'top',
       duration: 2
     })
-  }, [])
+  }, [userParticipation])
 
   useEffect(() => {
     if (status === 'success') {
@@ -39,10 +44,10 @@ export default function useClaimFractions(chainId: number, poolId: string, buyer
         duration: 5
       })
     }
-  }, [status, refetchData, notificationSuccessAddFounds])
+  }, [status, dismiss, refetchData, notificationSuccessAddFounds])
 
   return {
-    handleClaimFractions,
+    handleLeave,
     isExecutin: isLoading
   }
 }
