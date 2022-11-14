@@ -1,10 +1,11 @@
-import { RewardPool } from '@appTypes/pool/RewardPool'
 import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
 import { Button } from '@components/shared/design-system'
 import { Col, Row } from 'antd'
+import { useContext } from 'react'
+import { useSwitchNetwork } from 'wagmi'
+import { GlobalContext } from '../../../../../context/GlobalState'
 
 interface StakeErc721Props {
-  pool: RewardPool
   chainId: number
   setApprovalForAll?: () => void
   isApprovingUnlock: boolean
@@ -18,7 +19,6 @@ interface StakeErc721Props {
 }
 
 export function StakeERC721Action({
-  pool,
   account,
   chainId,
   isApprovingUnlock,
@@ -32,6 +32,8 @@ export function StakeERC721Action({
 }: StakeErc721Props) {
   const isButtonsDisabled = !account
 
+  const { dispatch } = useContext(GlobalContext)
+  const { switchNetwork } = useSwitchNetwork()
   return (
     <Row justify='center' gutter={[8, 0]}>
       {!isApprovedForAll && (
@@ -54,10 +56,12 @@ export function StakeERC721Action({
           loading={isStaking}
           type='primary'
           onClick={depositStake}
-          onChangeNetwork={() => console.log('mudarr aqui rede')}
+          onChangeNetwork={() => switchNetwork && switchNetwork(Number(process.env.NEXT_PUBLIC_CHAIN_ID))}
           currentChainId={walletChainId}
           accountAddress={account}
-          onConnectWallet={() => console.log('connect wallet')}
+          onConnectWallet={() => {
+            dispatch({ type: 'CONNECT_WALLET', payload: false })
+          }}
           chainId={chainId}
           disabled={account?.length > 0 && (!selectedItems.length || !isApprovedForAll)}
           skipStateValidation={false}

@@ -1,28 +1,25 @@
-import { RewardPool } from '@appTypes/pool/RewardPool'
 import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
 import { Button } from '@components/shared/design-system'
-import { Web3Provider } from '@ethersproject/providers'
 import { Col, Row } from 'antd'
+import { useContext } from 'react'
+import { useSwitchNetwork } from 'wagmi'
+import { GlobalContext } from '../../../../../context/GlobalState'
 
 interface StakeERC1155ActionProps {
-  pool: RewardPool
   chainId: number
-  signerProvider?: Web3Provider | null
-  setApprovalForAll: (signerProvider: Web3Provider, contractAddress: string, spenderAddress: string) => Promise<void>
+  setApprovalForAll?: () => void
   isLoadingUnlock: boolean
   isApprovedForAll: boolean
   account: string
   walletChainId: number | null
   selectedItems: SelectedNftStake[]
   isLoadingStakeErc1155: boolean
-  deposit: (poolAddress: string, tokenIdList: string[], amounts: string[], signerProvider: Web3Provider, chainId: number) => Promise<void>
+  deposit?: () => void
 }
 
 export function StakeERC1155Action({
-  pool,
   account,
   chainId,
-  signerProvider,
   setApprovalForAll,
   isApprovedForAll,
   walletChainId,
@@ -31,7 +28,9 @@ export function StakeERC1155Action({
   isLoadingStakeErc1155,
   deposit
 }: StakeERC1155ActionProps) {
-  const isButtonsDisabled = !signerProvider || !account
+  const isButtonsDisabled = !account
+  const { dispatch } = useContext(GlobalContext)
+  const { switchNetwork } = useSwitchNetwork()
 
   return (
     <Row justify='center' gutter={[8, 0]}>
@@ -43,7 +42,7 @@ export function StakeERC1155Action({
             shape='default'
             loading={isLoadingUnlock}
             skipStateValidation
-            onClick={() => signerProvider && setApprovalForAll(signerProvider, pool.token.id, pool.address)}
+            onClick={() => setApprovalForAll && setApprovalForAll()}
             disabled={isButtonsDisabled}
           >
             Unlock
@@ -56,23 +55,16 @@ export function StakeERC1155Action({
           type='primary'
           shape='default'
           loading={isLoadingStakeErc1155}
-          onChangeNetwork={() => console.log('change network')}
+          onChangeNetwork={() => switchNetwork && switchNetwork(Number(process.env.NEXT_PUBLIC_CHAIN_ID))}
           currentChainId={walletChainId}
           accountAddress={account}
-          onConnectWallet={() => console.log('connect wallet')}
+          onConnectWallet={() => {
+            dispatch({ type: 'CONNECT_WALLET', payload: false })
+          }}
           chainId={chainId}
           skipStateValidation={false}
           disabled={account?.length > 0 && (!selectedItems.length || !isApprovedForAll)}
-          onClick={() =>
-            !isButtonsDisabled &&
-            deposit(
-              pool.address,
-              selectedItems.map(item => item.tokenId),
-              selectedItems.map(item => item.amount),
-              signerProvider,
-              chainId
-            )
-          }
+          onClick={() => !isButtonsDisabled && deposit && deposit()}
         >
           Confirm
         </Button>

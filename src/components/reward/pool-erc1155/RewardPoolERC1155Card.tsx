@@ -123,31 +123,29 @@ export function RewardPoolERC1155Card({
                 </Col>
               </>
             )}
-            {!isExpired && signerProvider && stakedToken && walletChainId && pool.rewards[0] && (
+            {!isExpired && stakedToken && walletChainId && pool.rewards[0] && (
               <Col span={24}>
                 <Harvest
                   rewardToken={pool?.rewards[0]}
                   poolAddress={pool.address}
                   reward={myRewards.reward}
                   refetch={myRewards.refetch}
-                  signerProvider={signerProvider}
                   chainId={chainId}
                   tokenImageReward={pool.offchain?.earnTokenImage}
                 />
               </Col>
             )}
           </Row>
-          {isUnstaking && accountAddress && signerProvider && (
+          {isUnstaking && accountAddress && (
             <Unstake
               pool={pool}
               chainId={chainId}
               account={accountAddress}
               myRewards={myRewards.reward ? toHumanFormat(+myRewards.reward) : '0'}
               onConfirm={confirmedUnstake}
-              signerProvider={signerProvider}
             />
           )}
-          {pool.token?.id && isStaking && signerProvider && accountAddress && (
+          {pool.token?.id && isStaking && accountAddress && (
             <StakeModal
               title={stakeModalTitle}
               visible={isStaking}
@@ -156,7 +154,6 @@ export function RewardPoolERC1155Card({
               chainIdPage={chainId}
               onConfirm={handleConfirmStake}
               account={accountAddress}
-              signerProvider={signerProvider}
               stakePoolImage={pool.offchain?.stakeTokenImage}
               stakedAmount={amountMyStake}
             />
