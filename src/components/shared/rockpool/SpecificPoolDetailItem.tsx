@@ -4,7 +4,7 @@ import { Card, Col, Row, Typography } from 'antd'
 import styled from 'styled-components'
 import { chainConfig } from '../../../ChainConfig'
 import { Collection } from '../../../models/rockpool/Collection'
-import { TokenImage } from '../../shared/TokenImage'
+import { TokenImage } from '../TokenImage'
 
 export interface CollectionInfoProps {
   chainId: number

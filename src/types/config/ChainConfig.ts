@@ -13,6 +13,14 @@ interface SpecificConfig {
   }
   subgraph: string
 }
+interface BuyFloorConfig {
+  contract: {
+    externalAcquirerV2: string
+    perpetualOpenCollectivePurchaseV2: string
+    seaportFractionalizer: string
+  }
+  subgraph: string
+}
 export interface AssetERC20 {
   name: string
   symbol: string
@@ -40,5 +48,6 @@ export interface ChainConfig {
   hub?: RewardsConfig
   products: {
     specific: SpecificConfig
+    buyFloor: BuyFloorConfig
   }
 }

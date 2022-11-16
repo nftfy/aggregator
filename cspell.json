@@ -26,6 +26,10 @@
     "offchain",
     "rockpool",
     "unstake",
-    "wagmi"
+    "wagmi",
+    "Executin",
+    "isLoading",
+    "buyfloor",
+    "hexlify"
   ]
 }
