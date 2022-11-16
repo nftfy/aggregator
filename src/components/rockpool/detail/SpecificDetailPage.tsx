@@ -1,5 +1,4 @@
 import { Col, PageHeader, Row } from 'antd'
-import styled from 'styled-components'
 import ShareButton from '../../shared/ShareButton'
 import SpecificPoolComponent from './SpecificPoolComponent'
 
@@ -19,12 +18,4 @@ export default function SpecificDetailPage({ chainId, specificPoolId }: DetailPa
       </Col>
     </Row>
   )
-}
-
-const { Container } = {
-  Container: styled.div`
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-  `
 }

@@ -13,8 +13,8 @@ import { RockpoolStatus } from '../../../models/rockpool/SpecificPoolsTypes'
 import { formatToLocaleString } from '../../../services/UtilService'
 import AddedParticipants from './Participants/AddedParticipation'
 
+import CollectionInfo from '../../shared/rockpool/SpecificPoolDetailItem'
 import SpecificParticipants from './Participants/SpecificParticipants'
-import CollectionInfo from './SpecificPoolDetailItem'
 import TargetNftCards from './TargetNftCards'
 import WinningPool from './WinningPool'
 

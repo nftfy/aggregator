@@ -44,6 +44,14 @@ const chainsConfig: ChainConfig[] = [
           openCollectivePurchase: '0x1afcCa7a8656A1BCC5A3827B97A183C4Cd1740c2'
         },
         subgraph: ''
+      },
+      buyFloor: {
+        contract: {
+          externalAcquirerV2: '',
+          perpetualOpenCollectivePurchaseV2: '',
+          seaportFractionalizer: ''
+        },
+        subgraph: 'https://api.thegraph.com/subgraphs/id/Qme91Fy6kygWAaswhArTAGYy1ZrsuyV6Yh7rwHFv6v6reX'
       }
     },
     blockExplorer: 'https://etherscan.io/'
@@ -73,6 +81,14 @@ const chainsConfig: ChainConfig[] = [
           openCollectivePurchase: '0x1afcCa7a8656A1BCC5A3827B97A183C4Cd1740c2'
         },
         subgraph: 'https://api.thegraph.com/subgraphs/id/QmcCdhq4ADYQApYW1YcaYv5u5HoPwNxxNGcihFFLuM466y'
+      },
+      buyFloor: {
+        contract: {
+          externalAcquirerV2: '0xCa05bB38f014622119eb8d59Ec6115ea64762836',
+          perpetualOpenCollectivePurchaseV2: '0xC841052b1C22059beF16A216a7488b39393B1126',
+          seaportFractionalizer: '0x254Bb60B25EdFd72B73cBcf49285B79534A2EcC7'
+        },
+        subgraph: 'https://api.thegraph.com/subgraphs/id/Qme91Fy6kygWAaswhArTAGYy1ZrsuyV6Yh7rwHFv6v6reX'
       }
     },
     stableCoins: {
@@ -102,6 +118,14 @@ const chainsConfig: ChainConfig[] = [
         contract: {
           externalAcquirer: '',
           openCollectivePurchase: ''
+        },
+        subgraph: ''
+      },
+      buyFloor: {
+        contract: {
+          externalAcquirerV2: '',
+          perpetualOpenCollectivePurchaseV2: '',
+          seaportFractionalizer: ''
         },
         subgraph: ''
       }

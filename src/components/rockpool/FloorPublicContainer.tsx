@@ -8,12 +8,12 @@ import { useSpecificPublicItems } from '../../hook/rockpool/specific/useSpecific
 import { OrderDirection, SpecificPoolItemFilter, SpecificPoolItemOrderBy } from '../../models/rockpool/SpecificPoolsTypes'
 import { formatToLocaleString } from '../../services/UtilService'
 
-export interface SpecificPublicTableProps {
+export interface FloorPublicTableProps {
   chainId: number
   collectionAddress: string
 }
 
-export default function SpecificPublicTable({ chainId, collectionAddress }: SpecificPublicTableProps) {
+export default function FloorPublicTable({ chainId, collectionAddress }: FloorPublicTableProps) {
   const { specificPools, loading } = useSpecificPublicItems(
     chainId,
     {
