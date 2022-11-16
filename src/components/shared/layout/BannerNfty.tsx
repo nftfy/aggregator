@@ -5,7 +5,6 @@ import FormatEth from '../../../../components/FormatEth'
 import { chainConfig } from '../../../ChainConfig'
 import { TokenImage } from '../TokenImage'
 import blockExplorerIcon from '/public/assets/imgs/block-explorer.svg'
-import defaultBanner from '/public/assets/imgs/collectionResponse.png'
 import discordIcon from '/public/assets/imgs/discord.svg'
 import linkIcon from '/public/assets/imgs/link.svg'
 import twitterIcon from '/public/assets/imgs/twitter.svg'
@@ -33,7 +32,7 @@ export const BannerNfty = ({ collectionId, chainId }: NewheaderProps) => {
   }
   return (
     <div className='relative z-0 col-span-full flex w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
-      <Banner src={defaultBanner.src} />
+      {collection?.banner && <Banner src={collection.banner} />}
       <div className='col-span-full flex w-full flex-row flex-wrap items-center gap-4 py-6 '>
         <div className='flex items-center justify-center gap-1'>
           <TokenImage diameter={64} address={collectionId} src={collection?.image} />
