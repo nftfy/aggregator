@@ -1,7 +1,7 @@
 import { notification } from 'antd'
 import { useCallback, useEffect } from 'react'
 import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
-import useLeave from '../openCollectivePurchase/useLeave'
+import useLeave from '../open-collective-purchase/useLeave'
 
 export default function useSpecificLeavePool(
   chainId: number,

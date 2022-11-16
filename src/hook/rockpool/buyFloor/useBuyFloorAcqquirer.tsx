@@ -1,27 +1,17 @@
 import { notification } from 'antd'
 import { useCallback, useEffect } from 'react'
-import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
-import useAcquire from '../external-acquirer/useAcquire'
+import useAcquireV2 from '../external-acquirerV2/useAcquirerV2'
 
-export default function useSpecificAcquire(
+export default function useBuyFloorAcquirerV2(
   chainId: number,
-  specificPoolItem: SpecificPoolItem,
-  walletAddress: string,
+  tokenId: string,
+  poolId: string,
   poolIsCompleted: boolean,
+  collectionAddress: string,
   refetchData: () => void
 ) {
-  const { acquire, status, dismiss, isLoading } = useAcquire(
-    chainId,
-    specificPoolItem.id,
-    walletAddress,
-    specificPoolItem.listed,
-    poolIsCompleted
-  )
+  const { acquire, status, dismiss, isLoading } = useAcquireV2(chainId, tokenId, poolId, poolIsCompleted, collectionAddress)
   const handleSpecificAcquire = async () => {
-    if (!specificPoolItem) {
-      return
-    }
-
     try {
       await acquire()
     } catch (_) {

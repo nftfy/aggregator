@@ -1,11 +1,9 @@
 import { UserOutlined } from '@ant-design/icons'
-import { useReactiveVar } from '@apollo/client'
-import { walletAccountVar } from '@nftfyorg/wallet'
 import { Button, Empty, List, Typography } from 'antd'
 import styled from 'styled-components'
-import { Buyer } from '../../../../../types/models/Buyer'
-import InviteCard from '../../../../shared/InviteCard'
-import Participant from '../../../../shared/Participant'
+import { Buyer } from '../../../../../graphql/nftfy/rockpool/SpecificPoolItemBuyer'
+import InviteCard from '../../../detail/Participants/InviteCard'
+import Participant from '../../../detail/Participants/Participant'
 import { modalParticipantsVar, ParticipantsModal } from './ParticipantsModal'
 
 interface ParticipantsProps {
@@ -13,11 +11,11 @@ interface ParticipantsProps {
   buyersLoading?: boolean
   buyers: Buyer[]
   poolProgress: number
+  walletAddress: string
 }
 
-export default function Participants({ chainId, buyers, buyersLoading, poolProgress }: ParticipantsProps) {
+export default function Participants({ chainId, buyers, buyersLoading, poolProgress, walletAddress }: ParticipantsProps) {
   const { Text } = Typography
-  const walletAddress = useReactiveVar(walletAccountVar)
 
   return (
     <Content>

@@ -1,7 +1,7 @@
 import { notification } from 'antd'
 import { ethers } from 'ethers'
 import { useCallback, useEffect } from 'react'
-import useJoinV2 from '../openCollectivePurchaseV2/useJoinV2'
+import useJoinV2 from '../open-collective-purchaseV2/useJoinV2'
 
 export default function usePerpetualJoin(
   chainId: number,

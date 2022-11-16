@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { Buyer } from '../../types/models/Buyer'
+import { Buyer } from '../SpecificPoolItemBuyer'
 
 export interface PoolBuyersQueryData {
   buyFloorBuyers: Buyer[]

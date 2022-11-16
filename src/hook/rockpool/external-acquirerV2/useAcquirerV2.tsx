@@ -2,16 +2,23 @@ import { useEffect, useState } from 'react'
 import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
 import { chainConfig } from '../../../ChainConfig'
 import { nftfyClient } from '../../../graphql/Client'
-import { SpecificAcquirerData, SpecificAcquirerDataVars, SPECIFIC_ACQUIRING } from '../../../graphql/nftfy/rockpool/SpecificAcquiring'
+import { AcquireDataQueryVars, AcquireQueryData, ACQUIRE_DATA_QUERY } from '../../../graphql/nftfy/rockpool/buyfloor/buyFloorAcquireQuery'
 import { useObserverTransaction } from '../../shared/useObserveTransaction'
-import externalAcquirerAbi from './externalAcquirerAbi.json'
-const useAcquire = (chainId: number, specificPoolItemId: string, walletAddress: string, listed: boolean, poolIsCompleted: boolean) => {
+import externalAcquirerV2Abi from './externalAcquirerV2Abi'
+
+const useAcquireV2 = (
+  chainId: number,
+  tokenId: string,
+  specificPoolItemId: string,
+  poolIsCompleted: boolean,
+  collectionAddress: string
+) => {
   const [dataTx, setDataTx] = useState<string>('')
 
   const { products } = chainConfig(chainId)
   const { config } = usePrepareContractWrite({
-    addressOrName: products.specific.contract.externalAcquirer,
-    contractInterface: externalAcquirerAbi,
+    addressOrName: products.buyFloor.contract.externalAcquirerV2,
+    contractInterface: externalAcquirerV2Abi,
     functionName: 'acquire',
     args: [specificPoolItemId, true, dataTx]
   })
@@ -21,12 +28,12 @@ const useAcquire = (chainId: number, specificPoolItemId: string, walletAddress: 
   const getDataForRequest = async () => {
     if (!poolIsCompleted) return
     try {
-      const { data, error } = await nftfyClient.query<SpecificAcquirerData, SpecificAcquirerDataVars>({
-        query: SPECIFIC_ACQUIRING,
+      const { data, error } = await nftfyClient.query<AcquireQueryData, AcquireDataQueryVars>({
+        query: ACQUIRE_DATA_QUERY,
         variables: {
-          rockpoolItemAcquiringDataId: specificPoolItemId,
           chainId,
-          creator: listed ? null : walletAddress
+          collectionAddress,
+          tokenId
         }
       })
 
@@ -34,10 +41,10 @@ const useAcquire = (chainId: number, specificPoolItemId: string, walletAddress: 
         throw error
       }
 
-      if (!data || !data.rockpoolItemAcquiringData) {
+      if (!data || !data.buyFloorAcquireData) {
         throw new Error()
       }
-      setDataTx(data.rockpoolItemAcquiringData.data)
+      setDataTx(data.buyFloorAcquireData.acquireData)
     } catch (error) {
       throw new Error(error as string)
     }
@@ -49,20 +56,18 @@ const useAcquire = (chainId: number, specificPoolItemId: string, walletAddress: 
     execFunction()
   }, [])
 
-  const acquire = async () => {
-    console.log(dataTx)
-    console.log(sendTransaction)
+  const acquireV2 = async () => {
     if (dataTx && sendTransaction) {
       await sendTransaction()
     }
   }
 
   return {
-    acquire,
+    acquire: acquireV2,
     isLoading: isLoading,
     status,
     dismiss
   }
 }
 
-export default useAcquire
+export default useAcquireV2

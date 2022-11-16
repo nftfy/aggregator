@@ -8,6 +8,7 @@ export const usePoolBuyers = (chainId: number, poolId?: string) => {
       chainId,
       poolId: poolId || '0'
     },
+    fetchPolicy: 'network-only',
     skip: !poolId,
     onError: () => {
       console.error({

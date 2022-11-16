@@ -1,8 +1,8 @@
 import { makeVar, useReactiveVar } from '@apollo/client'
 import { List, Modal } from 'antd'
 import styled from 'styled-components'
-import { Buyer } from '../../../../../types/models/Buyer'
-import Participant from '../../../../shared/Participant'
+import { Buyer } from '../../../../../graphql/nftfy/rockpool/SpecificPoolItemBuyer'
+import Participant from '../../../detail/Participants/Participant'
 
 interface ParticipantsModalProps {
   buyers: Buyer[]
