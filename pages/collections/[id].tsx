@@ -30,7 +30,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiRefreshCcw } from 'react-icons/fi'
 import { RewardPools } from '../../src/components/reward/pools/RewardPools'
-import SpecificPublicTable from '../../src/components/rockpool/SpecificPublicTable'
+import RockpoolPublicTable from '../../src/components/rockpool/RockpoolPublicContainer'
 
 // Environment variables
 // For more information about these variables
@@ -306,7 +306,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           </Tabs.Content>
           <Tabs.Content value='pools' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'>
             <div className='justify-right mt-14  dark:text-white'>
-              {id && <SpecificPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} />}
+              {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} />}
             </div>
           </Tabs.Content>
           <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>

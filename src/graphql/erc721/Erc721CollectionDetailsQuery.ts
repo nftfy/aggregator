@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
+import { Erc721Collection } from '../../models/rockpool/floor/Erc721Collection'
 import { TokenTypeEnum } from '../../models/TokenTypeEnum'
-import { Erc721Collection } from '../../types/Erc721'
 
 export interface Erc721CollectionDetailsQueryData {
   erc721Collection: Erc721Collection
