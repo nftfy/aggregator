@@ -67,7 +67,9 @@ export default function AddedFounds({
     chainId,
     collectionAddress,
     config.nativeToken.address,
-    ethers.BigNumber.from(units(depositAmount.slice(-1) === '.' ? depositAmount + '0' : depositAmount, config.nativeToken.decimals)),
+    !!depositAmount
+      ? ethers.BigNumber.from(units(depositAmount.slice(-1) === '.' ? depositAmount + '0' : depositAmount, config.nativeToken.decimals))
+      : ethers.BigNumber.from('0'),
     ethers.BigNumber.from(units(reservePrice || '0', config.nativeToken.decimals)),
     Number(poolId),
     refetchData
@@ -143,7 +145,7 @@ export default function AddedFounds({
           <ContainerInput>
             <Text>Deposit amount</Text>
             <Input
-              onChange={e => setDepositAmount(cryptoInputValidForm(!!e.target.value ? e.target.value : '0'))}
+              onChange={e => setDepositAmount(cryptoInputValidForm(e.target.value))}
               value={depositAmount}
               size='large'
               addonBefore={<span>ETH</span>}
