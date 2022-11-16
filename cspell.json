@@ -28,6 +28,8 @@
     "unstake",
     "wagmi",
     "Executin",
-    "isLoading"
+    "isLoading",
+    "buyfloor",
+    "hexlify"
   ]
 }
