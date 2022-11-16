@@ -26,6 +26,8 @@
     "offchain",
     "rockpool",
     "unstake",
-    "wagmi"
+    "wagmi",
+    "Executin",
+    "isLoading"
   ]
 }
