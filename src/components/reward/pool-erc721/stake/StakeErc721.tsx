@@ -1,10 +1,8 @@
-import { CheckOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import { InfoCircleOutlined } from '@ant-design/icons'
 import { RewardPool, StakedItem } from '@appTypes/pool/RewardPool'
 import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
-import { CardTokenContainer } from '@components/shared/card-token/CardTokenContainer'
 import { CardTokenImage } from '@components/shared/card-token/CardTokenImage'
 import CardLoader from '@components/shared/card/CardLoader'
-import { ModalConfirm } from '@components/shared/design-system'
 import ExternalLink from '@components/shared/ExternalLink'
 import { ListItemNft } from '@components/shared/ListItemNft'
 import { chainConfig } from '@config/chain'
@@ -32,7 +30,7 @@ interface StakeErc721Props {
   isApprovingUnlock: boolean
   isApprovedForAll: boolean
   selectedItems: SelectedNftStake[]
-  onConfirm: () => void
+  onConfirm: (items: SelectedNftStake[]) => void
   refetchUnlock: () => void
   setSelectedItems: (SelectedNftStake: SelectedNftStake[]) => void
   children?: ReactNode
@@ -57,7 +55,6 @@ export function StakeErc721({
   const config = chainConfig(chainIdPage)
   const [hasReachedMaxSelection, setHasReachedMaxSelection] = useState(false)
   const [hasLoadedStakedItems, setHasLoadedStakedItems] = useState(false)
-  const [isConfirmModalShowing, setIsConfirmModalShowing] = useState(false)
   const [stakedTokenIdList, setStakedTokenIdList] = useState<StakedItem[]>([])
   const { getErc721Collection, erc721Collection } = useErc721Collection()
   const {
@@ -84,11 +81,6 @@ export function StakeErc721({
       return
     }
     setSelectedItems(selectedItems.filter(item => item.tokenId !== tokenId).concat({ tokenId, amount, image }))
-  }
-
-  const handleConfirmStakeAdded = () => {
-    onConfirm()
-    setIsConfirmModalShowing(false)
   }
 
   useEffect(() => {
@@ -122,7 +114,7 @@ export function StakeErc721({
   useEffect(() => {
     if (stakeStatus && !isLoadingStakedNfts) {
       refetchWalletNfts()
-      setIsConfirmModalShowing(true)
+      onConfirm(selectedItems)
     }
   }, [refetchWalletNfts, stakeStatus, isLoadingStakedNfts])
 
@@ -136,199 +128,161 @@ export function StakeErc721({
     setHasReachedMaxSelection(selectedItems.length >= 5)
   }, [selectedItems])
   return (
-    <>
-      <div>
-        <Row gutter={[0, 24]}>
-          {!hideInfo && (
-            <>
-              <Col span={24}>
-                <Text>Stake NFT and earn rewards on it</Text>
-              </Col>
-              <Col span={24}>
-                <Row gutter={[0, 8]}>
-                  <Col span={24}>
-                    <Text>Collection Info</Text>
-                  </Col>
-                  <Col span={24}>
-                    <Row gutter={[0, 8]}>
-                      <CardTokenImage
-                        span={12}
-                        chainConfig={config}
-                        image={stakeTokenImage}
-                        token={{
-                          address: pool.token.id,
-                          ...pool.token
-                        }}
-                      />
-                      <Col span={6}>
-                        <Space direction='vertical' size={0}>
-                          <Text type='secondary'>Items</Text>
-                          <Text strong>{erc721Collection?.stats?.itemsCount || 'N/A'}</Text>
-                        </Space>
-                      </Col>
-                      <Col span={6}>
-                        <Space direction='vertical' size={0}>
-                          <Text type='secondary'>Owners</Text>
-                          <Text strong>{erc721Collection?.stats?.ownersCount || 'N/A'}</Text>
-                        </Space>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Col>
-            </>
-          )}
-
-          {pool.hasStake && (
+    <div>
+      <Row gutter={[0, 24]}>
+        {!hideInfo && (
+          <>
+            <Col span={24}>
+              <Text>Stake NFT and earn rewards on it</Text>
+            </Col>
             <Col span={24}>
               <Row gutter={[0, 8]}>
-                {!hideInfo && (
-                  <Col span={24}>
-                    <Text>My stake ({stakedTokenIdList.length || 0})</Text>
-                  </Col>
-                )}
                 <Col span={24}>
-                  <MyWalletContainer>
-                    <Row gutter={[0, 8]}>
-                      {isLoadingStakedNfts && (
-                        <Col span={24}>
-                          <CardLoader />
-                        </Col>
-                      )}
-                      {!!(!isLoadingStakedNfts && stakedTokenIdList.length) &&
-                        stakedTokenIdList.map(stakedTokenId => (
-                          <Col span={24} key={`${stakedTokenId.id}#${stakedTokenId.tokenId}`}>
-                            <ListItemNft
-                              image={stakedNfts.find(item => item.tokenId === stakedTokenId.tokenId)?.metadata?.image}
-                              token={pool.token}
-                              item={{
-                                id: pool.token.id,
-                                account: { id: stakedTokenId.account.id ?? '' },
-                                tokenId: stakedTokenId.tokenId
-                              }}
-                              type={pool.type}
-                              chainId={chainIdPage}
-                            />
-                          </Col>
-                        ))}
-                    </Row>
-                  </MyWalletContainer>
+                  <Text>Collection Info</Text>
+                </Col>
+                <Col span={24}>
+                  <Row gutter={[0, 8]}>
+                    <CardTokenImage
+                      span={12}
+                      chainConfig={config}
+                      image={stakeTokenImage}
+                      token={{
+                        address: pool.token.id,
+                        ...pool.token
+                      }}
+                    />
+                    <Col span={6}>
+                      <Space direction='vertical' size={0}>
+                        <Text type='secondary'>Items</Text>
+                        <Text strong>{erc721Collection?.stats?.itemsCount || 'N/A'}</Text>
+                      </Space>
+                    </Col>
+                    <Col span={6}>
+                      <Space direction='vertical' size={0}>
+                        <Text type='secondary'>Owners</Text>
+                        <Text strong>{erc721Collection?.stats?.ownersCount || 'N/A'}</Text>
+                      </Space>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
             </Col>
-          )}
-        </Row>
-        {(!hideInfo || pool?.hasStake) && <Divider plain />}
-        <Row gutter={[0, 12]}>
+          </>
+        )}
+
+        {pool.hasStake && (
           <Col span={24}>
-            <Space size='small'>
-              <GrayInfoCircleOutlined />
-              <Text type='secondary'>You can select only 5 NFTs per transaction.</Text>
-            </Space>
-          </Col>
-          <Col span={24}>
-            {!isLoadingWalletNfts && (
-              <Space size='small'>
-                <Text>My Wallet</Text>
-                <Text>{selectedItems.length || 0}/5</Text>
-              </Space>
-            )}
-          </Col>
-          <Col span={24}>
-            <InfiniteScrollContainer>
-              <InfiniteScroll
-                next={loadMore}
-                hasMore={hasMore}
-                loader={isLoadingWalletNfts && <CardLoader />}
-                dataLength={walletNfts.length}
-                height='100%'
-              >
-                <Row gutter={[0, 8]}>
-                  {!isLoadingWalletNfts &&
-                    walletNfts.length > 0 &&
-                    walletNfts.map(item => (
-                      <Col span={24} key={`${item.address}#${item.tokenId}`}>
-                        <ListItemNft
-                          disabled={
-                            !isApprovedForAll ||
-                            (hasReachedMaxSelection && !selectedItems.find(selectedItem => selectedItem.tokenId === item.tokenId))
-                          }
-                          image={item.metadata?.image}
-                          onChange={(tokenId, amount) => handleNftSelection(tokenId, String(amount), item.metadata?.image || '')}
-                          token={pool.token}
-                          item={{ id: item.address, account: { id: item.ownerAddress || '' }, tokenId: item.tokenId }}
-                          type={pool.type}
-                          chainId={chainIdPage}
-                        />
-                      </Col>
-                    ))}
-                  {!isLoadingWalletNfts && walletNfts.length === 0 && (
-                    <Col span={24}>
-                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No items in your wallet' />
-                    </Col>
-                  )}
-                </Row>
-              </InfiniteScroll>
-            </InfiniteScrollContainer>
-          </Col>
-          {children}
-          <Col span={24}>
-            <ExternalLink
-              href={pool?.offchain?.getMoreTokenUrl || `${config.scanAddress}address/${pool.token.id}`}
-              target='_blank'
-              rel='noreferrer'
-            >
-              <Space direction='horizontal' size='small'>
-                {`Get ${pool.token.name || 'more tokens'}`}
-                <FontAwesomeIcon size='1x' icon={faUpRightFromSquare} />
-              </Space>
-            </ExternalLink>
-          </Col>
-        </Row>
-      </div>
-      <ModalConfirm
-        visible={isConfirmModalShowing}
-        type='success'
-        title='Stake confirmed!'
-        onOk={handleConfirmStakeAdded}
-        onCancel={handleConfirmStakeAdded}
-      >
-        <InfiniteScrollContainer>
-          <InfiniteScroll next={loadMore} hasMore={false} loader={false} dataLength={selectedItems.length}>
             <Row gutter={[0, 8]}>
-              {selectedItems.map(item => (
-                <Col span={24} key={`${item.amount}#${item.tokenId}`}>
-                  <CardTokenContainer gutter={0}>
-                    <CardTokenImage
-                      chainConfig={config}
-                      image={item.image}
-                      native={pool.token.native}
-                      token={{
-                        ...pool.token,
-                        address: pool.token.id,
-                        id: item.tokenId
-                      }}
-                    />
-                    <Col>
-                      <CheckIcon />
-                    </Col>
-                  </CardTokenContainer>
+              {!hideInfo && (
+                <Col span={24}>
+                  <Text>My stake ({stakedTokenIdList.length || 0})</Text>
                 </Col>
-              ))}
+              )}
+              <Col span={24}>
+                <MyWalletContainer>
+                  <Row gutter={[0, 8]}>
+                    {isLoadingStakedNfts && (
+                      <Col span={24}>
+                        <CardLoader />
+                      </Col>
+                    )}
+                    {!!(!isLoadingStakedNfts && stakedTokenIdList.length) &&
+                      stakedTokenIdList.map(stakedTokenId => (
+                        <Col span={24} key={`${stakedTokenId.id}#${stakedTokenId.tokenId}`}>
+                          <ListItemNft
+                            image={stakedNfts.find(item => item.tokenId === stakedTokenId.tokenId)?.metadata?.image}
+                            token={pool.token}
+                            item={{
+                              id: pool.token.id,
+                              account: { id: stakedTokenId.account.id ?? '' },
+                              tokenId: stakedTokenId.tokenId
+                            }}
+                            type={pool.type}
+                            chainId={chainIdPage}
+                          />
+                        </Col>
+                      ))}
+                  </Row>
+                </MyWalletContainer>
+              </Col>
             </Row>
-          </InfiniteScroll>
-        </InfiniteScrollContainer>
-      </ModalConfirm>
-    </>
+          </Col>
+        )}
+      </Row>
+      {(!hideInfo || pool?.hasStake) && <Divider plain />}
+      <Row gutter={[0, 12]}>
+        <Col span={24}>
+          <Space size='small'>
+            <GrayInfoCircleOutlined />
+            <Text type='secondary'>You can select only 5 NFTs per transaction.</Text>
+          </Space>
+        </Col>
+        <Col span={24}>
+          {!isLoadingWalletNfts && (
+            <Space size='small'>
+              <Text>My Wallet</Text>
+              <Text>{selectedItems.length || 0}/5</Text>
+            </Space>
+          )}
+        </Col>
+        <Col span={24}>
+          <InfiniteScrollContainer>
+            <InfiniteScroll
+              next={loadMore}
+              hasMore={hasMore}
+              loader={isLoadingWalletNfts && <CardLoader />}
+              dataLength={walletNfts.length}
+              height='100%'
+            >
+              <Row gutter={[0, 8]}>
+                {!isLoadingWalletNfts &&
+                  walletNfts.length > 0 &&
+                  walletNfts.map(item => (
+                    <Col span={24} key={`${item.address}#${item.tokenId}`}>
+                      <ListItemNft
+                        disabled={
+                          !isApprovedForAll ||
+                          (hasReachedMaxSelection && !selectedItems.find(selectedItem => selectedItem.tokenId === item.tokenId))
+                        }
+                        image={item.metadata?.image}
+                        onChange={(tokenId, amount) => handleNftSelection(tokenId, String(amount), item.metadata?.image || '')}
+                        token={pool.token}
+                        item={{ id: item.address, account: { id: item.ownerAddress || '' }, tokenId: item.tokenId }}
+                        type={pool.type}
+                        chainId={chainIdPage}
+                      />
+                    </Col>
+                  ))}
+                {!isLoadingWalletNfts && walletNfts.length === 0 && (
+                  <Col span={24}>
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No items in your wallet' />
+                  </Col>
+                )}
+              </Row>
+            </InfiniteScroll>
+          </InfiniteScrollContainer>
+        </Col>
+        {children}
+        <Col span={24}>
+          <ExternalLink
+            href={pool?.offchain?.getMoreTokenUrl || `${config.scanAddress}address/${pool.token.id}`}
+            target='_blank'
+            rel='noreferrer'
+          >
+            <Space direction='horizontal' size='small'>
+              {`Get ${pool.token.name || 'more tokens'}`}
+              <FontAwesomeIcon size='1x' icon={faUpRightFromSquare} />
+            </Space>
+          </ExternalLink>
+        </Col>
+      </Row>
+    </div>
   )
 }
 
-const { InfiniteScrollContainer, MyWalletContainer, GrayInfoCircleOutlined, CheckIcon } = {
+const { InfiniteScrollContainer, MyWalletContainer, GrayInfoCircleOutlined } = {
   GrayInfoCircleOutlined: styled(InfoCircleOutlined)`
     color: var(--text-color-secondary);
-  `,
-  CheckIcon: styled(CheckOutlined)`
-    color: var(--primary-color);
   `,
   MyWalletContainer: styled.div`
     max-height: 250px;

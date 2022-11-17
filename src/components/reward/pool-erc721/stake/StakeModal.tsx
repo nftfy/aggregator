@@ -16,7 +16,7 @@ interface StakeErc721Props {
   stakeTokenImage?: string
   account: string
   visible: boolean
-  onConfirm: () => void
+  onConfirm: (items: SelectedNftStake[]) => void
   onClose?: () => void
 }
 
