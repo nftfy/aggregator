@@ -1,6 +1,6 @@
-import { LoadingOutlined } from '@ant-design/icons'
+import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons'
 import { switchNetwork } from '@wagmi/core'
-import { Alert, Button, Col, Input, Row, Space, Typography } from 'antd'
+import { Alert, Button, Col, Input, Modal, Row, Space, Typography } from 'antd'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import { useState } from 'react'
@@ -8,7 +8,9 @@ import styled from 'styled-components'
 import { useNetwork } from 'wagmi'
 import ConnectWalletButton from '../../../../../../components/ConnectWalletButton'
 import { chainConfig } from '../../../../../ChainConfig'
+import useBuyFloorAcquirerV2 from '../../../../../hook/rockpool/buyFloor/useBuyFloorAcqquirer'
 import usePerpetualJoin from '../../../../../hook/rockpool/buyFloor/usePerpetualJoin'
+import usePerpetualLeave from '../../../../../hook/rockpool/buyFloor/usePerpetualLeave'
 import { BuyFloorStatus } from '../../../../../models/rockpool/floor/BuyFloorStatusEnum'
 import { cryptoInputValidForm, formatToLocaleString, units } from '../../../../../services/UtilService'
 
@@ -23,8 +25,8 @@ interface AddedFoundsProps {
   poolId?: string
   poolProgressStatus: BuyFloorStatus
   userParticipation?: string
-  tokenId?: string
   walletAccount: string
+  tokenId: string
   refetchData: () => void
 }
 
@@ -39,8 +41,8 @@ export default function AddedFounds({
   balanceLoading,
   poolProgressStatus,
   userParticipation,
-  tokenId,
   walletAccount,
+  tokenId,
   refetchData
 }: AddedFoundsProps) {
   const [depositAmount, setDepositAmount] = useState('0')
@@ -67,6 +69,7 @@ export default function AddedFounds({
     chainId,
     collectionAddress,
     config.nativeToken.address,
+    depositAmount || '0',
     !!depositAmount
       ? ethers.BigNumber.from(units(depositAmount.slice(-1) === '.' ? depositAmount + '0' : depositAmount, config.nativeToken.decimals))
       : ethers.BigNumber.from('0'),
@@ -74,59 +77,36 @@ export default function AddedFounds({
     Number(poolId),
     refetchData
   )
-  // const { handleBuyNft, isExecution } = useBuyNFTForm({
-  //   chainId,
-  //   collectionAddress,
-  //   signerProvider,
-  //   refetchData,
-  //   poolId,
-  //   tokenId
-  // })
-  // const {
-  //   setPerpetualLeave,
-  //   status: statusPerpetualLeave,
-  //   dismiss: dismissPerpetualLeave,
-  //   isLoading: loadingPerpetualLeave
-  // } = usePerpetualLeave()
 
-  // const notificationRemoveParticipation = useCallback(() => {
-  //   notification.success({
-  //     message: `Funds successfully removed!`,
-  //     description: `Amount removed: ${userParticipation || ''} ${config.nativeToken.symbol}`,
-  //     placement: 'top',
-  //     duration: 2
-  //   })
-  // }, [config.nativeToken.symbol, userParticipation])
+  const { handleLeave, isExecutin: isLoadingLeave } = usePerpetualLeave(
+    chainId,
+    collectionAddress,
+    config.nativeToken.address,
+    userParticipation || '0',
+    refetchData
+  )
 
-  // const handleRemoveParticipation = () => {
-  //   Modal.confirm({
-  //     title: 'Remove funds',
-  //     icon: <ExclamationCircleOutlined />,
-  //     content: `You have ${userParticipation || ''} ${config.nativeToken.symbol} of participation. Do you want to remove it?`,
-  //     okText: 'Remove participation',
-  //     cancelText: 'Cancel',
-  //     onOk: async () => removeParticipation(),
-  //     cancelButtonProps: { style: { width: '100%', padding: '5px' } },
-  //     okButtonProps: { style: { width: '100%', padding: '5px' } }
-  //   })
-  // }
+  const { handleSpecificAcquire, isExecutin: isLoadingAcquirer } = useBuyFloorAcquirerV2(
+    chainId,
+    tokenId,
+    poolId || '',
+    canBuyNft,
+    collectionAddress,
+    refetchData
+  )
 
-  // useEffect(() => {
-  //   if (statusPerpetualJoin === 'success') {
-  //     refetchData()
-  //     notificationSuccessAddFounds()
-  //     dismiss()
-  //     setDepositAmount('')
-  //   }
-  // }, [dismiss, notificationSuccessAddFounds, refetchData, statusPerpetualJoin])
-
-  // useEffect(() => {
-  //   if (statusPerpetualLeave === 'success') {
-  //     refetchData()
-  //     notificationRemoveParticipation()
-  //     dismissPerpetualLeave()
-  //   }
-  // }, [dismissPerpetualLeave, notificationRemoveParticipation, refetchData, statusPerpetualLeave])
+  const handleRemoveParticipation = () => {
+    Modal.confirm({
+      title: 'Remove funds',
+      icon: <ExclamationCircleOutlined />,
+      content: `You have ${userParticipation || ''} ${config.nativeToken.symbol} of participation. Do you want to remove it?`,
+      okText: 'Remove participation',
+      cancelText: 'Cancel',
+      onOk: async () => handleLeave(),
+      cancelButtonProps: { style: { width: '100%', padding: '5px' } },
+      okButtonProps: { style: { width: '100%', padding: '5px' } }
+    })
+  }
 
   const handleUseMax = () => {
     if (isUserNotEnabledToJoin) return
@@ -186,26 +166,24 @@ export default function AddedFounds({
                   </Button>
                 )}
                 {canBuyNft && (
-                  // <Button type='primary' disabled={false} block onClick={handleBuyNft} loading={isExecution}>
-                  //   Buy Floor
-                  // </Button>
-                  <div>Buy Floor</div>
+                  <Button type='primary' disabled={false} block onClick={handleSpecificAcquire} loading={isLoadingAcquirer}>
+                    Buy Floor
+                  </Button>
                 )}
               </>
             )}
 
             {!isPoolNeverInitialized && new BigNumber(userParticipation || '0').gt('0') && (
-              // <Button
-              //   type='text'
-              //   block
-              //   onClick={handleRemoveParticipation}
-              //   disabled={new BigNumber(userParticipation || '0').isEqualTo('0')}
-              //   loading={loadingPerpetualLeave}
-              //   style={{ color: 'var(--primary-color)' }}
-              // >
-              //   Remove funds
-              // </Button>
-              <div>Remove funds</div>
+              <Button
+                type='text'
+                block
+                onClick={handleRemoveParticipation}
+                disabled={new BigNumber(userParticipation || '0').isEqualTo('0')}
+                loading={isLoadingLeave}
+                style={{ color: 'var(--primary-color)' }}
+              >
+                Remove funds
+              </Button>
             )}
           </>
         )}

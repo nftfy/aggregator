@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react'
 import { chainConfig } from '../../../ChainConfig'
 import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
 import { useErc20Approve } from '../erc20/useErc20Approve'
-import useJoin from '../openCollectivePurchase/useJoin'
+import useJoin from '../open-collective-purchase/useJoin'
 
 export default function useSpecificJoinPool(
   chainId: number,

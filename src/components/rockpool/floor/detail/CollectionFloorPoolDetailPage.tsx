@@ -14,6 +14,7 @@ import { TokenTypeEnum } from '../../../../models/TokenTypeEnum'
 import CollectionInfo from '../../../shared/rockpool/SpecificPoolDetailItem'
 import TargetNftCards from '../../detail/TargetNftCards'
 import AddedFounds from './buy-floor-card/AddedFounds'
+import Participants from './buy-floor-card/Participants'
 
 interface CollectionFloorPoolDetailPageProps {
   collectionAddress: string
@@ -92,6 +93,7 @@ export default function CollectionFloorPoolDetailPage({ chainId, collectionAddre
                     refetchData={handleRefetchData}
                     collectionAddress={collectionAddress}
                     poolId={poolData?.id}
+                    tokenId={itemFloorPrice?.tokenId || ''}
                     reservePrice={reservePrice}
                     chainId={chainId}
                     targetPrice={itemFloorPrice?.targetPrice}
@@ -100,18 +102,18 @@ export default function CollectionFloorPoolDetailPage({ chainId, collectionAddre
                     remainingAmount={poolProgress?.remainingAmount}
                     poolProgressStatus={poolProgress?.status || BuyFloorStatus.ENDED}
                     userParticipation={buyers.find(buyer => buyer.buyer.toLocaleLowerCase() === walletAccount?.toLocaleLowerCase())?.amount}
-                    tokenId={itemFloorPrice?.tokenId}
                     walletAccount={walletAccount}
                   />
                 </Col>
                 <Col span={24}>
-                  {/* {![BuyFloorStatus.ENDED, BuyFloorStatus.NO_ITEM_AVAILABLE].includes(poolProgress?.status || BuyFloorStatus.ENDED) &&
+                  {![BuyFloorStatus.ENDED, BuyFloorStatus.NO_ITEM_AVAILABLE].includes(poolProgress?.status || BuyFloorStatus.ENDED) &&
                     !buyersLoading && (
                       <Participants
                         buyers={buyers}
                         buyersLoading={buyersLoading}
                         poolProgress={Number(poolProgress?.progress || 0)}
                         chainId={chainId}
+                        walletAddress={walletAccount}
                       />
                     )}
                   {buyersLoading && (
@@ -120,7 +122,7 @@ export default function CollectionFloorPoolDetailPage({ chainId, collectionAddre
                         <LoadingIcon />
                       </ContainerBuyerLoading>
                     </div>
-                  )} */}
+                  )}
                 </Col>
               </Row>
             </CardAnt>

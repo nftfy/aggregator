@@ -38,7 +38,7 @@ const useJoinV2 = (
     ]
   })
   const { sendTransaction, isSuccess, data, isLoading } = useSendTransaction(config)
-  const { status, dismiss } = useObserverTransaction(data, isSuccess, products.specific.subgraph)
+  const { status, dismiss } = useObserverTransaction(data, isSuccess, products.buyFloor.subgraph)
 
   const join = async () => {
     if (sendTransaction) {

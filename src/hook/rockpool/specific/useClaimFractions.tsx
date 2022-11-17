@@ -1,6 +1,6 @@
 import { notification } from 'antd'
 import { useCallback, useEffect } from 'react'
-import useClaim from '../openCollectivePurchase/useClaim'
+import useClaim from '../open-collective-purchase/useClaim'
 
 export default function useClaimFractions(chainId: number, poolId: string, buyer: string, refetchData: () => void) {
   const { setClaim, dismiss, status, isLoading } = useClaim(chainId, poolId, buyer)
