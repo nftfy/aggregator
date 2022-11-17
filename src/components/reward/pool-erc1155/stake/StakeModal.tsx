@@ -1,11 +1,12 @@
 import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Modal } from '@components/shared/design-system'
 
 import { useErc1155ApproveForAll } from '../../../../hook/reward/erc1155/useErc1155ApproveForAll'
+import { useStakeErc1155 } from '../../../../hook/reward/pool-erc1155/useRewardPoolErc1155Deposit'
 import { StakeERC1155 } from './Stake1155'
 import { StakeERC1155Action } from './Stake1155Action'
 
@@ -43,6 +44,15 @@ export function StakeModal({
     status
   } = useErc1155ApproveForAll(chainIdPage, pool.token.id, pool.address, account)
 
+  const {
+    deposit,
+    status: depositStatus,
+    isLoading
+  } = useStakeErc1155(
+    pool.address,
+    selectedItems.map(item => item.tokenId),
+    selectedItems.map(item => item.amount)
+  )
   const onSelectItem = (tokenId: string, amount: string, image: string) => {
     const selectedItemsToUpdate = selectedItems.filter(item => item.tokenId !== tokenId)
 
@@ -54,6 +64,11 @@ export function StakeModal({
     setSelectedItems(selectedItemsToUpdate.concat({ tokenId, amount, image }))
   }
 
+  useEffect(() => {
+    if (depositStatus === 'success' && !isLoading) {
+      onConfirm()
+    }
+  }, [depositStatus, isLoading])
   return (
     <Modal
       title={title}
@@ -71,6 +86,7 @@ export function StakeModal({
           selectedItems={selectedItems}
           isLoadingUnlock={isLoadingUnlock}
           isLoadingStakeErc1155={isLoadingUnlock}
+          deposit={deposit}
         />
       }
     >
