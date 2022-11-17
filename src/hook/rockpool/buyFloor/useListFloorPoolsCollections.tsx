@@ -1,13 +1,12 @@
 import { useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { globalConfig } from '../../../config/GlobalConfig'
+import { globalConfig } from '../../../config'
 import {
   ListFloorPoolsCollectionsQueryData,
   ListFloorPoolsCollectionsQueryVars,
   LIST_FLOOR_POOLS_COLLECTIONS
-} from '../../../graphql/buyfloor/listingFloorPools'
-import { code } from '../../../message'
-import { BuyFloorStatus } from '../../../types/models/enums/BuyFloorStatusEnum'
+} from '../../../graphql/nftfy/rockpool/buyfloor/listingFloorPools'
+import { BuyFloorStatus } from '../../../models/rockpool/floor/BuyFloorStatusEnum'
 
 export const useListFloorPoolsCollections = (
   chainId: number,
@@ -24,8 +23,7 @@ export const useListFloorPoolsCollections = (
   const { loading, error, refetch, data, fetchMore } = useQuery<ListFloorPoolsCollectionsQueryData, ListFloorPoolsCollectionsQueryVars>(
     LIST_FLOOR_POOLS_COLLECTIONS,
     {
-      notifyOnNetworkStatusChange: true,
-      pollInterval: globalConfig.pollingInterval,
+      pollInterval: 30000,
       variables: {
         chainId,
         collectionAddress: collectionAddress.toLocaleLowerCase(),
@@ -39,7 +37,7 @@ export const useListFloorPoolsCollections = (
       },
       skip: !collectionAddress || !chainId,
       onError: () => {
-        console.error('error', code[5003])
+        console.error('error', 'error')
       }
     }
   )

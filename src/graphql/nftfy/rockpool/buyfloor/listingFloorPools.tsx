@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
-import { BuyFloorStatus } from '../../types/models/enums/BuyFloorStatusEnum'
-import { ListFloorPoolsCollections } from '../../types/models/listBuyFloorCollections'
+import { BuyFloorStatus } from '../../../../models/rockpool/floor/BuyFloorStatusEnum'
+import { ListFloorPoolsCollections } from '../../../../models/rockpool/floor/listBuyFloorCollections'
 
 export interface ListFloorPoolsCollectionsQueryData {
   listingPools: ListFloorPoolsCollections[]

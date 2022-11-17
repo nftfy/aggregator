@@ -7,6 +7,7 @@ export default function usePerpetualJoin(
   chainId: number,
   collection: string,
   paymentToken: string,
+  depositValue: string,
   amount: ethers.BigNumber,
   maxReservePrice: ethers.BigNumber,
   referralId: number,
@@ -38,11 +39,10 @@ export default function usePerpetualJoin(
   const notificationSuccessAddFounds = useCallback(() => {
     notification.success({
       message: `Funds successfully added!`,
-      description: `Amount deposited: ${amount} ETH`,
-      placement: 'top',
-      duration: 2
+      description: `Amount deposited: ${depositValue} ETH`,
+      placement: 'top'
     })
-  }, [amount])
+  }, [depositValue])
 
   useEffect(() => {
     if (status === 'success') {

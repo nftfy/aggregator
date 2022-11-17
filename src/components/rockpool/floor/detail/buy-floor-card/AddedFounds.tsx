@@ -69,6 +69,7 @@ export default function AddedFounds({
     chainId,
     collectionAddress,
     config.nativeToken.address,
+    depositAmount || '0',
     !!depositAmount
       ? ethers.BigNumber.from(units(depositAmount.slice(-1) === '.' ? depositAmount + '0' : depositAmount, config.nativeToken.decimals))
       : ethers.BigNumber.from('0'),

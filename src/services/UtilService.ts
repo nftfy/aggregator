@@ -1,7 +1,9 @@
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import humanFormat from 'human-format'
+import moment from 'moment'
 import { EthereumTestNetworks } from '../ChainConfig'
+import { globalConfig } from '../config'
 
 export const formatToLocaleString = (
   value: string | number | BigNumber,
@@ -94,4 +96,17 @@ export function cryptoInputValidForm(value: string) {
 
   updatedValue = updatedValue.replace(/[^0-9.]/g, '')
   return updatedValue
+}
+
+export function formatTimestamp(timestamp: number) {
+  if (!timestamp) {
+    return 'no date'
+  }
+  const date = moment.unix(timestamp).format('DD MMM YYYY')
+
+  return date
+}
+
+export function redirectToShowFractions(chainId: number, fraction: string) {
+  window.open(`${globalConfig.nftfy.marketplaceUrl}/marketplace/${chainId}/detail/${fraction}`, '_blank')
 }
