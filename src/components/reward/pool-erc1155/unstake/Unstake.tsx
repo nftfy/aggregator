@@ -21,6 +21,7 @@ export function Unstake({ pool, chainId, onConfirm, myRewards, account }: Unstak
   const [rewardsEarned, setRewardsEarned] = useState<string>('0')
 
   const handleUnstakeErc1155 = async (selectedItems: SelectedNft[]) => {
+    setIsUnstaking(false)
     setIsConfirmed(true)
     setRewardsEarned(myRewards)
     setUnstakedNfts(selectedItems)
