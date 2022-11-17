@@ -16,7 +16,7 @@ interface StakeERC20ModalProps {
   chainIdPage: number
   visible: boolean
   account: string
-  onConfirm: () => void
+  onConfirm: (items: SelectedNftStake[]) => void
   onClose?: () => void
   stakePoolImage?: string
   stakedAmount: string
@@ -63,10 +63,13 @@ export function StakeModal({
 
     setSelectedItems(selectedItemsToUpdate.concat({ tokenId, amount, image }))
   }
+  const handleConfirm = () => {
+    onConfirm(selectedItems)
+  }
 
   useEffect(() => {
     if (depositStatus === 'success' && !isLoading) {
-      onConfirm()
+      onConfirm(selectedItems)
     }
   }, [depositStatus, isLoading])
   return (
@@ -74,7 +77,7 @@ export function StakeModal({
       title={title}
       visible={visible}
       onCancel={onClose}
-      onOk={onConfirm}
+      onOk={handleConfirm}
       closable
       customFooter={
         <StakeERC1155Action
@@ -95,7 +98,7 @@ export function StakeModal({
         selectedItems={selectedItems}
         pool={pool}
         chainIdPage={chainIdPage}
-        handleStakeConfirmed={onConfirm}
+        handleStakeConfirmed={handleConfirm}
         account={account}
         isApprovedForAll={isApprovedForAll}
         status={status}

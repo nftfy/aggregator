@@ -1,29 +1,28 @@
-import { CheckOutlined } from '@ant-design/icons'
 import { Col, Row } from 'antd'
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { chainConfig } from '../../../../ChainConfig'
+import { toHumanFormat } from '../../../../services/UtilService'
 import { RewardPool } from '../../../../types/pool/RewardPool'
 import { SelectedNftStake } from '../../../../types/stake/SelectedNftStake'
-import CardTokenContainer from '../../../shared/card-token/CardTokenContainer'
-import CardTokenImage from '../../../shared/card-token/CardTokenImage'
+import CardToken from '../../../shared/card-token/CardToken'
 import { ModalConfirm } from '../../../shared/design-system'
 import { StakeModal } from './StakeModal'
 
 interface StakeProps {
+  title: string
   pool: RewardPool
-  chainIdPage: number
-  account: string
+  chainId: number
   visible: boolean
+  accountAddress: string
   onConfirm: () => void
   onClose?: () => void
+  stakedAmount: string
 }
 
-export const Stake = ({ pool, account, chainIdPage, visible, onConfirm, onClose }: StakeProps) => {
-  const config = chainConfig(chainIdPage)
+export const Stake = ({ visible, onConfirm, onClose, pool, chainId, accountAddress, title, stakedAmount }: StakeProps) => {
   const [selectedItems, setSelectedItems] = useState<SelectedNftStake[]>([])
   const [isConfirmModalShowing, setIsConfirmModalShowing] = useState(false)
   const [isStaking, setIsStaking] = useState(false)
+
   const handleConfirm = (items: SelectedNftStake[]) => {
     setIsStaking(false)
     setSelectedItems(items)
@@ -37,43 +36,39 @@ export const Stake = ({ pool, account, chainIdPage, visible, onConfirm, onClose 
   return (
     <>
       <StakeModal
+        title={title}
         visible={visible && isStaking}
         onClose={onClose}
         pool={pool}
-        chainIdPage={chainIdPage}
+        chainIdPage={chainId}
         onConfirm={handleConfirm}
-        account={account}
-        stakeTokenImage={pool.offchain?.stakeTokenImage}
+        account={accountAddress}
+        stakePoolImage={pool.offchain?.stakeTokenImage}
+        stakedAmount={stakedAmount}
       />
+
       <ModalConfirm visible={isConfirmModalShowing} type='success' title='Stake confirmed!' onOk={onConfirm} onCancel={onConfirm}>
         <Row gutter={[0, 8]}>
           {selectedItems.map(item => (
             <Col span={24} key={`${item.amount}#${item.tokenId}`}>
-              <CardTokenContainer gutter={0}>
-                <CardTokenImage
-                  chainConfig={config}
-                  image={item.image}
-                  native={pool.token.native}
-                  token={{
-                    ...pool.token,
-                    address: pool.token.id,
-                    id: item.tokenId
-                  }}
-                />
-                <Col>
-                  <CheckIcon />
-                </Col>
-              </CardTokenContainer>
+              <CardToken
+                gutter={0}
+                title='My Stake'
+                chainId={chainId}
+                image={item.image}
+                native={pool.token.native}
+                token={{
+                  ...pool.token,
+                  address: pool.token.id,
+                  id: item.tokenId
+                }}
+                showBalanceSymbol={false}
+                amount={item.amount ? toHumanFormat(+item.amount) : '0'}
+              />
             </Col>
           ))}
         </Row>
       </ModalConfirm>
     </>
   )
-}
-
-const { CheckIcon } = {
-  CheckIcon: styled(CheckOutlined)`
-    color: var(--primary-color);
-  `
 }

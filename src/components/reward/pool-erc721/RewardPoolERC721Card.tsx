@@ -145,7 +145,6 @@ export function RewardPoolERC721Card({
               chainIdPage={chainId}
               onConfirm={handleConfirmStake}
               account={accountAddress}
-              refetchPoolList={refetchStakingPoolList}
             />
           )}
         </>
