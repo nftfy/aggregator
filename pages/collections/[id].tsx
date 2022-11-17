@@ -188,7 +188,9 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           {description}
           {image}
         </Head>
-        {id && <BannerNfty collectionId={id} chainId={Number(CHAIN_ID)} />}
+        <div className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'>
+          {id && <BannerNfty collectionId={id} chainId={Number(CHAIN_ID)} />}
+        </div>
         <Tabs.Root
           value={router.query?.tab?.toString() || 'items'}
           className="col-span-full grid grid-cols-4 gap-x-4 md:grid-cols-8 lg:grid-cols-12 3xl:grid-cols-16 4xl:grid-cols-21"
