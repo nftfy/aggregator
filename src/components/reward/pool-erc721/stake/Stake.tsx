@@ -1,14 +1,11 @@
 import { CheckOutlined } from '@ant-design/icons'
-import { Col, Row } from 'antd'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { chainConfig } from '../../../../ChainConfig'
 import { RewardPool } from '../../../../types/pool/RewardPool'
 import { SelectedNftStake } from '../../../../types/stake/SelectedNftStake'
-import CardTokenContainer from '../../../shared/card-token/CardTokenContainer'
-import CardTokenImage from '../../../shared/card-token/CardTokenImage'
-import { ModalConfirm } from '../../../shared/design-system'
 import { StakeModal } from './StakeModal'
+import { SucessfullStakeErc721 } from './SucessfulStakeErc721'
 
 interface StakeProps {
   pool: RewardPool
@@ -45,29 +42,14 @@ export const Stake = ({ pool, account, chainIdPage, visible, onConfirm, onClose 
         account={account}
         stakeTokenImage={pool.offchain?.stakeTokenImage}
       />
-      <ModalConfirm visible={isConfirmModalShowing} type='success' title='Stake confirmed!' onOk={onConfirm} onCancel={onConfirm}>
-        <Row gutter={[0, 8]}>
-          {selectedItems.map(item => (
-            <Col span={24} key={`${item.amount}#${item.tokenId}`}>
-              <CardTokenContainer gutter={0}>
-                <CardTokenImage
-                  chainConfig={config}
-                  image={item.image}
-                  native={pool.token.native}
-                  token={{
-                    ...pool.token,
-                    address: pool.token.id,
-                    id: item.tokenId
-                  }}
-                />
-                <Col>
-                  <CheckIcon />
-                </Col>
-              </CardTokenContainer>
-            </Col>
-          ))}
-        </Row>
-      </ModalConfirm>
+      <SucessfullStakeErc721
+        chainId={chainIdPage}
+        pool={pool}
+        visible={isConfirmModalShowing}
+        items={selectedItems}
+        onConfirm={onConfirm}
+        onCancel={onConfirm}
+      />
     </>
   )
 }
