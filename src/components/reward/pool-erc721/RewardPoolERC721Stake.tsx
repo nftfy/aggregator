@@ -106,7 +106,7 @@ export function RewardPoolERC721Stake({
           pool={pool}
           chainIdPage={chainId}
           account={accountAddress}
-          stakeStatus={stakeStatus}
+          stakeStatus={stakeStatus === 'success'}
           stakeTokenImage={stakeTokenImage}
           unlockStatus={unlockStatus}
           isApprovingUnlock={isApprovingUnlock}

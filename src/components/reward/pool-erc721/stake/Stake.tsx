@@ -1,7 +1,7 @@
 import { CheckOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { chainConfig } from '../../../../ChainConfig'
+import { useRewardPoolErc721Deposit } from '../../../../hook/reward/pool-erc721/useRewardPoolErc721Deposit'
 import { RewardPool } from '../../../../types/pool/RewardPool'
 import { SelectedNftStake } from '../../../../types/stake/SelectedNftStake'
 import { StakeModal } from './StakeModal'
@@ -17,10 +17,15 @@ interface StakeProps {
 }
 
 export const Stake = ({ pool, account, chainIdPage, visible, onConfirm, onClose }: StakeProps) => {
-  const config = chainConfig(chainIdPage)
   const [selectedItems, setSelectedItems] = useState<SelectedNftStake[]>([])
   const [isConfirmModalShowing, setIsConfirmModalShowing] = useState(false)
   const [isStaking, setIsStaking] = useState(false)
+
+  const { isLoading, deposit, status } = useRewardPoolErc721Deposit(
+    pool.address,
+    selectedItems.map(item => item.tokenId)
+  )
+
   const handleConfirm = (items: SelectedNftStake[]) => {
     setIsStaking(false)
     setSelectedItems(items)
@@ -31,15 +36,28 @@ export const Stake = ({ pool, account, chainIdPage, visible, onConfirm, onClose 
     setIsStaking(visible)
   }, [visible])
 
+  useEffect(() => {
+    if (status === 'pending') {
+      setIsStaking(false)
+    } else if (status === 'success') {
+      setIsStaking(false)
+      setIsConfirmModalShowing(true)
+    }
+  }, [status])
+
   return (
     <>
       <StakeModal
         visible={visible && isStaking}
         onClose={onClose}
         pool={pool}
+        isLoading={isLoading}
         chainIdPage={chainIdPage}
+        selectedItems={selectedItems}
+        setSelectedItems={setSelectedItems}
         onConfirm={handleConfirm}
         account={account}
+        depositStake={deposit}
         stakeTokenImage={pool.offchain?.stakeTokenImage}
       />
       <SucessfullStakeErc721

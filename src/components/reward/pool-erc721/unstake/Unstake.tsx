@@ -47,8 +47,6 @@ export function Unstake({ pool, chainId, onConfirm, visible, myRewards, account 
     if (withdrawStatus === 'pending') {
       setIsUnstaking(false)
     }
-    console.log('withdrawStatus', withdrawStatus)
-    console.log('isWithdrawing', isWithdrawing)
   }, [isWithdrawing, withdrawStatus])
 
   useEffect(() => {
