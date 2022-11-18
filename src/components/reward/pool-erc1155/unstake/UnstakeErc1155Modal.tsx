@@ -2,7 +2,6 @@ import { Col, Divider, Row, Typography } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useErc721TokenIdListItems } from '../../../../hook/reward/erc721/useErc721TokenIdListItems'
-import { useRewardPoolWithdrawErc1155 } from '../../../../hook/reward/pool-erc1155/useRewardPoolErc1155Withdraw'
 import { RewardPool, StakedItem } from '../../../../types/pool/RewardPool'
 import CardToken from '../../../shared/card-token/CardToken'
 import CardLoader from '../../../shared/card/CardLoader'
@@ -14,9 +13,12 @@ interface UnstakeNftModalProps {
   chainId: number
   myRewards: string
   visible?: boolean
-  onClose?: () => void
-  onConfirm: (selectedItems: SelectedNft[], stakedItems: StakedItem[]) => void
+  isLoading: boolean
+  selectedItems: SelectedNft[]
   account: string
+  setSelectedItems: (items: SelectedNft[]) => void
+  withdraw: () => void
+  onClose?: () => void
 }
 
 export interface SelectedNft {
@@ -26,8 +28,18 @@ export interface SelectedNft {
 
 const { Text } = Typography
 
-export function UnstakeErc1155Modal({ pool, myRewards, visible, onClose, onConfirm, chainId, account }: UnstakeNftModalProps) {
-  const [selectedItems, setSelectedItems] = useState<SelectedNft[]>([])
+export function UnstakeErc1155Modal({
+  pool,
+  visible,
+  chainId,
+  account,
+  isLoading,
+  myRewards,
+  selectedItems,
+  onClose,
+  withdraw,
+  setSelectedItems
+}: UnstakeNftModalProps) {
   const [isDisabled, setIsDisabled] = useState(false)
   const [stakedTokenIdList, setStakedTokenIdList] = useState<StakedItem[]>([])
 
@@ -43,9 +55,6 @@ export function UnstakeErc1155Modal({ pool, myRewards, visible, onClose, onConfi
     [selectedItems]
   )
 
-  const walletAccount = '0x7cA2246bC2BB0092285faD93d89325a581323c6a'
-  const walletChainId = 5
-
   const {
     execute: obtainStakedNfts,
     erc721TargetByOwner: stakedNfts,
@@ -56,21 +65,10 @@ export function UnstakeErc1155Modal({ pool, myRewards, visible, onClose, onConfi
     stakedTokenIdList.map(item => `${item.tokenId || ''}`)
   )
 
-  const { withdraw, status, isLoading, dismiss } = useRewardPoolWithdrawErc1155(
-    pool.address,
-    selectedItems.map(item => item.tokenId),
-    selectedItems.map(item => item.amount)
-  )
-
-  const handleConfirm = useCallback(() => {
-    onConfirm(selectedItems, stakedTokenIdList)
-  }, [onConfirm, selectedItems, stakedTokenIdList])
-
   useEffect(() => {
     if (!pool.hasStake) {
       return
     }
-
     const myItems = pool.items.filter(item => item.account.id.toLocaleLowerCase() === account.toLocaleLowerCase() && item.tokenId)
 
     setStakedTokenIdList(myItems)
@@ -88,12 +86,6 @@ export function UnstakeErc1155Modal({ pool, myRewards, visible, onClose, onConfi
     setIsDisabled(selectedItems.length === 0)
   }, [selectedItems])
 
-  useEffect(() => {
-    if (status === 'success' && !isLoading) {
-      handleConfirm()
-      dismiss()
-    }
-  }, [status, handleConfirm])
   return (
     <Modal
       title='Unstake'
@@ -108,15 +100,11 @@ export function UnstakeErc1155Modal({ pool, myRewards, visible, onClose, onConfi
               type='primary'
               shape='default'
               loading={isLoading}
-              onChangeNetwork={() => console.log('change chainId')}
-              currentChainId={walletChainId}
-              accountAddress={walletAccount}
-              onConnectWallet={() => console.log('connect wallet')}
+              currentChainId={chainId}
+              accountAddress={account}
               chainId={chainId}
               disabled={isDisabled}
-              onClick={() => {
-                withdraw && withdraw()
-              }}
+              onClick={withdraw}
             >
               Confirm
             </Button>
