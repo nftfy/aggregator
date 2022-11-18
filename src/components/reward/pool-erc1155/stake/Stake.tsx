@@ -1,5 +1,6 @@
 import { Col, Row } from 'antd'
 import { useEffect, useState } from 'react'
+import { useStakeErc1155 } from '../../../../hook/reward/pool-erc1155/useRewardPoolErc1155Deposit'
 import { toHumanFormat } from '../../../../services/UtilService'
 import { RewardPool } from '../../../../types/pool/RewardPool'
 import { SelectedNftStake } from '../../../../types/stake/SelectedNftStake'
@@ -23,6 +24,12 @@ export const Stake = ({ visible, onConfirm, onClose, pool, chainId, accountAddre
   const [isConfirmModalShowing, setIsConfirmModalShowing] = useState(false)
   const [isStaking, setIsStaking] = useState(false)
 
+  const { deposit, status, isLoading } = useStakeErc1155(
+    pool.address,
+    selectedItems.map(item => item.tokenId),
+    selectedItems.map(item => item.amount)
+  )
+
   const handleConfirm = (items: SelectedNftStake[]) => {
     setIsStaking(false)
     setSelectedItems(items)
@@ -33,13 +40,26 @@ export const Stake = ({ visible, onConfirm, onClose, pool, chainId, accountAddre
     setIsStaking(visible)
   }, [visible])
 
+  useEffect(() => {
+    if (status === 'success') {
+      setIsStaking(false)
+      setIsConfirmModalShowing(true)
+    } else if (status === 'pending') {
+      setIsStaking(false)
+    }
+  }, [status, isLoading])
+
   return (
     <>
       <StakeModal
         title={title}
         visible={visible && isStaking}
+        isLoading={isLoading}
         onClose={onClose}
+        selectedItems={selectedItems}
+        setSelectedItems={setSelectedItems}
         pool={pool}
+        deposit={deposit}
         chainIdPage={chainId}
         onConfirm={handleConfirm}
         account={accountAddress}

@@ -1,12 +1,9 @@
 import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
 
-import { useEffect, useState } from 'react'
-
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Modal } from '@components/shared/design-system'
 
 import { useErc1155ApproveForAll } from '../../../../hook/reward/erc1155/useErc1155ApproveForAll'
-import { useStakeErc1155 } from '../../../../hook/reward/pool-erc1155/useRewardPoolErc1155Deposit'
 import { StakeERC1155 } from './Stake1155'
 import { StakeERC1155Action } from './Stake1155Action'
 
@@ -16,8 +13,12 @@ interface StakeERC20ModalProps {
   chainIdPage: number
   visible: boolean
   account: string
+  isLoading: boolean
+  selectedItems: SelectedNftStake[]
+  setSelectedItems: (items: SelectedNftStake[]) => void
   onConfirm: (items: SelectedNftStake[]) => void
   onClose?: () => void
+  deposit: () => void
   stakePoolImage?: string
   stakedAmount: string
 }
@@ -28,14 +29,16 @@ export function StakeModal({
   onClose,
   pool,
   chainIdPage,
+  selectedItems,
+  setSelectedItems,
+  isLoading,
   account,
+  deposit,
   stakePoolImage,
   title,
   stakedAmount
 }: StakeERC20ModalProps) {
   const walletChainId = 5
-
-  const [selectedItems, setSelectedItems] = useState<SelectedNftStake[]>([])
 
   const {
     isLoading: isLoadingUnlock,
@@ -44,15 +47,6 @@ export function StakeModal({
     status
   } = useErc1155ApproveForAll(chainIdPage, pool.token.id, pool.address, account)
 
-  const {
-    deposit,
-    status: depositStatus,
-    isLoading
-  } = useStakeErc1155(
-    pool.address,
-    selectedItems.map(item => item.tokenId),
-    selectedItems.map(item => item.amount)
-  )
   const onSelectItem = (tokenId: string, amount: string, image: string) => {
     const selectedItemsToUpdate = selectedItems.filter(item => item.tokenId !== tokenId)
 
@@ -67,11 +61,6 @@ export function StakeModal({
     onConfirm(selectedItems)
   }
 
-  useEffect(() => {
-    if (depositStatus === 'success' && !isLoading) {
-      onConfirm(selectedItems)
-    }
-  }, [depositStatus, isLoading])
   return (
     <Modal
       title={title}
@@ -88,7 +77,7 @@ export function StakeModal({
           walletChainId={walletChainId}
           selectedItems={selectedItems}
           isLoadingUnlock={isLoadingUnlock}
-          isLoadingStakeErc1155={isLoadingUnlock}
+          isLoadingStakeErc1155={isLoading}
           deposit={deposit}
         />
       }
