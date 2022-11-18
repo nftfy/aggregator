@@ -164,10 +164,11 @@ export function RewardPoolERC721Stake({
               />
             </Col>
           )}
-          {isUnstaking && accountAddress && (
+          {accountAddress && (
             <Unstake
               account={accountAddress}
               pool={pool}
+              visible={isUnstaking}
               chainId={chainId}
               myRewards={myRewards.reward ? toHumanFormat(+myRewards.reward) : '0'}
               onConfirm={confirmedUnstake}

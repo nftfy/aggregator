@@ -132,6 +132,7 @@ export function RewardPoolERC721Card({
             <Unstake
               account={accountAddress}
               pool={pool}
+              visible={isUnstaking}
               chainId={chainId}
               myRewards={myRewards.reward ? toHumanFormat(+myRewards.reward) : '0'}
               onConfirm={confirmedUnstake}
