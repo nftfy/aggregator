@@ -30,7 +30,8 @@ export const useRewardPoolErc721Deposit = (poolAddress: string, tokenIdList: str
   }, [status])
 
   return {
-    status: isSuccess && !loading && !processing,
+    status,
+    isSuccess: isSuccess && !loading && !processing,
     isLoading: isLoading || loading,
     deposit: () => {
       if (sendTransaction) {

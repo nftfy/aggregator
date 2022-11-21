@@ -4,7 +4,6 @@ import iconPath from 'public/assets/alert-circle.svg'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useErc721TokenIdListItems } from '../../../../hook/reward/erc721/useErc721TokenIdListItems'
-import { useRewardPoolErc721Withdraw } from '../../../../hook/reward/pool-erc721/useRewardPoolErc721Withdraw'
 import { RewardPool, StakedItem } from '../../../../types/pool/RewardPool'
 import CardToken from '../../../shared/card-token/CardToken'
 import { Button, Modal } from '../../../shared/design-system'
@@ -15,9 +14,12 @@ interface UnstakeNftModalProps {
   account: string
   chainId: number
   myRewards: string
+  selectedItems: SelectedNft[]
+  onConfirm: () => Promise<void>
+  setSelectedItems: (selectedItems: SelectedNft[]) => void
+  loading?: boolean
   visible?: boolean
   onClose?: () => void
-  onConfirm: (selectedItems: SelectedNft[], isConfirmed: boolean, rewardsEarned: string) => void
 }
 
 export interface SelectedNft {
@@ -27,8 +29,18 @@ export interface SelectedNft {
 
 const { Text } = Typography
 
-export function UnstakeErc721Modal({ pool, myRewards, visible, onClose, onConfirm, chainId, account }: UnstakeNftModalProps) {
-  const [selectedItems, setSelectedItems] = useState<SelectedNft[]>([])
+export function UnstakeErc721Modal({
+  pool,
+  visible,
+  onClose,
+  onConfirm,
+  setSelectedItems,
+  selectedItems,
+  myRewards,
+  chainId,
+  loading,
+  account
+}: UnstakeNftModalProps) {
   const [isDisabled, setIsDisabled] = useState(false)
   const [stakedTokenIdList, setStakedTokenIdList] = useState<StakedItem[]>([])
   const [hasReachedMaxSelection, setHasReachedMaxSelection] = useState(false)
@@ -49,19 +61,9 @@ export function UnstakeErc721Modal({ pool, myRewards, visible, onClose, onConfir
         setSelectedItems(selectedItems.filter(item => item.tokenId !== tokenId))
         return
       }
-
       setSelectedItems(selectedItems.filter(item => item.tokenId !== tokenId).concat({ tokenId, amount }))
     },
     [selectedItems]
-  )
-
-  const {
-    withdraw,
-    status: withdrawStatus,
-    isLoading: isWithdrawing
-  } = useRewardPoolErc721Withdraw(
-    pool.address,
-    selectedItems.map(item => item.tokenId)
   )
 
   useEffect(() => {
@@ -89,19 +91,13 @@ export function UnstakeErc721Modal({ pool, myRewards, visible, onClose, onConfir
     setHasReachedMaxSelection(selectedItems.length >= 5)
   }, [selectedItems])
 
-  useEffect(() => {
-    if (withdrawStatus && !isWithdrawing) {
-      onConfirm(selectedItems, withdrawStatus, myRewards)
-    }
-  }, [isWithdrawing, withdrawStatus])
-
   return (
     <Modal
       title='Unstake'
       onCancel={onClose}
       visible={visible}
       customFooter={
-        <Button type='primary' block onClick={withdraw} disabled={isDisabled} loading={isWithdrawing}>
+        <Button type='primary' block onClick={onConfirm} disabled={isDisabled} loading={loading}>
           Confirm
         </Button>
       }

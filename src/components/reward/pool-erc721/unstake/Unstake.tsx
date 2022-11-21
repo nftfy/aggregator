@@ -1,33 +1,36 @@
 import { ModalConfirm } from '@components/shared/design-system'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRewardPoolErc721Withdraw } from '../../../../hook/reward/pool-erc721/useRewardPoolErc721Withdraw'
 import { RewardPool } from '../../../../types/pool/RewardPool'
 import { SuccessfulUnstakeNft } from './SuccessfulUnstakeNft'
 import { SelectedNft, UnstakeErc721Modal } from './UnstakeErc721Modal'
 
 interface UnstakeProps {
   pool: RewardPool
+  visible: boolean
   account: string
   chainId: number
   myRewards: string
   onConfirm: (pool: RewardPool) => void
 }
 
-export function Unstake({ pool, chainId, onConfirm, myRewards, account }: UnstakeProps) {
-  const [isUnstaking, setIsUnstaking] = useState(true)
+export function Unstake({ pool, chainId, onConfirm, visible, myRewards, account }: UnstakeProps) {
+  const [isUnstaking, setIsUnstaking] = useState(false)
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [unstakedNfts, setUnstakedNfts] = useState<SelectedNft[]>([])
-  const [rewardsEarned, setRewardsEarned] = useState<string>('0')
 
-  const handleUnstakeErc721 = async (selectedItems: SelectedNft[], isConfirmed: boolean, rewardsEarned: string) => {
-    setUnstakedNfts(selectedItems)
-    setIsConfirmed(isConfirmed)
-    setRewardsEarned(rewardsEarned)
-  }
+  const {
+    withdraw,
+    status: withdrawStatus,
+    isLoading: isWithdrawing
+  } = useRewardPoolErc721Withdraw(
+    pool.address,
+    unstakedNfts.map(item => item.tokenId)
+  )
 
   const handleConfirm = async () => {
     setIsUnstaking(false)
     setIsConfirmed(false)
-    onConfirm(pool)
   }
 
   const handleCancel = async () => {
@@ -35,24 +38,37 @@ export function Unstake({ pool, chainId, onConfirm, myRewards, account }: Unstak
     setIsConfirmed(false)
     onConfirm(pool)
   }
+
+  useEffect(() => {
+    if (withdrawStatus === 'success') {
+      setIsConfirmed(true)
+    }
+
+    if (withdrawStatus === 'pending') {
+      setIsUnstaking(false)
+    }
+  }, [isWithdrawing, withdrawStatus])
+
+  useEffect(() => {
+    setIsUnstaking(visible)
+  }, [visible])
   return (
     <>
-      {isUnstaking && (
-        <UnstakeErc721Modal
-          account={account}
-          pool={pool}
-          chainId={chainId}
-          myRewards={myRewards}
-          visible={isUnstaking && !isConfirmed}
-          onClose={handleCancel}
-          onConfirm={handleUnstakeErc721}
-        />
-      )}
-      {isConfirmed && (
-        <ModalConfirm onOk={handleConfirm} onCancel={handleCancel} title='Unstake confirmed!' type='success' visible={isConfirmed}>
-          <SuccessfulUnstakeNft unstakedItems={unstakedNfts} pool={pool} rewardsEarned={rewardsEarned} chainId={chainId} />
-        </ModalConfirm>
-      )}
+      <UnstakeErc721Modal
+        account={account}
+        pool={pool}
+        chainId={chainId}
+        myRewards={myRewards}
+        visible={isUnstaking}
+        onClose={handleCancel}
+        setSelectedItems={setUnstakedNfts}
+        selectedItems={unstakedNfts}
+        onConfirm={withdraw}
+        loading={isWithdrawing}
+      />
+      <ModalConfirm onOk={handleConfirm} onCancel={handleCancel} title='Unstake confirmed!' type='success' visible={isConfirmed}>
+        <SuccessfulUnstakeNft unstakedItems={unstakedNfts} pool={pool} rewardsEarned={myRewards} chainId={chainId} />
+      </ModalConfirm>
     </>
   )
 }

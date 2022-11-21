@@ -15,6 +15,7 @@ import { useRewardPoolErc721Deposit } from '../../../hook/reward/pool-erc721/use
 import { Harvest } from './harvest/Harvest'
 import { StakeErc721 } from './stake/StakeErc721'
 import { StakeERC721Action } from './stake/StakeErc721Action'
+import { SucessfullStakeErc721 } from './stake/SucessfulStakeErc721'
 import { Unstake } from './unstake/Unstake'
 
 interface RewardPoolERC721StakeProps {
@@ -41,6 +42,7 @@ export function RewardPoolERC721Stake({
   const [amountMyStake, setAmountMyStake] = useState<string>('0')
   const [stakedToken, setStakedToken] = useState<HarvestStakeToken | null>(null)
   const [isUnstaking, setIsUnstaking] = useState(false)
+  const [isConfirmModalShowing, setIsConfirmModalShowing] = useState(false)
 
   const { isLoading: isApprovingUnlock, setApprovalForAll, status: unlockStatus } = useErc721SetApprovalForAll(accountAddress, pool.address)
 
@@ -73,6 +75,10 @@ export function RewardPoolERC721Stake({
     onGetPool()
   }
 
+  const handleConfirmStake = () => {
+    setIsConfirmModalShowing(true)
+  }
+
   useEffect(() => {
     setStakedToken({
       id: pool.token.id,
@@ -87,9 +93,7 @@ export function RewardPoolERC721Stake({
     if (!accountAddress) {
       return
     }
-
     const amount = pool.items?.find(item => item.tokenId === null)?.amount
-
     if (amount) {
       setAmountMyStake(amount)
     }
@@ -102,12 +106,12 @@ export function RewardPoolERC721Stake({
           pool={pool}
           chainIdPage={chainId}
           account={accountAddress}
-          stakeStatus={stakeStatus}
+          stakeStatus={stakeStatus === 'success'}
           stakeTokenImage={stakeTokenImage}
           unlockStatus={unlockStatus}
           isApprovingUnlock={isApprovingUnlock}
           isApprovedForAll={isApprovedForAll}
-          onConfirm={onGetPool}
+          onConfirm={handleConfirmStake}
           refetchUnlock={refetchUnlock}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
@@ -160,10 +164,11 @@ export function RewardPoolERC721Stake({
               />
             </Col>
           )}
-          {isUnstaking && accountAddress && (
+          {accountAddress && (
             <Unstake
               account={accountAddress}
               pool={pool}
+              visible={isUnstaking}
               chainId={chainId}
               myRewards={myRewards.reward ? toHumanFormat(+myRewards.reward) : '0'}
               onConfirm={confirmedUnstake}
@@ -171,6 +176,14 @@ export function RewardPoolERC721Stake({
           )}
         </Row>
       </Col>
+      <SucessfullStakeErc721
+        chainId={chainId}
+        pool={pool}
+        visible={isConfirmModalShowing}
+        items={selectedItems}
+        onConfirm={onGetPool}
+        onCancel={onGetPool}
+      />
     </Row>
   )
 }

@@ -8,7 +8,7 @@ import { Col, Divider, Row } from 'antd'
 import { useEffect, useState } from 'react'
 import { chainConfig } from '../../../ChainConfig'
 import { Harvest } from './harvest/Harvest'
-import { StakeModal } from './stake/StakeModal'
+import { Stake } from './stake/Stake'
 import { Unstake } from './unstake/Unstake'
 
 interface RewardPoolERC721CardProps {
@@ -132,20 +132,20 @@ export function RewardPoolERC721Card({
             <Unstake
               account={accountAddress}
               pool={pool}
+              visible={isUnstaking}
               chainId={chainId}
               myRewards={myRewards.reward ? toHumanFormat(+myRewards.reward) : '0'}
               onConfirm={confirmedUnstake}
             />
           )}
           {pool.token?.id && isStaking && accountAddress && (
-            <StakeModal
+            <Stake
               visible={isStaking}
               onClose={() => setIsStaking(false)}
               pool={pool}
               chainIdPage={chainId}
               onConfirm={handleConfirmStake}
               account={accountAddress}
-              stakeTokenImage={pool.offchain?.stakeTokenImage}
             />
           )}
         </>

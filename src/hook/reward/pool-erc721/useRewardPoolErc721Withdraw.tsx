@@ -28,7 +28,8 @@ export const useRewardPoolErc721Withdraw = (poolAddress: string, tokenIdList: st
     }
   }, [status])
   return {
-    status: isSuccess && !loading && !processing,
+    status,
+    confirmed: isSuccess && !loading && !processing,
     isLoading: isLoading || loading,
     withdraw
   }
