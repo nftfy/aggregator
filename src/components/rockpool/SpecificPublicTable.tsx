@@ -7,6 +7,7 @@ import LoadingIcon from '../../../components/LoadingIcon'
 import { useSpecificPublicItems } from '../../hook/rockpool/specific/useSpecificPulicItems'
 import { OrderDirection, SpecificPoolItemFilter, SpecificPoolItemOrderBy } from '../../models/rockpool/SpecificPoolsTypes'
 import { formatToLocaleString } from '../../services/UtilService'
+import RockpoolTableEmpty from '../shared/rockpool/RockpoolTableEmpty'
 
 export interface SpecificPublicTableProps {
   chainId: number
@@ -42,6 +43,8 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
     )
   }
 
+  if (!specificPools?.length) return <RockpoolTableEmpty chainId={chainId} type='specific' />
+
   return (
     <table className='w-full'>
       <thead>
@@ -54,7 +57,7 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
         </tr>
       </thead>
       <tbody>
-        {specificPools &&
+        {specificPools.length &&
           specificPools.map(pool => (
             <tr key={pool.id} className='h-24 border-b border-gray-300 dark:border-[#525252]'>
               <td className='px-6 py-4'>

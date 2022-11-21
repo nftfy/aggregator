@@ -181,9 +181,7 @@ const Address: NextPage<Props> = ({ address, fallback }) => {
               </>
             )}
             <Tabs.Content value='pools' className='col-span-full'>
-              <div className='mt-14'>
                <RockpoolProfileTable walletAddress={address as string} chainId={Number(CHAIN_ID)}/>
-              </div>
             </Tabs.Content>
             <Tabs.Content value='activity' className='col-span-full'>
               <UserActivityTab user={address} />

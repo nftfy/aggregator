@@ -308,14 +308,10 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
             <CollectionActivityTab collectionId={id} />
           </Tabs.Content>
           <Tabs.Content value='pools' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'>
-            <div className='justify-right mt-14  dark:text-white'>
-              {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''}/>}
-            </div>
+            {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''}/>}
           </Tabs.Content>
           <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
-            <div className='justify-right mt-14  dark:text-white'>
-              {id && <RewardPools chainId={Number(CHAIN_ID)} collectionAddress={id} />} 
-            </div>
+            {id && <RewardPools chainId={Number(CHAIN_ID)} collectionAddress={id} />}
           </Tabs.Content>
         </Tabs.Root>
       </>

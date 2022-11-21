@@ -7,6 +7,7 @@ import LoadingIcon from '../../../components/LoadingIcon'
 import { chainConfig } from '../../ChainConfig'
 import { useListBuyFloorCollections } from '../../hook/rockpool/buyFloor/useFloorPublicByAddress'
 import { formatToLocaleString } from '../../services/UtilService'
+import RockpoolTableEmpty from '../shared/rockpool/RockpoolTableEmpty'
 export interface FloorPublicTableProps {
   chainId: number
   collectionAddress: string
@@ -36,6 +37,8 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
       </div>
     )
   }
+
+  if (!floorCollectionItem) return <RockpoolTableEmpty chainId={chainId} type='buyFloor' />
 
   return (
     <table className='w-full'>

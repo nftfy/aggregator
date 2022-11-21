@@ -31,6 +31,10 @@ export default function FloorClaimTable({ chainId, walletAddress }: FloorClaimTa
     )
   }
 
+  if (!listClaimsFloorCollections.length) {
+    return <div className='mt-14 grid justify-center dark:text-white'>There is no pool</div>
+  }
+
   return (
     <table className='w-full'>
       <thead>
@@ -43,7 +47,7 @@ export default function FloorClaimTable({ chainId, walletAddress }: FloorClaimTa
         </tr>
       </thead>
       <tbody>
-        {listClaimsFloorCollections &&
+        {listClaimsFloorCollections.length &&
           listClaimsFloorCollections.map(pool => (
             <tr key={pool.poolId} className='h-24 border-b border-gray-300 dark:border-[#525252]'>
               <td className='px-6 py-4'>
@@ -78,7 +82,9 @@ export default function FloorClaimTable({ chainId, walletAddress }: FloorClaimTa
               </td>
               <td className=' px-6 py-4'>
                 <Container>
-                  <span className='ml-2.5 mr-2.5  font-light'>{pool.amount === '0' ? '-' : `${pool.amount} ETH`}</span>
+                  <span className='ml-2.5 mr-2.5  font-light'>
+                    {pool.amount === '0' ? '-' : `${formatToLocaleString(pool.amount)} ETH`}
+                  </span>
                 </Container>
               </td>
               <td className='px-6 py-4'>
