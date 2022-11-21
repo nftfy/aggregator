@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { ListBuyFloorCollections } from '../../types/models/listBuyFloorCollections'
+import { ListBuyFloorCollections } from '../../../../models/rockpool/floor/listBuyFloorCollections'
 
 export interface ListBuyFloorCollectionsQueryData {
   listBuyFloorCollections: ListBuyFloorCollections[]

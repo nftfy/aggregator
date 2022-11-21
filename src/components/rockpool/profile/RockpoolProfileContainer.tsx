@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import styled from 'styled-components'
-import FloorPublicTable from './FloorPublicContainer'
-import SpecificPublicTable from './SpecificPublicTable'
+import FloorClaimTable from './FloorClaimTable'
+import SpecificClaimTable from './SpecificClaimTable'
 
-export interface RockpoolPublicTableProps {
+export interface RockpoolProfileTableProps {
   chainId: number
-  collectionAddress: string
-  collectionImage: string
+  walletAddress: string
 }
 
 interface Filter {
@@ -15,7 +13,7 @@ interface Filter {
   active: boolean
 }
 
-export default function RockpoolPublicTable({ chainId, collectionAddress, collectionImage }: RockpoolPublicTableProps) {
+export default function RockpoolProfileTable({ chainId, walletAddress }: RockpoolProfileTableProps) {
   const [filters, setFilters] = useState<Filter[]>([
     { name: 'Specific', key: 'specific', active: true },
     { name: 'Floor', key: 'floor', active: false }
@@ -36,9 +34,9 @@ export default function RockpoolPublicTable({ chainId, collectionAddress, collec
   const handleFilter = (filter: Filter) => {
     switch (filter.key) {
       case 'specific':
-        return <SpecificPublicTable chainId={chainId} collectionAddress={collectionAddress} />
+        return <SpecificClaimTable chainId={chainId} walletAddress={walletAddress} />
       case 'floor':
-        return <FloorPublicTable chainId={chainId} collectionAddress={collectionAddress} collectionImage={collectionImage} />
+        return <FloorClaimTable chainId={chainId} walletAddress={walletAddress} />
     }
   }
   return (
@@ -63,12 +61,4 @@ export default function RockpoolPublicTable({ chainId, collectionAddress, collec
       {handleFilter(filters.filter(filter => filter.active === true)[0])}
     </>
   )
-}
-
-const { Container } = {
-  Container: styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  `
 }

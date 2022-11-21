@@ -8,7 +8,7 @@ import { useListFloorPoolsCollections } from '../../../../hook/rockpool/buyFloor
 import { BuyFloorStatus } from '../../../../models/rockpool/floor/BuyFloorStatusEnum'
 import { Buyer, ListFloorPoolsCollections } from '../../../../models/rockpool/floor/listBuyFloorCollections'
 import { formatTimestamp, formatToLocaleString } from '../../../../services/UtilService'
-import ClaimFractionsModal from '../../../shared/rockpool/ClaimFractionsModal'
+import ClaimFractionsFloorModal from '../../../shared/rockpool/ClaimFractionsFloorModal'
 import { TokenImage } from '../../../shared/TokenImage'
 
 export interface FloorFinishRoundsListProps {
@@ -81,7 +81,7 @@ export default function FloorFinishRoundsList({ chainId, collectionAddress }: Fl
       render: (_: unknown, data: ListFloorPoolsCollections) => {
         const buyer = data.buyers.find(findBuyer)
         return (
-          <ClaimFractionsModal
+          <ClaimFractionsFloorModal
             data={{
               poolId: data.id,
               amount: buyer?.amount,
