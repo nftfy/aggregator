@@ -1,7 +1,5 @@
 import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
 
-import { useState } from 'react'
-
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Modal } from '@components/shared/design-system'
 
@@ -15,8 +13,12 @@ interface StakeERC20ModalProps {
   chainIdPage: number
   visible: boolean
   account: string
-  onConfirm: () => void
+  isLoading: boolean
+  selectedItems: SelectedNftStake[]
+  setSelectedItems: (items: SelectedNftStake[]) => void
+  onConfirm: (items: SelectedNftStake[]) => void
   onClose?: () => void
+  deposit: () => void
   stakePoolImage?: string
   stakedAmount: string
 }
@@ -27,14 +29,16 @@ export function StakeModal({
   onClose,
   pool,
   chainIdPage,
+  selectedItems,
+  setSelectedItems,
+  isLoading,
   account,
+  deposit,
   stakePoolImage,
   title,
   stakedAmount
 }: StakeERC20ModalProps) {
   const walletChainId = 5
-
-  const [selectedItems, setSelectedItems] = useState<SelectedNftStake[]>([])
 
   const {
     isLoading: isLoadingUnlock,
@@ -53,13 +57,16 @@ export function StakeModal({
 
     setSelectedItems(selectedItemsToUpdate.concat({ tokenId, amount, image }))
   }
+  const handleConfirm = () => {
+    onConfirm(selectedItems)
+  }
 
   return (
     <Modal
       title={title}
       visible={visible}
       onCancel={onClose}
-      onOk={onConfirm}
+      onOk={handleConfirm}
       closable
       customFooter={
         <StakeERC1155Action
@@ -70,7 +77,8 @@ export function StakeModal({
           walletChainId={walletChainId}
           selectedItems={selectedItems}
           isLoadingUnlock={isLoadingUnlock}
-          isLoadingStakeErc1155={isLoadingUnlock}
+          isLoadingStakeErc1155={isLoading}
+          deposit={deposit}
         />
       }
     >
@@ -79,7 +87,7 @@ export function StakeModal({
         selectedItems={selectedItems}
         pool={pool}
         chainIdPage={chainIdPage}
-        handleStakeConfirmed={onConfirm}
+        handleStakeConfirmed={handleConfirm}
         account={account}
         isApprovedForAll={isApprovedForAll}
         status={status}

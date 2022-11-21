@@ -1,9 +1,7 @@
 import { RewardPool } from '@appTypes/pool/RewardPool'
 
-import { useState } from 'react'
 import { useErc721IsApprovedForAll } from '../../../../hook/reward/erc721/useErc721IsApprovedForAll'
 import { useErc721SetApprovalForAll } from '../../../../hook/reward/erc721/useErc721SetApprovalForAll'
-import { useRewardPoolErc721Deposit } from '../../../../hook/reward/pool-erc721/useRewardPoolErc721Deposit'
 import { SelectedNftStake } from '../../../../types/stake/SelectedNftStake'
 import { Modal } from '../../../shared/design-system'
 
@@ -13,18 +11,31 @@ import { StakeERC721Action } from './StakeErc721Action'
 interface StakeErc721Props {
   pool: RewardPool
   chainIdPage: number
-  stakeTokenImage?: string
   account: string
   visible: boolean
-  onConfirm: () => void
+  selectedItems: SelectedNftStake[]
+  isLoading: boolean
+  setSelectedItems: (items: SelectedNftStake[]) => void
+  onConfirm: (items: SelectedNftStake[]) => void
+  depositStake: () => void
+  stakeTokenImage?: string
   onClose?: () => void
 }
 
-export function StakeModal({ pool, account, chainIdPage, stakeTokenImage, visible, onConfirm, onClose }: StakeErc721Props) {
-  const [selectedItems, setSelectedItems] = useState<SelectedNftStake[]>([])
-
+export function StakeModal({
+  pool,
+  account,
+  chainIdPage,
+  stakeTokenImage,
+  visible,
+  selectedItems,
+  isLoading,
+  depositStake,
+  setSelectedItems,
+  onConfirm,
+  onClose
+}: StakeErc721Props) {
   const walletChainId = 5
-
   const { isLoading: isApprovingUnlock, setApprovalForAll, status: unlockStatus } = useErc721SetApprovalForAll(pool.token.id, pool.address)
   const {
     refetch: refetchUnlock,
@@ -32,19 +43,12 @@ export function StakeModal({ pool, account, chainIdPage, stakeTokenImage, visibl
     isLoading: isCheckingUnlock
   } = useErc721IsApprovedForAll(pool.token.id, account, pool.address, chainIdPage)
 
-  const {
-    isLoading: isStaking,
-    status: stakeStatus,
-    deposit: depositStake
-  } = useRewardPoolErc721Deposit(
-    pool.address,
-    selectedItems.map(item => item.tokenId)
-  )
   const handleSetApprovalForAll = () => {
     if (setApprovalForAll) {
       setApprovalForAll()
     }
   }
+
   return (
     <Modal
       title={pool.hasStake ? 'Add more stake' : 'Stake'}
@@ -60,7 +64,7 @@ export function StakeModal({ pool, account, chainIdPage, stakeTokenImage, visibl
           isApprovedForAll={isApprovedForAll}
           isCheckingUnlock={isCheckingUnlock}
           walletChainId={walletChainId}
-          isStaking={isStaking}
+          isStaking={isLoading}
           selectedItems={selectedItems}
           depositStake={depositStake}
         />
@@ -70,7 +74,7 @@ export function StakeModal({ pool, account, chainIdPage, stakeTokenImage, visibl
         pool={pool}
         chainIdPage={chainIdPage}
         account={account}
-        stakeStatus={stakeStatus}
+        stakeStatus={false}
         stakeTokenImage={stakeTokenImage}
         unlockStatus={unlockStatus}
         isApprovingUnlock={isApprovingUnlock}

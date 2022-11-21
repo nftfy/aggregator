@@ -8,7 +8,7 @@ import { toHumanFormat } from '@services/UtilService'
 import { Col, Divider, Row } from 'antd'
 import { useEffect, useState } from 'react'
 import { Harvest } from './harvest/Harvest'
-import { StakeModal } from './stake/StakeModal'
+import { Stake } from './stake/Stake'
 import { Unstake } from './unstake/Unstake'
 
 interface RewardPoolERC1155CardProps {
@@ -143,15 +143,14 @@ export function RewardPoolERC1155Card({
             />
           )}
           {pool.token?.id && isStaking && accountAddress && (
-            <StakeModal
+            <Stake
               title={stakeModalTitle}
               visible={isStaking}
               onClose={() => setIsStaking(false)}
               pool={pool}
-              chainIdPage={chainId}
+              chainId={chainId}
               onConfirm={handleConfirmStake}
-              account={accountAddress}
-              stakePoolImage={pool.offchain?.stakeTokenImage}
+              accountAddress={accountAddress}
               stakedAmount={amountMyStake}
             />
           )}

@@ -5,7 +5,6 @@ import { Toaster } from 'react-hot-toast'
 import styled from 'styled-components'
 import Navbar from '../../../components/Navbar'
 import NetworkWarning from '../../../components/NetworkWarning'
-import { ModalTransaction } from './TransactionModal'
 
 const { Content } = Layout
 
@@ -62,7 +61,6 @@ export function DefaultPageTemplate({ title, product, children, subHeader }: Def
           )}
           {children}
         </Main>
-        <ModalTransaction />
       </Layout>
     </>
   )

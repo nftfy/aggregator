@@ -36,6 +36,7 @@ export const useObserverTransaction = (data: SendTransactionResult | undefined, 
   useEffect(() => {
     const handleWait = async () => {
       try {
+        setStatus('pending')
         const response = await data?.wait()
         if (subgraphUrl && response && response?.confirmations > 0) {
           verifySubgraph(subgraphUrl, response.blockNumber)
