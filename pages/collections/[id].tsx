@@ -312,7 +312,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
               {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} />}
             </div>
           </Tabs.Content>
-          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
+          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid lg:col-start-2 lg:col-end-[-4]'>
             <div className='justify-right mt-14  dark:text-white'>
               {id && <RewardPools chainId={Number(CHAIN_ID)} collectionAddress={id} />} 
             </div>
