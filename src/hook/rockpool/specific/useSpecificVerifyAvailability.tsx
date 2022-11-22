@@ -1,23 +1,23 @@
-import { ethers } from 'ethers'
+import axios from 'axios'
 import { useEffect } from 'react'
-import { openCollectivePurchase } from '../../../contracts/rockpool/openCollectivePurchase/openCollectivePurchase'
-import { SpecificPoolItem } from '../../../models/rockpool/SpecificPoolsTypes'
-export const useSpecificVerifyAvailability = (
-  chainId: number,
-  signerProvider: ethers.providers.Web3Provider | null,
-  specificItem?: SpecificPoolItem
-) => {
+import { globalConfig } from '../../../config'
+export const useSpecificVerifyAvailability = (chainId: number, specificPoolId: string, listed = false, specificCreator?: string) => {
   useEffect(() => {
-    const handleAvailability = async () => {
-      if (specificItem && signerProvider) {
-        if (!specificItem.listed) {
-          await openCollectivePurchase(signerProvider, chainId).verifyRockpoolAvailability(specificItem?.id, specificItem.creator)
-          return
-        }
+    const verifyAvailability = async () => {
+      try {
+        const baseUrl = globalConfig.nftfy.api.base
+        const uri = baseUrl ? baseUrl.replace('/graphql', '') : ''
 
-        await openCollectivePurchase(signerProvider, chainId).verifyRockpoolAvailability(specificItem?.id)
+        const url = listed
+          ? `${uri}/rockpool/update-opensea-availability/${specificPoolId}/${chainId}/${specificCreator}`
+          : `${uri}/rockpool/update-opensea-availability/${specificPoolId}/${chainId}`
+
+        await axios.get(url)
+        return true
+      } catch (e) {
+        return false
       }
     }
-    handleAvailability()
-  }, [chainId, signerProvider, specificItem])
+    verifyAvailability()
+  }, [])
 }
