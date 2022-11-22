@@ -188,7 +188,6 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           {description}
           {image}
         </Head>
-        {/* <div className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'> */}
         <div className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
           {id && <BannerNfty collectionId={id} chainId={Number(CHAIN_ID)} />}
         </div>
