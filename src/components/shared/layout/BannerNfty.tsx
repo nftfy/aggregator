@@ -36,7 +36,7 @@ export const BannerNfty = ({ collectionId, chainId }: NewheaderProps) => {
         <Banner src={collection?.banner} />
       ) : (
         <EmptyBanner className='max-h-[240px] min-h-[240px] w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
-          <h1 className='text-lg'>{collection?.name}</h1>
+          <span>{collection?.name}</span>
         </EmptyBanner>
       )}
       <div className='col-span-full flex w-full flex-row flex-wrap items-center gap-6 py-6 '>
@@ -95,14 +95,15 @@ const { Banner, EmptyBanner, NetworkSocial, Divider } = {
   EmptyBanner: styled.div`
     width: 100%;
     min-height: 180px;
-    background: var(--primary-color);
+    background: var(--gray-3);
     border-radius: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    > h1 {
-      font-size: 32px;
+    > span {
+      font-size: 38px;
       font-weight: 600;
+      color: var(--gray-6);
     }
 
     @media (min-width: 1400px) {
