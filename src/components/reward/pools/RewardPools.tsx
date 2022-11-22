@@ -59,26 +59,20 @@ export function RewardPools({ chainId, collectionAddress }: RewardPoolsProps) {
   }, [selectedMenuItems])
 
   return (
-    <Layout>
-      <Layout>
-        <Layout style={{ paddingLeft: '24px' }}>
-          <Content>
-            <Row gutter={[12, 24]}>
-              <Col span={24}>
-                <RewardPoolsOpen
-                  chainId={chain?.id ?? chainId}
-                  stakingPools={stakingPools}
-                  loading={loading}
-                  loadMore={loadMore}
-                  hasMore={hasMore}
-                  refetch={refetch}
-                  isRefetching={isRefetching}
-                />
-              </Col>
-            </Row>
-          </Content>
-        </Layout>
-      </Layout>
-    </Layout>
+    <div className='mt-2  md:m-5 md:gap-4'>
+      <Row gutter={[12, 24]}>
+        <Col span={24}>
+          <RewardPoolsOpen
+            chainId={chain?.id ?? chainId}
+            stakingPools={stakingPools}
+            loading={loading}
+            loadMore={loadMore}
+            hasMore={hasMore}
+            refetch={refetch}
+            isRefetching={isRefetching}
+          />
+        </Col>
+      </Row>
+    </div>
   )
 }
