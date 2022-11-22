@@ -6,6 +6,7 @@ import { useClaimableFractions } from '../../../hook/rockpool/specific/useClaima
 import { formatTimestamp, formatToLocaleString } from '../../../services/UtilService'
 import ClaimFractionsSpecificModal from '../../shared/rockpool/ClaimFractionsSpecificModal'
 import { imageFailedFallback } from '../../shared/rockpool/CollectionImageFallBack'
+import RockpoolTableEmpty from '../../shared/rockpool/RockpoolTableEmpty'
 export interface SpecificClaimTableProps {
   chainId: number
   walletAddress: string
@@ -31,9 +32,7 @@ export default function SpecificClaimTable({ chainId, walletAddress }: SpecificC
     )
   }
 
-  if (!claimableFractions.length) {
-    return <div className='mt-14 grid justify-center dark:text-white'>There is no pool</div>
-  }
+  if (!claimableFractions?.length) return <RockpoolTableEmpty chainId={chainId} type='specific' />
 
   return (
     <table className='w-full'>

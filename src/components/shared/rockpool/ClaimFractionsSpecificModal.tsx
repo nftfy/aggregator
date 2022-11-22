@@ -38,11 +38,11 @@ export default function ClaimFractionsSpecificModal({ chainId, data, walletAccou
   return (
     <>
       {new BigNumber(data.fractionsCount || '').gt('0') ? (
-        <Button block type='primary' onClick={showModal}>
+        <Button block type='primary' onClick={showModal} style={{ width: 128 }}>
           Claim fractions
         </Button>
       ) : (
-        <Button block type='primary' ghost onClick={() => redirectToShowFractions(chainId, data.fractions)}>
+        <Button block type='primary' ghost onClick={() => redirectToShowFractions(chainId, data.fractions)} style={{ width: 128 }}>
           See fractions
         </Button>
       )}

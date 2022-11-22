@@ -24,7 +24,7 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
   const history = useRouter()
   const floorCollectionItem = listBuyFloorCollections[0]
   const headings = [
-    { name: 'NFT', align: 'left' },
+    { name: 'Collection', align: 'left' },
     { name: 'Target price', align: 'center' },
     { name: 'Participants', align: 'center' },
     { name: 'Progress', align: 'center' },
