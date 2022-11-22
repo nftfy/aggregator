@@ -2,7 +2,7 @@ import { usePrepareContractWrite, useSendTransaction } from 'wagmi'
 import { chainConfig } from '../../../ChainConfig'
 import { useObserverTransaction } from '../../shared/useObserveTransaction'
 import perpetualOpenCollectivePurchaseV2Abi from './perpetualOpenCollectivePurchaseV2Abi'
-const useClaimFractions = (chainId: number, listingId: string, buyer: string) => {
+const useFloorClaimFractions = (chainId: number, listingId: string, buyer: string) => {
   const { products } = chainConfig(chainId)
 
   const { config } = usePrepareContractWrite({
@@ -28,4 +28,4 @@ const useClaimFractions = (chainId: number, listingId: string, buyer: string) =>
   }
 }
 
-export default useClaimFractions
+export default useFloorClaimFractions

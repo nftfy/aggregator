@@ -2,10 +2,10 @@ import { Button, Modal } from 'antd'
 import BigNumber from 'bignumber.js'
 import { useState } from 'react'
 import { chainConfig } from '../../../ChainConfig'
-import useFloorClaimFractions from '../../../hook/rockpool/buyFloor/useFloorClaimableFractions'
+import useClaimFractions from '../../../hook/rockpool/specific/useClaimFractions'
 import { formatDecimals, formatToLocaleString, redirectToShowFractions } from '../../../services/UtilService'
 
-interface ClaimFractionsModalProps {
+interface ClaimFractionsSpecificModalProps {
   chainId: number
   data: {
     poolId: string
@@ -18,24 +18,20 @@ interface ClaimFractionsModalProps {
   refetch: () => void
 }
 
-export default function ClaimFractionsModal({ chainId, data, walletAccount, refetch }: ClaimFractionsModalProps) {
+export default function ClaimFractionsSpecificModal({ chainId, data, walletAccount, refetch }: ClaimFractionsSpecificModalProps) {
   const config = chainConfig(chainId)
   const [isOpen, setIsOpen] = useState(false)
-  const { claimFractions } = useFloorClaimFractions(chainId, walletAccount, data.poolId, refetch)
 
+  const handleSuccessClaim = () => {
+    refetch()
+    setIsOpen(false)
+  }
+  const { handleClaimFractions, isLoading } = useClaimFractions(chainId, data.poolId, walletAccount, handleSuccessClaim)
   const showModal = () => {
     setIsOpen(true)
   }
 
   const handleCancel = () => {
-    setIsOpen(false)
-  }
-
-  const handleClaimFractions = () => {
-    if (!data.poolId) {
-      return
-    }
-    claimFractions()
     setIsOpen(false)
   }
 
@@ -64,7 +60,7 @@ export default function ClaimFractionsModal({ chainId, data, walletAccount, refe
             <Button block key='back' onClick={handleCancel}>
               Cancel
             </Button>
-            <Button block type='primary' onClick={handleClaimFractions}>
+            <Button block type='primary' onClick={handleClaimFractions} loading={isLoading}>
               Claim
             </Button>
           </div>

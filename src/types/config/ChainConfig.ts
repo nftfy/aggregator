@@ -11,6 +11,7 @@ interface SpecificConfig {
     externalAcquirer: string
     openCollectivePurchase: string
   }
+  createPoolUrl: string
   subgraph: string
 }
 interface BuyFloorConfig {
@@ -19,6 +20,7 @@ interface BuyFloorConfig {
     perpetualOpenCollectivePurchaseV2: string
     seaportFractionalizer: string
   }
+  createPoolUrl: string
   subgraph: string
 }
 export interface AssetERC20 {

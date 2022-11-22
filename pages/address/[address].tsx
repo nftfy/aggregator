@@ -23,6 +23,7 @@ import { useRouter } from 'next/router'
 import { ComponentProps } from 'react'
 import toast from 'react-hot-toast'
 import { useAccount, useEnsAvatar, useEnsName, useNetwork } from 'wagmi'
+import RockpoolProfileTable from '../../src/components/rockpool/profile/RockpoolProfileContainer'
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 const COLLECTION = process.env.NEXT_PUBLIC_COLLECTION
@@ -99,7 +100,6 @@ const Address: NextPage<Props> = ({ address, fallback }) => {
       { name: 'Offers Received', id: 'received' },
       { name: 'Offers Made', id: 'buying' },
       { name: 'Pools', id: 'pools' },
-      { name: 'Rewards', id: 'rewards' }
     ]
   }
 
@@ -180,11 +180,8 @@ const Address: NextPage<Props> = ({ address, fallback }) => {
                 </Tabs.Content>
               </>
             )}
-            <Tabs.Content value='rewards' className='col-span-full'>
-              <div className='mt-14 grid justify-center dark:text-white'>[Release 12/2022] Integration with Nftfy RockPool</div>
-            </Tabs.Content>
             <Tabs.Content value='pools' className='col-span-full'>
-              <div className='mt-14 grid justify-center dark:text-white'>[Release 12/2022] Integration with Nftfy Rewards</div>
+               <RockpoolProfileTable walletAddress={address as string} chainId={Number(CHAIN_ID)}/>
             </Tabs.Content>
             <Tabs.Content value='activity' className='col-span-full'>
               <UserActivityTab user={address} />

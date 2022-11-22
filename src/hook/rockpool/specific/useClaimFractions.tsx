@@ -43,6 +43,6 @@ export default function useClaimFractions(chainId: number, poolId: string, buyer
 
   return {
     handleClaimFractions,
-    isExecutin: isLoading
+    isLoading
   }
 }
