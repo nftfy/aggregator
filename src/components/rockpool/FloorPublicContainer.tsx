@@ -16,11 +16,13 @@ export interface FloorPublicTableProps {
 
 export default function FloorPublicTable({ chainId, collectionAddress, collectionImage }: FloorPublicTableProps) {
   const { nativeToken } = chainConfig(chainId)
-  const { listBuyFloorCollections, loading } = useListBuyFloorCollections(chainId, nativeToken.address)
-  const history = useRouter()
-  const floorCollectionItem = listBuyFloorCollections.find(
-    pool => pool.collectionAddress.toLocaleLowerCase() === collectionAddress.toLocaleLowerCase()
+  const { listBuyFloorCollections, loading } = useListBuyFloorCollections(
+    chainId,
+    nativeToken.address,
+    collectionAddress.toLocaleLowerCase()
   )
+  const history = useRouter()
+  const floorCollectionItem = listBuyFloorCollections[0]
   const headings = [
     { name: 'NFT', align: 'left' },
     { name: 'Target price', align: 'center' },
@@ -82,7 +84,7 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
               </Container>
             </td>
             <td className='px-6 py-4'>
-              <Progress percent={Number(floorCollectionItem.progress)} size='default' />
+              <Progress percent={Number(formatToLocaleString(floorCollectionItem.progress, 2))} size='default' />
             </td>
             <td className=' px-6 py-4'>
               <Container>

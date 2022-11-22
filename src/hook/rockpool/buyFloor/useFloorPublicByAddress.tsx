@@ -2,29 +2,29 @@ import { useQuery } from '@apollo/client'
 import {
   ListBuyFloorCollectionsQueryData,
   ListBuyFloorCollectionsQueryVars,
-  LIST_BUY_FLOOR_COLLECTIONS_QUERY
-} from '../../../graphql/nftfy/rockpool/buyfloor/listBuyFloorCollectionsQuery'
+  LIST_BUY_FLOOR_COLLECTIONS_BY_ADDRESS_QUERY
+} from '../../../graphql/nftfy/rockpool/buyfloor/listBuyFloorCollectionsByAddressQuery'
 
-export function useListBuyFloorCollections(chainId: number, creator: string) {
+export function useListBuyFloorCollections(chainId: number, creator: string, collectionAddress: string) {
   const { data, loading, startPolling, stopPolling, refetch } = useQuery<
     ListBuyFloorCollectionsQueryData,
     ListBuyFloorCollectionsQueryVars
-  >(LIST_BUY_FLOOR_COLLECTIONS_QUERY, {
+  >(LIST_BUY_FLOOR_COLLECTIONS_BY_ADDRESS_QUERY, {
     variables: {
       chainId,
-      creator
+      creator,
+      collectionAddress
     },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
     onError: errorData => {
       console.error(errorData.networkError, 'Failed to obtain data')
       stopPolling()
     },
     onCompleted: listCollections => {
-      if (listCollections.listBuyFloorCollections) {
+      if (listCollections.listBuyFloorCollectionsByAddress) {
         startPolling(30000)
       }
     }
   })
-  return { listBuyFloorCollections: data?.listBuyFloorCollections || [], loading, refetch }
+  console.log(data?.listBuyFloorCollectionsByAddress)
+  return { listBuyFloorCollections: data?.listBuyFloorCollectionsByAddress || [], loading, refetch }
 }
