@@ -310,7 +310,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           <Tabs.Content value='pools' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'>
             {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''}/>}
           </Tabs.Content>
-          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
+          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'>
             {id && <RewardPools chainId={Number(CHAIN_ID)} collectionAddress={id} />}
           </Tabs.Content>
         </Tabs.Root>
