@@ -5,6 +5,7 @@ import { transactionProcessingVar } from '../../graphql/variables/TransactionVar
 import { theGraphService } from '../../services/TheGraphService'
 
 export type TransactionStatus = 'standby' | 'success' | 'reverted' | 'pending'
+export type transactionStatusWagmi = 'success' | 'error' | 'idle' | 'loading'
 
 export const useObserverTransaction = (data: SendTransactionResult | undefined, isSuccess: boolean, subgraphUrl?: string) => {
   const [status, setStatus] = useState<TransactionStatus>('standby')

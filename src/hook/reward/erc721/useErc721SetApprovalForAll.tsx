@@ -12,8 +12,8 @@ export const useErc721SetApprovalForAll = (contractAddress: string, spenderAddre
     args: [spenderAddress, true]
   })
 
-  const { sendTransaction, isSuccess, data } = useSendTransaction(config)
-  const { isLoading: isLoading, status, dismiss } = useObserverTransaction(data, isSuccess)
+  const { sendTransaction, isSuccess, data, isLoading } = useSendTransaction(config)
+  const { status, dismiss } = useObserverTransaction(data, isSuccess)
 
   useEffect(() => {
     if (!isLoading && status === 'success') {

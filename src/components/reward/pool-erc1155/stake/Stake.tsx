@@ -33,7 +33,11 @@ export const Stake = ({ visible, onConfirm, onClose, pool, chainId, accountAddre
   const handleConfirm = (items: SelectedNftStake[]) => {
     setIsStaking(false)
     setSelectedItems(items)
-    setIsConfirmModalShowing(true)
+    if (selectedItems?.length > 0) {
+      console.log('selectedItems', selectedItems?.length > 0)
+      console.log('handle')
+      setIsConfirmModalShowing(true)
+    }
   }
 
   useEffect(() => {
@@ -41,13 +45,17 @@ export const Stake = ({ visible, onConfirm, onClose, pool, chainId, accountAddre
   }, [visible])
 
   useEffect(() => {
-    if (status === 'success') {
+    console.log('status', status)
+
+    if (status === 'success' && selectedItems?.length > 0) {
+      console.log('selectedItems', selectedItems?.length > 0)
+      console.log('aquiiii')
       setIsStaking(false)
       setIsConfirmModalShowing(true)
     } else if (status === 'pending') {
       setIsStaking(false)
     }
-  }, [status, isLoading])
+  }, [status, isLoading, selectedItems])
 
   return (
     <>
@@ -67,7 +75,13 @@ export const Stake = ({ visible, onConfirm, onClose, pool, chainId, accountAddre
         stakedAmount={stakedAmount}
       />
 
-      <ModalConfirm visible={isConfirmModalShowing} type='success' title='Stake confirmed!' onOk={onConfirm} onCancel={onConfirm}>
+      <ModalConfirm
+        visible={isConfirmModalShowing && selectedItems?.length > 0}
+        type='success'
+        title='Stake confirmed! aaaaa'
+        onOk={onConfirm}
+        onCancel={onConfirm}
+      >
         <Row gutter={[0, 8]}>
           {selectedItems.map(item => (
             <Col span={24} key={`${item.amount}#${item.tokenId}`}>
