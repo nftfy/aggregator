@@ -78,7 +78,7 @@ export const Stake = ({ visible, onConfirm, onClose, pool, chainId, accountAddre
       <ModalConfirm
         visible={isConfirmModalShowing && selectedItems?.length > 0}
         type='success'
-        title='Stake confirmed! aaaaa'
+        title='Stake confirmed!'
         onOk={onConfirm}
         onCancel={onConfirm}
       >
