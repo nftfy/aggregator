@@ -31,16 +31,16 @@ export const BannerNfty = ({ collectionId, chainId }: NewheaderProps) => {
     if (newWindow) newWindow.opener = null
   }
   return (
-    <div className='relative z-0 col-span-full flex w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
+    <div className='relative z-0 col-span-full mb-6 flex w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
       {collection?.banner ? (
-        <Banner src={collection?.banner} />
+        <Banner src={collection?.banner.replace('w=500', 'w=1337')} />
       ) : (
-        <EmptyBanner className='max-h-[240px] min-h-[240px] w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
+        <EmptyBanner className='mb-6 max-h-[240px] min-h-[240px] w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
           <span>{collection?.name}</span>
         </EmptyBanner>
       )}
-      <div className='col-span-full flex w-full flex-row flex-wrap items-center gap-6 py-6 '>
-        <div className='flex items-center justify-center gap-3'>
+      <div className='col-span-full flex w-full flex-row flex-wrap items-center gap-8 py-6 '>
+        <div className='flex items-center justify-center gap-5'>
           <TokenImage diameter={64} address={collectionId} src={collection?.image} />
           <span className='m-0 text-xl font-semibold'>{collection?.name}</span>
         </div>
@@ -91,6 +91,7 @@ const { Banner, EmptyBanner, NetworkSocial, Divider } = {
     width: 100%;
     max-height: 240px;
     border-radius: 24px;
+    object-fit: cover;
   `,
   EmptyBanner: styled.div`
     width: 100%;

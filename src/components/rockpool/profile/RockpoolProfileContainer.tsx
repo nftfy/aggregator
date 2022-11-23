@@ -15,8 +15,8 @@ interface Filter {
 
 export default function RockpoolProfileTable({ chainId, walletAddress }: RockpoolProfileTableProps) {
   const [filters, setFilters] = useState<Filter[]>([
-    { name: 'Specific', key: 'specific', active: true },
-    { name: 'Floor', key: 'floor', active: false }
+    { name: 'Floor', key: 'floor', active: true },
+    { name: 'Specific', key: 'specific', active: false }
   ])
 
   const handleActiveFilter = (activeFilter: Filter) => {
