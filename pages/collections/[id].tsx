@@ -188,12 +188,12 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           {description}
           {image}
         </Head>
-        <div className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'>
+        <div className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
           {id && <BannerNfty collectionId={id} chainId={Number(CHAIN_ID)} />}
         </div>
         <Tabs.Root
           value={router.query?.tab?.toString() || 'items'}
-          className="col-span-full grid grid-cols-4 gap-x-4 md:grid-cols-8 lg:grid-cols-12 3xl:grid-cols-16 4xl:grid-cols-21"
+          className="col-span-full grid grid-cols-5 gap-x-4 md:grid-cols-8 lg:grid-cols-12 3xl:grid-cols-16 4xl:grid-cols-21"
         >
           <Tabs.List className="col-span-full flex justify-center border-b border-[#D4D4D4] dark:border-[#525252]">
             {tabs.map(({ name, id }) => (
@@ -307,10 +307,10 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           >
             <CollectionActivityTab collectionId={id} />
           </Tabs.Content>
-          <Tabs.Content value='pools' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'>
+          <Tabs.Content value='pools' className='col-span-full w-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
             {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''}/>}
           </Tabs.Content>
-          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
+          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
             {id && <RewardPools chainId={Number(CHAIN_ID)} collectionAddress={id} />}
           </Tabs.Content>
         </Tabs.Root>

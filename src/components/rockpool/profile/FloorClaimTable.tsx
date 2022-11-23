@@ -5,6 +5,7 @@ import { useListClaimsFloorCollections } from '../../../hook/rockpool/buyFloor/u
 import { formatTimestamp, formatToLocaleString } from '../../../services/UtilService'
 import ClaimFractionsFloorModal from '../../shared/rockpool/ClaimFractionsFloorModal'
 import CollectionImage from '../../shared/rockpool/CollectionImage'
+import RockpoolTableEmpty from '../../shared/rockpool/RockpoolTableEmpty'
 export interface FloorClaimTableProps {
   chainId: number
   walletAddress: string
@@ -32,7 +33,7 @@ export default function FloorClaimTable({ chainId, walletAddress }: FloorClaimTa
   }
 
   if (!listClaimsFloorCollections.length) {
-    return <div className='mt-14 grid justify-center dark:text-white'>There is no pool</div>
+    return <RockpoolTableEmpty chainId={chainId} type='specific' />
   }
 
   return (

@@ -63,7 +63,7 @@ export const Stake = ({ pool, account, chainIdPage, visible, onConfirm, onClose 
       <SucessfullStakeErc721
         chainId={chainIdPage}
         pool={pool}
-        visible={isConfirmModalShowing}
+        visible={isConfirmModalShowing && !!selectedItems?.length}
         items={selectedItems}
         onConfirm={onConfirm}
         onCancel={onConfirm}

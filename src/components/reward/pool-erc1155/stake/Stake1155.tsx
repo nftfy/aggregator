@@ -1,17 +1,13 @@
 import { RewardPool, StakedItem } from '@appTypes/pool/RewardPool'
-import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
-import { CardToken } from '@components/shared/card-token/CardToken'
 import { CardTokenContainer } from '@components/shared/card-token/CardTokenContainer'
 import { CardTokenImage } from '@components/shared/card-token/CardTokenImage'
 import CardLoader from '@components/shared/card/CardLoader'
-import { ModalConfirm } from '@components/shared/design-system'
 import ExternalLink from '@components/shared/ExternalLink'
 import { ListItemNft } from '@components/shared/ListItemNft'
 import { chainConfig } from '@config/chain'
 import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import { toHumanFormat } from '@services/UtilService'
 import { Col, Divider, Empty, Row, Space, Typography } from 'antd'
 import { ReactNode, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -26,13 +22,11 @@ const { Text } = Typography
 interface StakeERC1155Props {
   pool: RewardPool
   chainIdPage: number
-  handleStakeConfirmed: () => void
   account: string
   stakePoolImage?: string
   status: TransactionStatus
   isApprovedForAll: boolean
   onSelectItem: (tokenId: string, amount: string, image: string) => void
-  selectedItems: SelectedNftStake[]
   stakedAmount: string
   hideInfo?: boolean
   children?: ReactNode
@@ -43,16 +37,13 @@ export function StakeERC1155({
   stakePoolImage,
   account,
   chainIdPage,
-  handleStakeConfirmed,
   status,
   isApprovedForAll,
   onSelectItem,
-  selectedItems,
   stakedAmount,
   children,
   hideInfo
 }: StakeERC1155Props) {
-  const [isConfirmModalShowing, setIsConfirmModalShowing] = useState(false)
   const [stakedTokenIdList, setStakedTokenIdList] = useState<StakedItem[]>([])
   const { erc1155Collection, getErc1155Collection } = useErc1155Collection()
   const config = chainConfig(chainIdPage)
@@ -70,11 +61,6 @@ export function StakeERC1155({
     pool.token.id,
     stakedTokenIdList.map(item => `${item.tokenId || ''}`)
   )
-
-  const handleConfirmStakeAdded = () => {
-    handleStakeConfirmed()
-    setIsConfirmModalShowing(false)
-  }
 
   useEffect(() => {
     if (!pool.hasStake) {
@@ -106,7 +92,6 @@ export function StakeERC1155({
   useEffect(() => {
     if (status === 'success') {
       refetchListNfts()
-      setIsConfirmModalShowing(true)
     }
   }, [refetchListNfts, status])
 
@@ -214,38 +199,6 @@ export function StakeERC1155({
           )}
         </Row>
       </div>
-      <ModalConfirm
-        visible={isConfirmModalShowing}
-        type='success'
-        title='Stake confirmed!'
-        onOk={handleConfirmStakeAdded}
-        onCancel={handleConfirmStakeAdded}
-      >
-        <InfiniteScrollContainer>
-          <InfiniteScroll next={loadMore} hasMore={false} loader={false} dataLength={selectedItems.length}>
-            <Row gutter={[0, 8]}>
-              {selectedItems.map(item => (
-                <Col span={24} key={`${item.amount}#${item.tokenId}`}>
-                  <CardToken
-                    gutter={0}
-                    title='My Stake'
-                    chainId={chainIdPage}
-                    image={item.image}
-                    native={pool.token.native}
-                    token={{
-                      ...pool.token,
-                      address: pool.token.id,
-                      id: item.tokenId
-                    }}
-                    showBalanceSymbol={false}
-                    amount={item.amount ? toHumanFormat(+item.amount) : '0'}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </InfiniteScroll>
-        </InfiniteScrollContainer>
-      </ModalConfirm>
     </>
   )
 }

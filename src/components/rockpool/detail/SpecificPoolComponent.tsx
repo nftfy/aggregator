@@ -13,6 +13,7 @@ import { RockpoolStatus } from '../../../models/rockpool/SpecificPoolsTypes'
 import { formatToLocaleString } from '../../../services/UtilService'
 import AddedParticipants from './Participants/AddedParticipation'
 
+import { useSpecificVerifyAvailability } from '../../../hook/rockpool/specific/useSpecificVerifyAvailability'
 import CollectionInfo from '../../shared/rockpool/SpecificPoolDetailItem'
 import SpecificParticipants from './Participants/SpecificParticipants'
 import TargetNftCards from './TargetNftCards'
@@ -28,7 +29,7 @@ export default function SpecificPoolComponent({ chainId, specificPoolId }: Speci
   const walletAccount = account?.address || ''
   const config = chainConfig(chainId)
   const { loading, specificPublicItem, refetch: refetchSpecificPublicItemById } = useSpecificPublicItemById(specificPoolId, chainId)
-  // useSpecificVerifyAvailability(chainId, signerProvider, specificPublicItem)
+  useSpecificVerifyAvailability(chainId, specificPoolId, specificPublicItem?.listed, specificPublicItem?.creator)
   const priceAfterFractionalization = new BigNumber(specificPublicItem?.targetPrice || 0).multipliedBy(
     specificPublicItem?.priceMultiplier || 0
   )

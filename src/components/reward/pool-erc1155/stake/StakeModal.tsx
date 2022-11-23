@@ -84,10 +84,8 @@ export function StakeModal({
     >
       <StakeERC1155
         onSelectItem={onSelectItem}
-        selectedItems={selectedItems}
         pool={pool}
         chainIdPage={chainIdPage}
-        handleStakeConfirmed={handleConfirm}
         account={account}
         isApprovedForAll={isApprovedForAll}
         status={status}

@@ -100,6 +100,22 @@
 @modal-footer-padding-horizontal: 24px;
 @modal-border-radius: 12px;
 
+.ant-modal-confirm-btns {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  @media (max-width: 425px) {
+    flex-direction: column;
+    gap: 0.6rem;
+
+    button {
+      margin: 0 !important;
+    }
+  }
+}
+
+
 // -> tabs.less
 @tabs-bar-margin: 0px;
 .ant-tabs > .ant-tabs-nav {
