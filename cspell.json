@@ -12,5 +12,24 @@
     "pages",
     "package.json"
   ],
-  "words": ["nftfy"]
+  "words": [
+    "antd",
+    "bignumber",
+    "ethersproject",
+    "fractionalizer",
+    "fractionalizers",
+    "jazzicon",
+    "luxon",
+    "Millis",
+    "nftfy",
+    "nftfyorg",
+    "offchain",
+    "rockpool",
+    "unstake",
+    "wagmi",
+    "Executin",
+    "isLoading",
+    "buyfloor",
+    "hexlify"
+  ]
 }

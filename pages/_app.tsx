@@ -1,3 +1,6 @@
+import { ApolloProvider } from '@apollo/client'
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
 import {
   darkTheme as rainbowKitDarkTheme, getDefaultWallets, lightTheme as rainbowKitLightTheme, RainbowKitProvider
 } from '@rainbow-me/rainbowkit'
@@ -40,8 +43,12 @@ import {
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import presetColors from '../colors'
+import { ModalTransaction } from '../src/components/shared/TransactionModal'
+import { nftfyClient } from '../src/graphql/Client'
+import '../styles/theme.light.less'
 
 
+config.autoAddCss = true
 // Select a custom ether.js interface for connecting to a network
 // Reference = https://wagmi-xyz.vercel.app/docs/provider#provider-optional
 // OPTIONAL
@@ -177,23 +184,26 @@ const App: FC<AppProps & { baseUrl: string }> = ({
   }
 
   return (
-    <ReservoirKitProvider options={options} theme={reservoirKitTheme}>
-      <GlobalProvider>
-        <RecoilRoot>
-          <WagmiConfig client={wagmiClient}>
-            <RainbowKitProvider
-              chains={chains}
-              theme={rainbowKitTheme}
-              modalSize="compact"
-            >
-              <AnalyticsProvider>
-                <Component {...pageProps} />
-              </AnalyticsProvider>
-            </RainbowKitProvider>
-          </WagmiConfig>
-        </RecoilRoot>
-      </GlobalProvider>
-    </ReservoirKitProvider>
+    <ApolloProvider client={nftfyClient}>
+      <ReservoirKitProvider options={options} theme={reservoirKitTheme}>
+        <GlobalProvider >
+          <RecoilRoot>
+            <WagmiConfig client={wagmiClient}>
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
+              >
+                <AnalyticsProvider>
+                  <Component {...pageProps} />
+                </AnalyticsProvider>
+              </RainbowKitProvider>
+            </WagmiConfig>
+          </RecoilRoot>
+        </GlobalProvider>
+      </ReservoirKitProvider>
+      <ModalTransaction />
+    </ApolloProvider>
   )
 }
 

@@ -14,6 +14,7 @@ export interface GlobalConfig {
     api: {
       base: string
     }
+    marketplaceUrl: string
   }
   paginationLimit: number
 }
@@ -24,7 +25,8 @@ export const globalConfig: GlobalConfig = {
   nftfy: {
     api: {
       base: process.env.NEXT_PUBLIC_NFTFY_API_BASE
-    }
+    },
+    marketplaceUrl: 'https://app.marketplace.nftfy.org/'
   },
   paginationLimit: 50
 }

@@ -5,7 +5,6 @@ import AttributesFlex from 'components/AttributesFlex'
 import ExploreFlex from 'components/ExploreFlex'
 import ExploreTokens from 'components/ExploreTokens'
 import FormatEth from 'components/FormatEth'
-import Hero from 'components/Hero'
 import Layout from 'components/Layout'
 import Sidebar from 'components/Sidebar'
 import SortMenuExplore from 'components/SortMenuExplore'
@@ -29,6 +28,10 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiRefreshCcw } from 'react-icons/fi'
+import { RewardPools } from '../../src/components/reward/pools/RewardPools'
+import RockpoolPublicTable from '../../src/components/rockpool/RockpoolPublicContainer'
+import { BannerNfty } from '../../src/components/shared/layout/BannerNfty'
+
 
 // Environment variables
 // For more information about these variables
@@ -61,7 +64,6 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
   const router = useRouter()
   const [localListings, setLocalListings] = useState(false)
   const [refreshLoading, setRefreshLoading] = useState(false)
-
   const collectionResponse = useCollections(
     { id },
     {
@@ -72,7 +74,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
     collectionResponse.data && collectionResponse.data[0]
       ? collectionResponse.data[0]
       : undefined
-
+  
   const stats = useCollectionStats(router, id)
 
   const { tokens, ref: refTokens } = useTokens(
@@ -175,8 +177,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
     { name: 'Items', id: 'items' },
     { name: 'Pools', id: 'pools' },
     { name: 'Rewards', id: 'rewards' },
-    { name: 'Activity', id: 'activity' },
-
+    { name: 'Activity', id: 'activity' }
   ]
 
   return (
@@ -187,10 +188,12 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           {description}
           {image}
         </Head>
-        <Hero collectionId={id} fallback={fallback} />
+        <div className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
+          {id && <BannerNfty collectionId={id} chainId={Number(CHAIN_ID)} />}
+        </div>
         <Tabs.Root
           value={router.query?.tab?.toString() || 'items'}
-          className="col-span-full grid grid-cols-4 gap-x-4 md:grid-cols-8 lg:grid-cols-12 3xl:grid-cols-16 4xl:grid-cols-21"
+          className="col-span-full grid grid-cols-5 gap-x-4 md:grid-cols-8 lg:grid-cols-12 3xl:grid-cols-16 4xl:grid-cols-21"
         >
           <Tabs.List className="col-span-full flex justify-center border-b border-[#D4D4D4] dark:border-[#525252]">
             {tabs.map(({ name, id }) => (
@@ -304,15 +307,11 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           >
             <CollectionActivityTab collectionId={id} />
           </Tabs.Content>
-          <Tabs.Content value='pools' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-3]'>
-            <div className='justify-right mt-14  dark:text-white'>
-              <h3>[Release 12/2022] Integration with Nftfy RockPool</h3>
-            </div>
+          <Tabs.Content value='pools' className='col-span-full w-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
+            {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''}/>}
           </Tabs.Content>
-          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-4]'>
-            <div className='justify-right mt-14  dark:text-white'>
-              <h3>[Release 12/2022] Integration with Nftfy Rewards</h3>
-            </div>
+          <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
+            {id && <RewardPools chainId={Number(CHAIN_ID)} collectionAddress={id} />}
           </Tabs.Content>
         </Tabs.Root>
       </>
@@ -430,7 +429,6 @@ export const getStaticProps: GetStaticProps<{
   const tokensRes = await fetch(tokensUrl.href, options)
 
   const tokens = (await tokensRes.json()) as Props['fallback']['tokens']
-
   return {
     props: { fallback: { collection, tokens }, id },
     revalidate: 20,

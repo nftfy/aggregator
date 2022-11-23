@@ -9,18 +9,13 @@ type Props = {
   decimals?: number
 }
 
-const FormatCurrency: FC<Props> = ({
-  amount,
-  maximumFractionDigits = 2,
-  children,
-  decimals,
-}) => {
+const FormatCurrency: FC<Props> = ({ amount, maximumFractionDigits = 2, children, decimals }) => {
   const value = formatBN(amount, maximumFractionDigits, decimals)
 
   return (
-    <div className="inline-flex flex-none items-center gap-1">
+    <div className='inline-flex flex-none items-center gap-1'>
+      <span className='flex-grow whitespace-nowrap'>{value}</span>
       {value !== '-' ? children : null}
-      <span className="flex-grow whitespace-nowrap font-semibold">{value}</span>
     </div>
   )
 }

@@ -3,6 +3,8 @@ import Document, {
   DocumentContext, Head, Html, Main,
   NextScript
 } from 'next/document'
+import React, { ReactElement } from 'react'
+import { ServerStyleSheet } from 'styled-components'
 
 const DARK_MODE = process.env.NEXT_PUBLIC_DARK_MODE
 const META_TITLE = process.env.NEXT_PUBLIC_META_TITLE
@@ -19,6 +21,8 @@ const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
 const MyDocument = function () {
   const chain = findChain(CHAIN_ID)
+
+  
 
   return (
     <Html className={DARK_MODE ? 'dark' : ''}>
@@ -97,8 +101,24 @@ const MyDocument = function () {
 }
 
 MyDocument.getInitialProps = async (ctx: DocumentContext) => {
-  const initialProps = await Document.getInitialProps(ctx)
-  return { ...initialProps }
+  const sheet = new ServerStyleSheet()
+  const originalRenderPage = ctx.renderPage
+  try {
+    ctx.renderPage = () =>
+      originalRenderPage({
+        enhanceApp:
+          App =>
+          (props): ReactElement =>
+            sheet.collectStyles(<App {...props} />)
+      })
+    const initialProps = await Document.getInitialProps(ctx)
+    return {
+      ...initialProps,
+      styles: [...React.Children.toArray(initialProps.styles), sheet.getStyleElement()]
+    }
+  } finally {
+    sheet.seal()
+  }
 }
 
 export default MyDocument
