@@ -3,6 +3,7 @@ import { SelectedNftStake } from '@appTypes/stake/SelectedNftStake'
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import { Modal } from '@components/shared/design-system'
 
+import { useNetwork } from 'wagmi'
 import { useErc1155ApproveForAll } from '../../../../hook/reward/erc1155/useErc1155ApproveForAll'
 import { StakeERC1155 } from './Stake1155'
 import { StakeERC1155Action } from './Stake1155Action'
@@ -38,7 +39,7 @@ export function StakeModal({
   title,
   stakedAmount
 }: StakeERC20ModalProps) {
-  const walletChainId = 5
+  const network = useNetwork()
 
   const {
     isLoading: isLoadingUnlock,
@@ -74,7 +75,7 @@ export function StakeModal({
           chainId={chainIdPage}
           setApprovalForAll={setApprovalForAll}
           isApprovedForAll={isApprovedForAll}
-          walletChainId={walletChainId}
+          walletChainId={network.chain?.id ?? null}
           selectedItems={selectedItems}
           isLoadingUnlock={isLoadingUnlock}
           isLoadingStakeErc1155={isLoading}
