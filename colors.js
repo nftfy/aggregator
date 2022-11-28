@@ -160,6 +160,9 @@ const primaryColors = {
     700: '#7000FF',
     900: '#430099',
   },
+  primary: {
+    100:'#e06285'
+  }
 }
 
 module.exports = primaryColors
