@@ -31,7 +31,10 @@ export const BannerNfty = ({ collectionId, chainId }: NewheaderProps) => {
     if (newWindow) newWindow.opener = null
   }
   return (
-    <div className='relative z-0 col-span-full mb-6 flex w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
+    <div
+      className='relative z-0 col-span-full mb-6 flex w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black 
+    sm:justify-center'
+    >
       {collection?.banner ? (
         <Banner src={collection?.banner.replace('w=500', 'w=1337')} />
       ) : (
@@ -40,22 +43,24 @@ export const BannerNfty = ({ collectionId, chainId }: NewheaderProps) => {
         </EmptyBanner>
       )}
       <div className='col-span-full flex w-full flex-row flex-wrap items-center gap-8 py-6 '>
-        <div className='flex items-center justify-center gap-5'>
+        <CollectionTitle className='flex items-center justify-center gap-5'>
           <TokenImage diameter={64} address={collectionId} src={collection?.image} />
           <span className='m-0 text-xl font-semibold'>{collection?.name}</span>
-        </div>
-        <div className='flex flex-col items-center justify-center'>
-          <span className='text-sm font-semibold'>Floor Price</span>
-          <FormatEth amount={collection?.floorAsk?.price?.amount?.native} maximumFractionDigits={6} logoWidth={12} />
-        </div>
-        <div className='flex flex-col items-center justify-center'>
-          <span className='text-sm font-semibold'>1D Volume</span>
-          <FormatEth amount={collection?.volume?.['1day']?.valueOf()} maximumFractionDigits={6} logoWidth={12} />
-        </div>
-        <div className='flex flex-col items-center justify-center'>
-          <span className='text-sm font-semibold'>Supply</span>
-          <span>{collection?.tokenCount ?? 0}</span>
-        </div>
+        </CollectionTitle>
+        <CollectionInfo className='flex items-center justify-center gap-5'>
+          <div className='flex flex-col items-center justify-center'>
+            <span className='text-sm font-semibold'>Floor Price</span>
+            <FormatEth amount={collection?.floorAsk?.price?.amount?.native} maximumFractionDigits={6} logoWidth={12} />
+          </div>
+          <div className='flex flex-col items-center justify-center'>
+            <span className='text-sm font-semibold'>1D Volume</span>
+            <FormatEth amount={collection?.volume?.['1day']?.valueOf()} maximumFractionDigits={6} logoWidth={12} />
+          </div>
+          <div className='flex flex-col items-center justify-center'>
+            <span className='text-sm font-semibold'>Supply</span>
+            <span>{collection?.tokenCount ?? 0}</span>
+          </div>
+        </CollectionInfo>
 
         <NetworkSocial className='aling flex gap-2'>
           <Button
@@ -86,7 +91,7 @@ export const BannerNfty = ({ collectionId, chainId }: NewheaderProps) => {
   )
 }
 
-const { Banner, EmptyBanner, NetworkSocial, Divider } = {
+const { Banner, EmptyBanner, NetworkSocial, Divider, CollectionInfo, CollectionTitle } = {
   Banner: styled.img`
     width: 100%;
     max-height: 240px;
@@ -118,5 +123,27 @@ const { Banner, EmptyBanner, NetworkSocial, Divider } = {
   `,
   NetworkSocial: styled.div`
     margin: 0 0 0 auto;
+    @media (max-width: 320px) {
+      width: 100%;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+    }
+  `,
+  CollectionInfo: styled.div`
+    @media (max-width: 320px) {
+      width: 100%;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+    }
+  `,
+  CollectionTitle: styled.div`
+    @media (max-width: 320px) {
+      width: 100%;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+    }
   `
 }
