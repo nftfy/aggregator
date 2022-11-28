@@ -69,8 +69,7 @@ export function DefaultPageTemplate({ title, product, children, subHeader }: Def
 const { Main } = {
   Main: styled(Content)`
     padding: 16px 24px;
-    max-width: calc(var(--screen-xl) - 48px);
-    max-width: 1136px;
+    max-width: 1440px;
     margin: 0 auto;
     width: 100%;
   `

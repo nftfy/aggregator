@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import styled from 'styled-components'
 import FloorPublicTable from './FloorPublicContainer'
 import SpecificPublicTable from './SpecificPublicTable'
 
@@ -63,12 +62,4 @@ export default function RockpoolPublicTable({ chainId, collectionAddress, collec
       {handleFilter(filters.filter(filter => filter.active === true)[0])}
     </>
   )
-}
-
-const { Container } = {
-  Container: styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  `
 }
