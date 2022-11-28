@@ -1,6 +1,4 @@
-import { Button, Typography } from 'antd'
-import Image from 'next/image'
-import empty from 'public/assets/empty.svg'
+import { Button, Empty as AntEmpty } from 'antd'
 import styled from 'styled-components'
 import { chainConfig } from '../../../ChainConfig'
 export interface RockpoolTableEmptyProps {
@@ -9,13 +7,11 @@ export interface RockpoolTableEmptyProps {
 }
 
 export default function RockpoolTableEmpty({ chainId, type }: RockpoolTableEmptyProps) {
-  const { Text } = Typography
   const { products } = chainConfig(chainId)
   return (
     <Container>
       <div>
-        <Image className='rounded object-cover' loader={({ src }) => src} src={empty} alt={`no data`} />
-        <Text type='secondary'>There is no open pool, start a pool for the nft you want!</Text>
+        <AntEmpty description='There is no open pool, start a pool for the nft you want!' image={AntEmpty.PRESENTED_IMAGE_SIMPLE} />
         <Button
           style={{ width: 128 }}
           type='primary'
@@ -39,6 +35,10 @@ const { Container } = {
       justify-content: center;
       align-items: center;
       gap: 13px;
+
+      .ant-empty.ant-empty-normal {
+        margin: 0;
+      }
     }
   `
 }
