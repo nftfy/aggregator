@@ -30,8 +30,7 @@ export function StakeERC721Action({
   selectedItems,
   depositStake
 }: StakeErc721Props) {
-  const isButtonsDisabled = !account
-
+  const isButtonsDisabled = account === undefined
   const { dispatch } = useContext(GlobalContext)
   const { switchNetwork } = useSwitchNetwork()
   return (

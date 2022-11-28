@@ -77,8 +77,9 @@ export function Button({
     const isNotConnected = !accountAddress && !currentChainId
     const isWrongNetwork = !isConnectedOnExpectedChain
 
-    if (!isNotConnected && !isWrongNetwork) {
-      setButtonState(StateTypes.DEFAULT)
+    if (!isNotConnected && isWrongNetwork) {
+      setButtonState(StateTypes.DISCONNECTED)
+
       return
     }
 
