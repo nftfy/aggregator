@@ -31,18 +31,18 @@ export const BannerNfty = ({ collectionId, chainId }: NewheaderProps) => {
     if (newWindow) newWindow.opener = null
   }
   return (
-    <div
-      className='relative z-0 col-span-full mb-6 flex w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black 
+    <Container
+      className='relative z-0 col-span-full mb-0 flex w-full flex-col items-center bg-white px-[25px] dark:bg-black 
     sm:justify-center'
     >
       {collection?.banner ? (
         <Banner src={collection?.banner.replace('w=500', 'w=1337')} />
       ) : (
-        <EmptyBanner className='mb-6 max-h-[240px] min-h-[240px] w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
+        <EmptyBanner className='max-h-[240px] min-h-[240px] w-full flex-col items-center bg-white px-[25px] py-6 dark:bg-black'>
           <span>{collection?.name}</span>
         </EmptyBanner>
       )}
-      <div className='col-span-full flex w-full flex-row flex-wrap items-center gap-8 py-6 '>
+      <CollectionContainer className='col-span-full flex w-full flex-row flex-wrap items-center gap-8 pt-6'>
         <CollectionTitle className='flex items-center justify-center gap-5'>
           <TokenImage diameter={64} address={collectionId} src={collection?.image} />
           <span className='m-0 text-xl font-semibold'>{collection?.name}</span>
@@ -86,17 +86,23 @@ export const BannerNfty = ({ collectionId, chainId }: NewheaderProps) => {
           <Divider className='bg-slate-900' />
           <Button icon={<img className='anticon' src={linkIcon.src} />} type='text' onClick={handleCopyUrl} />
         </NetworkSocial>
-      </div>
-    </div>
+      </CollectionContainer>
+    </Container>
   )
 }
 
-const { Banner, EmptyBanner, NetworkSocial, Divider, CollectionInfo, CollectionTitle } = {
+const { Container, Banner, EmptyBanner, NetworkSocial, Divider, CollectionInfo, CollectionTitle, CollectionContainer } = {
   Banner: styled.img`
     width: 100%;
     max-height: 240px;
     border-radius: 24px;
     object-fit: cover;
+  `,
+  Container: styled.div`
+    padding-top: 1.4rem;
+  `,
+  CollectionContainer: styled.div`
+    padding-top: 1.2rem;
   `,
   EmptyBanner: styled.div`
     width: 100%;
