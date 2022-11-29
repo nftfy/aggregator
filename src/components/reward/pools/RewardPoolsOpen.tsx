@@ -1,8 +1,8 @@
 import { RewardPool } from '@appTypes/pool/RewardPool'
 import CardGrid from '@components/shared/card/CardGrid'
-import CardLoader from '@components/shared/card/CardLoader'
 import { Empty } from '@components/shared/Empty'
 import { useAccount, useNetwork } from 'wagmi'
+import LoadingIcon from '../../../../components/LoadingIcon'
 import { RewardPoolERC1155Card } from '../pool-erc1155/RewardPoolERC1155Card'
 import { RewardPoolERC721Card } from '../pool-erc721/RewardPoolERC721Card'
 
@@ -57,7 +57,13 @@ export function RewardPoolsOpen({ chainId, stakingPools, loading, loadMore, hasM
       data={stakingPools.map(pool => resolveRewardPoolCard(pool))}
       hasMore={hasMore}
       loadMore={loadMore}
-      loader={loading && <CardLoader />}
+      loader={
+        loading && (
+          <div className='my-20 flex justify-center'>
+            <LoadingIcon />
+          </div>
+        )
+      }
     />
   )
 }

@@ -1,6 +1,4 @@
-import { CheckOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { useRewardPoolErc721Deposit } from '../../../../hook/reward/pool-erc721/useRewardPoolErc721Deposit'
 import { RewardPool } from '../../../../types/pool/RewardPool'
 import { SelectedNftStake } from '../../../../types/stake/SelectedNftStake'
@@ -70,10 +68,4 @@ export const Stake = ({ pool, account, chainIdPage, visible, onConfirm, onClose 
       />
     </>
   )
-}
-
-const { CheckIcon } = {
-  CheckIcon: styled(CheckOutlined)`
-    color: var(--primary-color);
-  `
 }

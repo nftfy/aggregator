@@ -5,6 +5,7 @@ import { useErc721SetApprovalForAll } from '../../../../hook/reward/erc721/useEr
 import { SelectedNftStake } from '../../../../types/stake/SelectedNftStake'
 import { Modal } from '../../../shared/design-system'
 
+import { useNetwork } from 'wagmi'
 import { StakeErc721 } from './StakeErc721'
 import { StakeERC721Action } from './StakeErc721Action'
 
@@ -35,7 +36,7 @@ export function StakeModal({
   onConfirm,
   onClose
 }: StakeErc721Props) {
-  const walletChainId = 5
+  const network = useNetwork()
   const { isLoading: isApprovingUnlock, setApprovalForAll, status: unlockStatus } = useErc721SetApprovalForAll(pool.token.id, pool.address)
   const {
     refetch: refetchUnlock,
@@ -48,7 +49,6 @@ export function StakeModal({
       setApprovalForAll()
     }
   }
-
   return (
     <Modal
       title={pool.hasStake ? 'Add more stake' : 'Stake'}
@@ -63,7 +63,7 @@ export function StakeModal({
           setApprovalForAll={handleSetApprovalForAll}
           isApprovedForAll={isApprovedForAll}
           isCheckingUnlock={isCheckingUnlock}
-          walletChainId={walletChainId}
+          walletChainId={network.chain?.id ?? null}
           isStaking={isLoading}
           selectedItems={selectedItems}
           depositStake={depositStake}

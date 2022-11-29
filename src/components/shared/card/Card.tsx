@@ -6,14 +6,14 @@ import { ProgramDetailsSponsorBy } from '@components/shared/program/details/Spon
 import { ProgramDetailsStake } from '@components/shared/program/details/Stake'
 import { ProgramDetailsTimeLeft } from '@components/shared/program/details/TimeLeft'
 import { useRemainingTime } from '@hook/shared/useRemainingTime'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 
 import { Card as AntCard, Col, Row } from 'antd'
 import debounce from 'lodash.debounce'
 import Link from 'next/link'
-import { ReactNode, useContext, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import styled from 'styled-components'
 import { useAccount, useSwitchNetwork } from 'wagmi'
-import { GlobalContext } from '../../../../context/GlobalState'
 import { CardCover } from './CardCover'
 
 export type Token = {
@@ -40,9 +40,9 @@ export interface CardProps {
 
 export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, children, chainId, walletChainId, accountAddress }: CardProps) {
   const account = useAccount()
+  const { openConnectModal } = useConnectModal()
   const remainingTime = useRemainingTime({ ...pool?.rewards[0]?.expirationInfo })
   const { switchNetwork } = useSwitchNetwork()
-  const { dispatch } = useContext(GlobalContext)
   const [isCardHover, setIsCardHover] = useState(false)
 
   const handleOnMouseOver = debounce(() => {
@@ -100,7 +100,7 @@ export function Card({ loading, pool, stakeToken, rewardToken, scanAddress, chil
               currentChainId={walletChainId}
               accountAddress={accountAddress}
               onConnectWallet={() => {
-                dispatch({ type: 'CONNECT_WALLET', payload: false })
+                openConnectModal && openConnectModal()
               }}
               onChangeNetwork={() => switchNetwork && switchNetwork(Number(process.env.NEXT_PUBLIC_CHAIN_ID))}
               skipStateValidation={false}
