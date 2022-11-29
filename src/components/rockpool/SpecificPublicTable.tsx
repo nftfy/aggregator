@@ -57,7 +57,7 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
         </tr>
       </thead>
       <tbody>
-        {specificPools.length &&
+        {!!specificPools.length &&
           specificPools.map(pool => (
             <tr key={pool.id} className='h-24 border-b border-gray-300 dark:border-[#525252]'>
               <td className='px-6 py-4'>

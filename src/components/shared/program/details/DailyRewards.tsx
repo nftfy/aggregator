@@ -2,6 +2,7 @@ import { toHumanFormat } from '@services/UtilService'
 import { Space, Typography } from 'antd'
 
 export interface ProgramDetailsDailyRewardsProps {
+  showTitle?: boolean
   dailyRewards: {
     amount?: string
     label?: string
@@ -10,10 +11,10 @@ export interface ProgramDetailsDailyRewardsProps {
 
 const { Text, Title } = Typography
 
-export function ProgramDetailsDailyRewards({ dailyRewards }: ProgramDetailsDailyRewardsProps) {
+export function ProgramDetailsDailyRewards({ showTitle = true, dailyRewards }: ProgramDetailsDailyRewardsProps) {
   return (
     <Space direction='vertical' size={0}>
-      <Text type='secondary'>Daily Rewards</Text>
+      {showTitle && <Text type='secondary'>Daily Rewards</Text>}
       <Space direction='horizontal' align='start'>
         <Title level={5}>{toHumanFormat(+(dailyRewards.amount || '0'))}</Title>
         <Text type='secondary'>{dailyRewards.label || 'Not defined'}</Text>

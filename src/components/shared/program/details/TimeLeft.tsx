@@ -18,7 +18,7 @@ export function ProgramDetailsTimeLeft({ progress = 0, label, isExpired }: Progr
           <Text>Finished</Text>
         </>
       ) : (
-        <>
+        <div style={{ width: 200 }}>
           <Progress
             width={16}
             type='circle'
@@ -29,7 +29,7 @@ export function ProgramDetailsTimeLeft({ progress = 0, label, isExpired }: Progr
             strokeColor='var(--primary-color)'
           />
           <Text>{label}</Text>
-        </>
+        </div>
       )}
     </Space>
   )
