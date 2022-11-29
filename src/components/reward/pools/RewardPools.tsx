@@ -1,36 +1,31 @@
 import { useReactiveVar } from '@apollo/client'
 import { FilterEnum } from '@appTypes/pool/RewardPool'
-import { isManagePoolConfirmedVar, selectedMenuItemsVar, stakedOnlyVar } from '@graphql/variables/RewardPoolsVariables'
-import { useStakingPools } from '@hook/shared/useStakingPools'
-import { Col, Layout, Row } from 'antd'
+import { isManagePoolConfirmedVar, selectedMenuItemsVar } from '@graphql/variables/RewardPoolsVariables'
+import { Col, Row } from 'antd'
 import { useEffect, useState } from 'react'
-import { useAccount, useNetwork } from 'wagmi'
-import useMounted from '../../../../hooks/useMounted'
+import { useNetwork } from 'wagmi'
+import { RewardPool } from '../../../types/pool/RewardPool'
 import { RewardPoolsOpen } from './RewardPoolsOpen'
 
 interface RewardPoolsProps {
   chainId: number
-  collectionAddress: string
+  queryPool: {
+    stakingPools: RewardPool[]
+    loading: boolean
+    hasMore: boolean
+    isRefetching: boolean
+    loadMore: () => Promise<void>
+    refetch: () => Promise<void>
+  }
 }
 
-const { Content } = Layout
-
-export function RewardPools({ chainId, collectionAddress }: RewardPoolsProps) {
-  const account = useAccount()
-  const hasWalletInitialized = useMounted()
+export function RewardPools({ chainId, queryPool }: RewardPoolsProps) {
   const isManagePoolConfirmed = useReactiveVar(isManagePoolConfirmedVar)
   const selectedMenuItems = useReactiveVar(selectedMenuItemsVar)
-  const stakedOnly = useReactiveVar(stakedOnlyVar)
-  const [statusFilter, setStatusFilter] = useState<FilterEnum>(FilterEnum.all)
 
-  const { stakingPools, loading, loadMore, hasMore, refetch, isRefetching } = useStakingPools(
-    chainId,
-    hasWalletInitialized,
-    statusFilter,
-    account?.address,
-    [collectionAddress],
-    stakedOnly
-  )
+  const [statusFilter, setStatusFilter] = useState<FilterEnum>(FilterEnum.all)
+  const { stakingPools, loading, loadMore, hasMore, refetch, isRefetching } = queryPool
+
   const { chain } = useNetwork()
   useEffect(() => {
     if (isManagePoolConfirmed) {

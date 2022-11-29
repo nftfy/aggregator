@@ -9,7 +9,6 @@ import { chainConfig } from '@config/chain'
 
 import { UseRemainingTime } from '@hook/shared/useRemainingTime'
 import { Col, Row, Space, Typography } from 'antd'
-import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
 import { useTvlErc721 } from '../../../hook/reward/pool-erc721/useTvlErc721'
 
@@ -25,13 +24,8 @@ export function RewardPoolERC721Detail({ chainId, pool, remainingTime }: RewardP
   const config = chainConfig(chainId)
 
   const [tvl, setTvl] = useState('0')
-  const [dailyRewards, setDailyRewards] = useState<string>('0')
 
   const { getTvlErc721, ...poolTVL } = useTvlErc721()
-
-  useEffect(() => {
-    setDailyRewards(new BigNumber(pool?.rewards[0]?.rewardPerSec || 0).multipliedBy(60).multipliedBy(60).multipliedBy(24).toString())
-  }, [pool])
 
   useEffect(() => {
     getTvlErc721({
@@ -84,7 +78,7 @@ export function RewardPoolERC721Detail({ chainId, pool, remainingTime }: RewardP
       <Col xs={24} sm={24} md={24} lg={12}>
         <ProgramDetailsDailyRewards
           dailyRewards={{
-            amount: dailyRewards,
+            amount: pool?.rewards[0]?.dailyRewards,
             label: pool?.rewards[0]?.token?.symbol || pool?.rewards[0]?.token?.name
           }}
         />

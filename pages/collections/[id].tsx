@@ -1,3 +1,4 @@
+import { useReactiveVar } from '@apollo/client'
 import * as Tabs from '@radix-ui/react-tabs'
 import { paths, setParams } from '@reservoir0x/reservoir-kit-client'
 import { useAttributes, useCollections } from '@reservoir0x/reservoir-kit-ui'
@@ -28,9 +29,15 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiRefreshCcw } from 'react-icons/fi'
+import { useAccount } from 'wagmi'
+import useMounted from '../../hooks/useMounted'
 import { RewardPools } from '../../src/components/reward/pools/RewardPools'
+import { RewardPoolsTable } from '../../src/components/reward/pools/RewardPoolsTable'
 import RockpoolPublicTable from '../../src/components/rockpool/RockpoolPublicContainer'
 import { BannerNfty } from '../../src/components/shared/layout/BannerNfty'
+import { stakedOnlyVar } from '../../src/graphql/variables/RewardPoolsVariables'
+import { useStakingPools } from '../../src/hook/shared/useStakingPools'
+import { FilterEnum } from '../../src/types/pool/RewardPool'
 
 
 // Environment variables
@@ -62,6 +69,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const Home: NextPage<Props> = ({ fallback, id }) => {
   const router = useRouter()
+  const account = useAccount()
   const [localListings, setLocalListings] = useState(false)
   const [refreshLoading, setRefreshLoading] = useState(false)
   const collectionResponse = useCollections(
@@ -90,7 +98,25 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
 
   const attributes = useAttributes(id)
 
+
+  const stakedOnly = useReactiveVar(stakedOnlyVar)
+  const hasWalletInitialized = useMounted()
+  
+  const { stakingPools, loading, loadMore, hasMore, refetch, isRefetching } = useStakingPools(
+    Number(CHAIN_ID),
+    hasWalletInitialized,
+    FilterEnum.all,
+    account?.address,
+    [String(id)],
+    stakedOnly
+  )
+ 
+
+
   if (!CHAIN_ID) return null
+
+
+ 
 
   if (tokens.error) {
     return <div>There was an error</div>
@@ -174,6 +200,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
   )
 
   const tabs = [
+    { name: 'Overview', id: 'overview' },
     { name: 'Items', id: 'items' },
     { name: 'Pools', id: 'pools' },
     { name: 'Rewards', id: 'rewards' },
@@ -210,6 +237,9 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
               </Tabs.Trigger>
             ))}
           </Tabs.List>
+          <Tabs.Content value='overview' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
+            <RewardPoolsTable chainId={Number(CHAIN_ID)} stakingPools={stakingPools} loading={loading || isRefetching} />
+          </Tabs.Content>
           <Tabs.Content value="items" asChild>
             <>
               <Sidebar
@@ -311,7 +341,13 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
             {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''}/>}
           </Tabs.Content>
           <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
-            {id && <RewardPools chainId={Number(CHAIN_ID)} collectionAddress={id} />}
+            {id && <RewardPools chainId={Number(CHAIN_ID)} queryPool={{
+              stakingPools,
+              loading,
+              hasMore,
+              isRefetching,
+              loadMore,
+              refetch}} />}
           </Tabs.Content>
         </Tabs.Root>
       </>
