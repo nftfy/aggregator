@@ -39,6 +39,7 @@ import { RewardPools } from '../../src/components/reward/pools/RewardPools'
 import { RewardPoolsTable } from '../../src/components/reward/pools/RewardPoolsTable'
 import RockpoolPublicTable from '../../src/components/rockpool/RockpoolPublicContainer'
 import { BannerNfty } from '../../src/components/shared/layout/BannerNfty'
+import TokensGridNftfy from '../../src/components/shared/TokensGrid'
 import { stakedOnlyVar } from '../../src/graphql/variables/RewardPoolsVariables'
 import { useStakingPools } from '../../src/hook/shared/useStakingPools'
 import { FilterEnum } from '../../src/types/pool/RewardPool'
@@ -96,6 +97,8 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
     false,
     localListings
   )
+
+
 
   const { collectionAttributes, ref: refCollectionAttributes } =
     useCollectionAttributes(router, id)
@@ -365,7 +368,10 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
                     </>
                   }
                 >
-                  <></>
+                <TokensGridNftfy
+                  tokens={tokens}
+                  collectionImage={collection?.image as string}
+                />
                 </WrapperTableProducts>
               </ContainerOverview>
             </div>
