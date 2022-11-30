@@ -1,7 +1,7 @@
 import { useReactiveVar } from '@apollo/client'
 import * as Tabs from '@radix-ui/react-tabs'
 import { paths, setParams } from '@reservoir0x/reservoir-kit-client'
-import { useAttributes, useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useAttributes, useCollections, useTokensReservoir } from '@reservoir0x/reservoir-kit-ui'
 import AttributesFlex from 'components/AttributesFlex'
 import ExploreFlex from 'components/ExploreFlex'
 import ExploreTokens from 'components/ExploreTokens'
@@ -35,6 +35,7 @@ import { RewardPools } from '../../src/components/reward/pools/RewardPools'
 import { RewardPoolsTable } from '../../src/components/reward/pools/RewardPoolsTable'
 import RockpoolPublicTable from '../../src/components/rockpool/RockpoolPublicContainer'
 import { BannerNfty } from '../../src/components/shared/layout/BannerNfty'
+import TokensGridNftfy from '../../src/components/shared/TokensGrid'
 import { stakedOnlyVar } from '../../src/graphql/variables/RewardPoolsVariables'
 import { useStakingPools } from '../../src/hook/shared/useStakingPools'
 import { FilterEnum } from '../../src/types/pool/RewardPool'
@@ -72,6 +73,8 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
   const account = useAccount()
   const [localListings, setLocalListings] = useState(false)
   const [refreshLoading, setRefreshLoading] = useState(false)
+  type UseTokensReturnType = ReturnType<typeof useTokensReservoir>
+  const [filterList, setFilterList] = useState<UseTokensReturnType['tokens']>()
   const collectionResponse = useCollections(
     { id },
     {
@@ -92,6 +95,8 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
     false,
     localListings
   )
+
+
 
   const { collectionAttributes, ref: refCollectionAttributes } =
     useCollectionAttributes(router, id)
@@ -239,6 +244,17 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           </Tabs.List>
           <Tabs.Content value='overview' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
             <RewardPoolsTable chainId={Number(CHAIN_ID)} stakingPools={stakingPools} loading={loading || isRefetching} />
+            <hr />
+            <Sweep
+              collection={collection}
+              tokens={tokens.data}
+              setToast={setToast}
+              mutate={tokens.mutate}
+            />
+            <TokensGridNftfy
+              tokens={tokens}
+              collectionImage={collection?.image as string}
+            />
           </Tabs.Content>
           <Tabs.Content value="items" asChild>
             <>
