@@ -344,7 +344,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           <Tabs.Content value='pools' className='col-span-full w-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
             {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''}/>}
           </Tabs.Content>
-          <Tabs.Content value='overview' className='col-span-full w-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
+          <Tabs.Content value='overview' className='col-span-full w-full   grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
            <div className='ml: m-5 md:m-5'>
               <ContainerOverview>
                 <WrapperTableProducts title='Rewards Program' seeAllAction={() =>  toggleOnItem(router, 'tab', 'rewards')}>

@@ -26,11 +26,11 @@ export default function OverviewFloorTable({ chainId, collectionAddress, collect
   const floorCollectionItem = listBuyFloorCollections[0]
   const headings = [
     { name: 'Collection', align: 'left' },
-    { name: 'Target price', align: 'center' },
-    { name: 'Participants', align: 'center' },
-    { name: 'Progress', align: 'center' },
-    { name: 'To complete', align: 'center' },
-    { name: '', align: 'center' }
+    { name: 'Target price', align: 'left' },
+    { name: 'Participants', align: 'left' },
+    { name: 'Progress', align: 'left' },
+    { name: 'To complete', align: 'left' },
+    { name: '', align: 'left' }
   ]
 
   if (loading) {
@@ -118,7 +118,7 @@ const { Container, ContainerRight } = {
   Container: styled.div`
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: left;
   `,
   ContainerRight: styled.div`
     width: 100%;

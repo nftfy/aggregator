@@ -29,10 +29,10 @@ export default function OverviewSpecificTable({ chainId, collectionAddress }: Ov
 
   const headings = [
     { name: 'NFT', align: 'left' },
-    { name: 'Target price', align: 'center' },
-    { name: 'Participants', align: 'center' },
-    { name: 'Progress', align: 'center' },
-    { name: 'To complete', align: 'center' },
+    { name: 'Target price', align: 'left' },
+    { name: 'Participants', align: 'left' },
+    { name: 'Progress', align: 'left' },
+    { name: 'To complete', align: 'left' },
     { name: '', align: 'center' }
   ]
 
@@ -117,7 +117,7 @@ const { Container, ContainerRight } = {
   Container: styled.div`
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: left;
   `,
   ContainerRight: styled.div`
     width: 100%;
