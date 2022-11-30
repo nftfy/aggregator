@@ -27,6 +27,7 @@ export const RewardPoolsTable = ({ chainId, stakingPools, loading }: RewardPools
     { name: 'Participants', align: 'left' },
     { name: '', align: 'center' }
   ]
+
   const { switchNetwork } = useSwitchNetwork()
   const { openConnectModal } = useConnectModal()
   const { chain } = useNetwork()

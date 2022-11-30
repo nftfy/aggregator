@@ -8,13 +8,14 @@ import { chainConfig } from '../../ChainConfig'
 import { useListBuyFloorCollections } from '../../hook/rockpool/buyFloor/useFloorPublicByAddress'
 import { formatToLocaleString } from '../../services/UtilService'
 import RockpoolTableEmpty from '../shared/rockpool/RockpoolTableEmpty'
-export interface FloorPublicTableProps {
+
+export interface SpecificPublicTableProps {
   chainId: number
   collectionAddress: string
   collectionImage: string
 }
 
-export default function FloorPublicTable({ chainId, collectionAddress, collectionImage }: FloorPublicTableProps) {
+export default function OverviewFloorTable({ chainId, collectionAddress, collectionImage }: SpecificPublicTableProps) {
   const { nativeToken } = chainConfig(chainId)
   const { listBuyFloorCollections, loading } = useListBuyFloorCollections(
     chainId,
@@ -29,7 +30,7 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
     { name: 'Participants', align: 'center' },
     { name: 'Progress', align: 'center' },
     { name: 'To complete', align: 'center' },
-    { name: 'Action', align: 'center' }
+    { name: '', align: 'center' }
   ]
 
   if (loading) {
@@ -93,8 +94,8 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
                 </span>
               </Container>
             </td>
-            <td className='px-6 py-4'>
-              <Container>
+            <td>
+              <ContainerRight>
                 <Button
                   type='primary'
                   block
@@ -103,7 +104,7 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
                 >
                   Enter pool
                 </Button>
-              </Container>
+              </ContainerRight>
             </td>
           </tr>
         )}
@@ -113,10 +114,15 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
   )
 }
 
-const { Container } = {
+const { Container, ContainerRight } = {
   Container: styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
+  `,
+  ContainerRight: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: right;
   `
 }

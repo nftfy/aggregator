@@ -8,14 +8,14 @@ import {
 } from '../../../graphql/nftfy/rockpool/SpecificPublicItemsQuery'
 import { RockpoolFilter } from '../../../models/rockpool/SpecificPoolsTypes'
 
-export const useSpecificPublicItems = (chainId: number, filters: RockpoolFilter, filterByCollectionAddress: string) => {
+export const useSpecificPublicItems = (chainId: number, filters: RockpoolFilter, filterByCollectionAddress: string, limit?: number) => {
   const [offset, setOffset] = useState<number>(0)
   const [hasMore, setHasMore] = useState<boolean>(true)
 
   const { loading, data, error, fetchMore } = useQuery<SpecificPublicItemsData, SpecificPublicItemsVars>(SPECIFIC_PUBLIC_ITEMS_QUERY, {
     variables: {
       chainId,
-      limit: globalConfig.paginationLimit,
+      limit: limit ? limit : globalConfig.paginationLimit,
       filterBy: filters.type,
       offset,
       orderBy: filters.sortingField,

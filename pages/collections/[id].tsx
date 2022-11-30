@@ -29,8 +29,12 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FiRefreshCcw } from 'react-icons/fi'
+import styled from 'styled-components'
 import { useAccount } from 'wagmi'
 import useMounted from '../../hooks/useMounted'
+import OverviewFloorTable from '../../src/components/overview/OverviewFloorTables'
+import OverviewSpecificTable from '../../src/components/overview/OverviewSpecificTable'
+import WrapperTableProducts from '../../src/components/overview/WrapperTableProducts'
 import { RewardPools } from '../../src/components/reward/pools/RewardPools'
 import { RewardPoolsTable } from '../../src/components/reward/pools/RewardPoolsTable'
 import RockpoolPublicTable from '../../src/components/rockpool/RockpoolPublicContainer'
@@ -219,7 +223,7 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           {id && <BannerNfty collectionId={id} chainId={Number(CHAIN_ID)} />}
         </div>
         <Tabs.Root
-          value={router.query?.tab?.toString() || 'items'}
+          value={router.query?.tab?.toString() || 'overview'}
           className="col-span-full grid grid-cols-5 gap-x-4 md:grid-cols-8 lg:grid-cols-12 3xl:grid-cols-16 4xl:grid-cols-21"
         >
           <Tabs.List className="col-span-full flex justify-center border-b border-[#D4D4D4] dark:border-[#525252]">
@@ -237,9 +241,6 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
               </Tabs.Trigger>
             ))}
           </Tabs.List>
-          <Tabs.Content value='overview' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
-            <RewardPoolsTable chainId={Number(CHAIN_ID)} stakingPools={stakingPools} loading={loading || isRefetching} />
-          </Tabs.Content>
           <Tabs.Content value="items" asChild>
             <>
               <Sidebar
@@ -339,6 +340,35 @@ const Home: NextPage<Props> = ({ fallback, id }) => {
           </Tabs.Content>
           <Tabs.Content value='pools' className='col-span-full w-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
             {id && <RockpoolPublicTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''}/>}
+          </Tabs.Content>
+          <Tabs.Content value='overview' className='col-span-full w-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
+           <div className='ml: m-5 md:m-5'>
+              <ContainerOverview>
+                <WrapperTableProducts title='Rewards Program' seeAllAction={() =>  toggleOnItem(router, 'tab', 'rewards')}>
+                  <RewardPoolsTable chainId={Number(CHAIN_ID)} stakingPools={stakingPools} loading={loading} />
+                </WrapperTableProducts>
+                <WrapperTableProducts title='Floor pool' seeAllAction={() =>  toggleOnItem(router, 'tab', 'pools') }>
+                 { id &&  <OverviewFloorTable chainId={Number(CHAIN_ID)} collectionAddress={id} collectionImage={collection?.image || ''} />}
+                </WrapperTableProducts>
+                <WrapperTableProducts
+                  title='Specific pool'
+                  seeAllAction={() => toggleOnItem(router, 'tab', 'pools') }
+                >
+                  {id && <OverviewSpecificTable chainId={Number(CHAIN_ID)} collectionAddress={id} />}
+                </WrapperTableProducts>
+                <WrapperTableProducts
+                  title='Collection Itens'
+                  seeAllAction={() => toggleOnItem(router, 'tab', 'items') }
+                  buttonAffter={
+                    <>
+                      <Sweep collection={collection} tokens={tokens.data} setToast={setToast} mutate={tokens.mutate} />
+                    </>
+                  }
+                >
+                  <></>
+                </WrapperTableProducts>
+              </ContainerOverview>
+            </div>
           </Tabs.Content>
           <Tabs.Content value='rewards' className='col-span-full mx-[25px] grid pt-2 lg:col-start-2 lg:col-end-[-2]'>
             {id && <RewardPools chainId={Number(CHAIN_ID)} queryPool={{
@@ -469,4 +499,12 @@ export const getStaticProps: GetStaticProps<{
     props: { fallback: { collection, tokens }, id },
     revalidate: 20,
   }
+}
+
+const { ContainerOverview } = {
+  ContainerOverview: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  `
 }

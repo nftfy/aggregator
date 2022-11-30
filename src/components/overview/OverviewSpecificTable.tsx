@@ -9,12 +9,12 @@ import { OrderDirection, SpecificPoolItemFilter, SpecificPoolItemOrderBy } from 
 import { formatToLocaleString } from '../../services/UtilService'
 import RockpoolTableEmpty from '../shared/rockpool/RockpoolTableEmpty'
 
-export interface SpecificPublicTableProps {
+export interface OverviewFloorTableProps {
   chainId: number
   collectionAddress: string
 }
 
-export default function SpecificPublicTable({ chainId, collectionAddress }: SpecificPublicTableProps) {
+export default function OverviewSpecificTable({ chainId, collectionAddress }: OverviewFloorTableProps) {
   const { specificPools, loading } = useSpecificPublicItems(
     chainId,
     {
@@ -22,7 +22,8 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
       sortingDirection: OrderDirection.desc,
       sortingField: SpecificPoolItemOrderBy.timestamp
     },
-    collectionAddress
+    collectionAddress,
+    5
   )
   const history = useRouter()
 
@@ -32,7 +33,7 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
     { name: 'Participants', align: 'center' },
     { name: 'Progress', align: 'center' },
     { name: 'To complete', align: 'center' },
-    { name: 'Action', align: 'center' }
+    { name: '', align: 'center' }
   ]
 
   if (loading) {
@@ -97,12 +98,12 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
                   </span>
                 </Container>
               </td>
-              <td className='px-6 py-4'>
-                <Container>
+              <td>
+                <ContainerRight>
                   <Button type='primary' block onClick={() => history.push(`/rockpool/specific/${pool.id}`)} style={{ width: 148 }}>
                     Enter pool
                   </Button>
-                </Container>
+                </ContainerRight>
               </td>
             </tr>
           ))}
@@ -112,10 +113,15 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
   )
 }
 
-const { Container } = {
+const { Container, ContainerRight } = {
   Container: styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
+  `,
+  ContainerRight: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: right;
   `
 }
