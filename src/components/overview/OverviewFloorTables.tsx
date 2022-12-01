@@ -1,7 +1,6 @@
 import { Button, Progress } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import LoadingIcon from '../../../components/LoadingIcon'
 import { chainConfig } from '../../ChainConfig'
@@ -22,7 +21,6 @@ export default function OverviewFloorTable({ chainId, collectionAddress, collect
     nativeToken.address,
     collectionAddress.toLocaleLowerCase()
   )
-  const history = useRouter()
   const floorCollectionItem = listBuyFloorCollections[0]
   const headings = [
     { name: 'Collection', align: 'left' },
@@ -96,14 +94,11 @@ export default function OverviewFloorTable({ chainId, collectionAddress, collect
             </td>
             <td>
               <ContainerRight>
-                <Button
-                  type='primary'
-                  block
-                  onClick={() => history.push(`/rockpool/floor/${floorCollectionItem.collectionAddress}`)}
-                  style={{ width: 148 }}
-                >
-                  Enter pool
-                </Button>
+                <Link href={['rockpool', 'floor', floorCollectionItem.collectionAddress].join('/')} passHref>
+                  <Button type='primary' block style={{ width: 148 }}>
+                    Enter pool
+                  </Button>
+                </Link>
               </ContainerRight>
             </td>
           </tr>

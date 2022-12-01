@@ -1,7 +1,6 @@
 import { Button, Progress } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import LoadingIcon from '../../../components/LoadingIcon'
 import { useSpecificPublicItems } from '../../hook/rockpool/specific/useSpecificPulicItems'
@@ -25,7 +24,6 @@ export default function OverviewSpecificTable({ chainId, collectionAddress }: Ov
     collectionAddress,
     5
   )
-  const history = useRouter()
 
   const headings = [
     { name: 'NFT', align: 'left' },
@@ -100,9 +98,11 @@ export default function OverviewSpecificTable({ chainId, collectionAddress }: Ov
               </td>
               <td>
                 <ContainerRight>
-                  <Button type='primary' block onClick={() => history.push(`/rockpool/specific/${pool.id}`)} style={{ width: 148 }}>
-                    Enter pool
-                  </Button>
+                  <Link href={['reward', 'specific', pool?.id].join('/')} passHref>
+                    <Button type='primary' block style={{ width: 148 }}>
+                      Enter pool
+                    </Button>
+                  </Link>
                 </ContainerRight>
               </td>
             </tr>
