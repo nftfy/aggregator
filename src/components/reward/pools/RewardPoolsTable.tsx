@@ -1,7 +1,5 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit'
-
 import Link from 'next/link'
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+import styled from 'styled-components'
 import { chainConfig } from '../../../ChainConfig'
 import { RewardPool } from '../../../types/pool/RewardPool'
 import { Button } from '../../shared/design-system'
@@ -27,10 +25,7 @@ export const RewardPoolsTable = ({ chainId, stakingPools, loading }: RewardPools
     { name: 'Participants', align: 'left' },
     { name: '', align: 'center' }
   ]
-  const { switchNetwork } = useSwitchNetwork()
-  const { openConnectModal } = useConnectModal()
-  const { chain } = useNetwork()
-  const account = useAccount()
+
   return (
     <table className='w-full'>
       <thead>
@@ -86,27 +81,24 @@ export const RewardPoolsTable = ({ chainId, stakingPools, loading }: RewardPools
               <td>
                 <ProgramDetailsParticipants count={pool?.userCount} />
               </td>
-              <td>
+              <ActionCell className='items-center'>
                 <Link href={['/reward', pool?.address].join('/')} passHref>
-                  <Button
-                    type='primary'
-                    block
-                    chainId={chainId}
-                    currentChainId={chain?.id}
-                    accountAddress={account?.address}
-                    onConnectWallet={() => {
-                      openConnectModal && openConnectModal()
-                    }}
-                    onChangeNetwork={() => switchNetwork && switchNetwork(Number(process.env.NEXT_PUBLIC_CHAIN_ID))}
-                    skipStateValidation={false}
-                  >
-                    Details
+                  <Button type='primary' block style={{ width: 148 }}>
+                    Enter pool
                   </Button>
                 </Link>
-              </td>
+              </ActionCell>
             </tr>
           ))}
       </tbody>
     </table>
   )
+}
+
+const { ActionCell } = {
+  ActionCell: styled.td`
+    display: flex;
+    justify-content: end;
+    height: inherit;
+  `
 }

@@ -1,7 +1,6 @@
 import { Button, Progress } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import LoadingIcon from '../../../components/LoadingIcon'
 import { useSpecificPublicItems } from '../../hook/rockpool/specific/useSpecificPulicItems'
@@ -9,12 +8,12 @@ import { OrderDirection, SpecificPoolItemFilter, SpecificPoolItemOrderBy } from 
 import { formatToLocaleString } from '../../services/UtilService'
 import RockpoolTableEmpty from '../shared/rockpool/RockpoolTableEmpty'
 
-export interface SpecificPublicTableProps {
+export interface OverviewFloorTableProps {
   chainId: number
   collectionAddress: string
 }
 
-export default function SpecificPublicTable({ chainId, collectionAddress }: SpecificPublicTableProps) {
+export default function OverviewSpecificTable({ chainId, collectionAddress }: OverviewFloorTableProps) {
   const { specificPools, loading } = useSpecificPublicItems(
     chainId,
     {
@@ -22,17 +21,17 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
       sortingDirection: OrderDirection.desc,
       sortingField: SpecificPoolItemOrderBy.timestamp
     },
-    collectionAddress
+    collectionAddress,
+    5
   )
-  const history = useRouter()
 
   const headings = [
     { name: 'NFT', align: 'left' },
-    { name: 'Target price', align: 'center' },
-    { name: 'Participants', align: 'center' },
-    { name: 'Progress', align: 'center' },
-    { name: 'To complete', align: 'center' },
-    { name: 'Action', align: 'center' }
+    { name: 'Target price', align: 'left' },
+    { name: 'Participants', align: 'left' },
+    { name: 'Progress', align: 'left' },
+    { name: 'To complete', align: 'left' },
+    { name: '', align: 'center' }
   ]
 
   if (loading) {
@@ -97,12 +96,14 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
                   </span>
                 </Container>
               </td>
-              <td className='px-6 py-4'>
-                <Container>
-                  <Button type='primary' block onClick={() => history.push(`/rockpool/specific/${pool.id}`)} style={{ width: 148 }}>
-                    Enter pool
-                  </Button>
-                </Container>
+              <td>
+                <ContainerRight>
+                  <Link href={['reward', 'specific', pool?.id].join('/')} passHref>
+                    <Button type='primary' block style={{ width: 148 }}>
+                      Enter pool
+                    </Button>
+                  </Link>
+                </ContainerRight>
               </td>
             </tr>
           ))}
@@ -112,10 +113,15 @@ export default function SpecificPublicTable({ chainId, collectionAddress }: Spec
   )
 }
 
-const { Container } = {
+const { Container, ContainerRight } = {
   Container: styled.div`
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: left;
+  `,
+  ContainerRight: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: right;
   `
 }

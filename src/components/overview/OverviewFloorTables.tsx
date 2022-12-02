@@ -1,35 +1,34 @@
 import { Button, Progress } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import LoadingIcon from '../../../components/LoadingIcon'
 import { chainConfig } from '../../ChainConfig'
 import { useListBuyFloorCollections } from '../../hook/rockpool/buyFloor/useFloorPublicByAddress'
 import { formatToLocaleString } from '../../services/UtilService'
 import RockpoolTableEmpty from '../shared/rockpool/RockpoolTableEmpty'
-export interface FloorPublicTableProps {
+
+export interface SpecificPublicTableProps {
   chainId: number
   collectionAddress: string
   collectionImage: string
 }
 
-export default function FloorPublicTable({ chainId, collectionAddress, collectionImage }: FloorPublicTableProps) {
+export default function OverviewFloorTable({ chainId, collectionAddress, collectionImage }: SpecificPublicTableProps) {
   const { nativeToken } = chainConfig(chainId)
   const { listBuyFloorCollections, loading } = useListBuyFloorCollections(
     chainId,
     nativeToken.address,
     collectionAddress.toLocaleLowerCase()
   )
-  const history = useRouter()
   const floorCollectionItem = listBuyFloorCollections[0]
   const headings = [
     { name: 'Collection', align: 'left' },
-    { name: 'Target price', align: 'center' },
-    { name: 'Participants', align: 'center' },
-    { name: 'Progress', align: 'center' },
-    { name: 'To complete', align: 'center' },
-    { name: 'Action', align: 'center' }
+    { name: 'Target price', align: 'left' },
+    { name: 'Participants', align: 'left' },
+    { name: 'Progress', align: 'left' },
+    { name: 'To complete', align: 'left' },
+    { name: '', align: 'left' }
   ]
 
   if (loading) {
@@ -93,17 +92,14 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
                 </span>
               </Container>
             </td>
-            <td className='px-6 py-4'>
-              <Container>
-                <Button
-                  type='primary'
-                  block
-                  onClick={() => history.push(`/rockpool/floor/${floorCollectionItem.collectionAddress}`)}
-                  style={{ width: 148 }}
-                >
-                  Enter pool
-                </Button>
-              </Container>
+            <td>
+              <ContainerRight>
+                <Link href={['rockpool', 'floor', floorCollectionItem.collectionAddress].join('/')} passHref>
+                  <Button type='primary' block style={{ width: 148 }}>
+                    Enter pool
+                  </Button>
+                </Link>
+              </ContainerRight>
             </td>
           </tr>
         )}
@@ -113,10 +109,15 @@ export default function FloorPublicTable({ chainId, collectionAddress, collectio
   )
 }
 
-const { Container } = {
+const { Container, ContainerRight } = {
   Container: styled.div`
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: left;
+  `,
+  ContainerRight: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: right;
   `
 }
